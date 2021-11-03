@@ -1,0 +1,50 @@
+<?php
+/**
+ * Programa responsável por efetuar o Login de cada usuário, dar início menu
+ * Autor: Vitor Hugo Nunes Marini
+ * Data: 25/06/2021
+ */
+include_once "../_conection/_conect.php";
+include_once "./aux.php";
+
+$pass = md5($_POST['pass']);
+$user = retiraAcentos($_POST['user']);
+
+$data = $bd->Execute($sql = 
+"SELECT user_id 
+,	user_nome 
+,	user_email 
+,	user_tipo 
+,	user_nickname 
+,	1 AS login
+ FROM 	t_user 
+WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
+  AND   user_pass = '{$pass}';");    
+  
+//Valida a inserção do usuário e verificando se existe ou não o valor
+if ( $data->fields['login'] == 1){
+    
+    session_start();
+    
+    $_SESSION['user_id']        = $data->fields['user_id'];
+    $_SESSION['user_nome']      = $data->fields['user_nome'];
+    $_SESSION['user_email']     = $data->fields['user_email'];
+    $_SESSION['user_tipo']      = $data->fields['user_tipo'];
+    $_SESSION['user_nickname']  = $data->fields['user_nickname'];      
+    $_SESSION['tela_atual']     = "VAZIO";    
+    $_SESSION['menu_atual']     = "";    
+    $_SESSION['submenu_atual']  = "";    
+    $_SESSION['op']             = "";    
+    $_SESSION['id']             = "";    
+    $_SESSION['buscas']         = "";    
+    $_SESSION['p']              = "1";    //Página da movimentação da Linha
+    $_SESSION['autoriza']       = true;    //Página da movimentação da Linha
+    
+    
+    $retorno = "OK";
+    
+}else{
+    $retorno = "FALSE";
+}
+print $retorno;
+  
