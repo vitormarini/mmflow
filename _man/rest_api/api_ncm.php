@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 
 //Includes necessários
 include_once "../../_conection/_conect.php";
-include '../../_man/aux.php';              
+include '../../_man/_aux.php';              
 
 //Tipo de erro gerado pelo sistema
 const ERRO_SISTEMA = 0;

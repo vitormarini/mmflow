@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-include_once './aux.php';
+include_once './_aux.php';
 
 session_start();
 

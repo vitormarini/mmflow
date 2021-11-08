@@ -5,7 +5,7 @@
  * Data: 25/06/2021
  */
 include_once "../_conection/_conect.php";
-include_once "./aux.php";
+include_once "./_aux.php";
 
 $pass = md5($_POST['pass']);
 $user = retiraAcentos($_POST['user']);

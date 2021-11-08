@@ -5,7 +5,7 @@
  * Vitor Hugo Nunes Marini
  */
 include_once '../../_conection/_conect.php';
-include_once '../../_man/aux.php';
+include_once '../../_man/_aux.php';
 
 
 //Verificando qual a TABELA do banco que iremos setar
