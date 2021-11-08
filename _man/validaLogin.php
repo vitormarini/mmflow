@@ -21,6 +21,7 @@ $data = $bd->Execute($sql =
 WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
   AND   user_pass = '{$pass}';");    
   
+
 //Valida a inserção do usuário e verificando se existe ou não o valor
 if ( $data->fields['login'] == 1){
     
