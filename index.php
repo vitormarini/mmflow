@@ -28,7 +28,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Digite seu usário e senha 2 :</p>
+      <p class="login-box-msg">Digite seu usário e senha :</p>
 
       <form action="./_man/validaLogin.php" method="post" id="frmDados">
         <div class="input-group mb-3">
