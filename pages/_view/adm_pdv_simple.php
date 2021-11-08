@@ -1,90 +1,52 @@
-<?php
-    $local = $bd->Execute(
-      "SELECT 
-            t_menu.menu_descricao AS menu
-     ,	CASE 
-                    WHEN menu_submenu_categoria = 'CADASTROS' THEN 'Cadastros'
-                    WHEN menu_submenu_descricao = 'RELATORIO' THEN 'Relatórios'
-                    WHEN menu_submenu_categoria = 'MOVIMENTO' THEN 'Movimentação'
-            END AS categoria
-     ,	t_menu_sub.menu_submenu_descricao AS sub
-    FROM t_menu_sub
-    INNER JOIN t_menu ON ( t_menu.menu_id = t_menu_sub.menu_id )
-    WHERE menu_submenu_url  = 'adm_pdv_simple';");
-?>
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Pedido de Venda - Simples</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="menu_sys.php">Home</a></li>
-              <li class="breadcrumb-item active"> <b><?= $local->fields['menu']?></b> > <i><?=$local->fields['categoria']?></i> > <u><?= $local->fields['sub'] ?></u></li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+<!-- Main content -->
+<section class="content">
+    <!-- INICIAMOS O MODO TELA -->
+    <?php  if ( $_SESSION['op'] == "" ){
+        $buscas = explode("&",$_SESSION["buscas"]);
+        $filtro_busca = $where = "";
+        if ( count($buscas) > 0 ){
+            $where =
+            "WHERE ped.pedido_simples_id IS NOT NULL
+                AND ( ped.pedido_simples_id::text ILIKE '%".explode("=", $buscas[0])[1]."%' )";
 
-    <!-- Main content -->
-    <section class="content">
+            $filtro_busca = explode("=", $buscas[0])[1];
+        }
+    ?>
 
-       <!-- INICIAMOS O MODO TELA -->
-        <?php  if ( $_SESSION['op'] == "" ){
-          
-          $buscas = explode("&",$_SESSION["buscas"]);
-          $filtro_busca = $where = "";
-          if ( count($buscas) > 0 ){
-              $where = 
-              "WHERE ped.pedido_simples_id IS NOT NULL 
-                 AND ( ped.pedido_simples_id::text ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-              
-              $filtro_busca = explode("=", $buscas[0])[1];
-                      
-          } 
-        ?>
-        
-      <!-- Default box -->
-      <div class="card body-view">
-        <div class="card-header">          
-          
-          <div class="row">
-                <div class="col-sm-2">                  
+    <!-- Default box -->
+    <div class="card body-view">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-sm-2">
                     <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_pdv_simple','insert','', 'movimentacao','','')">
-                      <span class="fas fa-plus"></span>
-                      Novo Item
-                  </button>                  
-               </div>
-              
+                        <span class="fas fa-plus"></span>
+                        Novo Item
+                    </button>
+                </div>
                 <div class="col-sm-8">
-                    <div class="col-sm-12">                        
+                    <div class="col-sm-12">
                         <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Razão Social o CNPJ..."/>
                     </div>
                 </div>
-              
-                <div class="col-sm-2">                  
-                  <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_pdv_simple','','', 'movimentacao','','')">
-                      <span class="fas fa-search"></span>
-                      Pesquisar
-                  </button>                  
-               </div>
-          </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_pdv_simple','','', 'movimentacao','','')">
+                        <span class="fas fa-search"></span>
+                        Pesquisar
+                    </button>
+                </div>
+            </div>
 
-           <?php      
+            <?php
             #Preparamos o filtro da pesquisa
             $intPaginaAtual = ( $_SESSION['p'] );
             $intPaginaAtual = filter_var( $intPaginaAtual, FILTER_VALIDATE_INT );
             $intLimite      = 10;
-            $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );                                   
-            
+            $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );
+
             #buscamos os dados
-            $sql = "SELECT  ped.pedido_simples_id	        , ped.pedido_simples_data_abertura
-                        , 	ped.pedido_simples_situacao	    , ped.participante_id 
-                        ,	CASE 
+            $sql = "SELECT  ped.pedido_simples_id	        , databrasil(ped.pedido_simples_data_abertura) AS pedido_simples_data_abertura
+                        , 	ped.pedido_simples_situacao	    , ped.participante_id
+                        ,	CASE
                                 WHEN ped.pedido_simples_situacao = '1' THEN 'ABERTO'
                                 WHEN ped.pedido_simples_situacao = '2' THEN 'Cancelado'
                                 WHEN ped.pedido_simples_situacao = '3' THEN 'Eliminado'
@@ -95,21 +57,21 @@
                         FROM public.t_pedido_simples AS ped
                         INNER JOIN t_participante AS p ON ( p.participante_id = ped.participante_id  )
                     {$where}
-                     AND ped.pedido_simples_situacao NOT IN ( '3' ) ";
-            
-            
+                        AND ped.pedido_simples_situacao NOT IN ( '3' ) ";
+
+
             $dados = $bd->Execute($sql);
-            
-            
+
+
             #Setamos a quantidade de itens na busca
             $qtdRows        = $dados->RecordCount();
-           ?>
-            
-          <div class="card-tools">
+            ?>
+
+            <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-              <i class="fas fa-minus"></i>
+                <i class="fas fa-minus"></i>
             </button>
-          </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="row">
@@ -117,316 +79,298 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th width="10%">Número Pedido   </th>
-                                <th width="10%">Data   </th>
-                                <th width="30%">Cliente         </th>
-                                <th width="20%">Situação        </th>
-                                <th width="20%">Valor Total     </th>
-                                <th width="10%" class="text-center">Ações           </th>
+                                <th width="15%" class="text-center">Número Pedido   </th>
+                                <th width="10%" class="text-center">Data   </th>
+                                <th width="35%" class="text-center">Cliente         </th>
+                                <th width="15%" class="text-left"  >Situação        </th>
+                                <th width="10%" class="text-right" >Valor Total     </th>
+                                <th width="15%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ( $dados->RecordCount() > 0 ){ ?>
                                 <?php while ( !$dados->EOF ) { ?>
                             <tr>
-                                <td class="text-center"><?= $dados->fields['pedido_simples_id']                 ?></td>                                
+                                <td class="text-center"><?= $dados->fields['pedido_simples_id']                 ?></td>
                                 <td class="text-left"  ><?= $dados->fields['pedido_simples_data_abertura']      ?></td>
                                 <td class="text-left"  ><?= $dados->fields['participante_descricao']            ?></td>
                                 <td class="text-left"  ><?= $dados->fields['situacao_descricao']                ?></td>
-                                <td class="text-left"  ><?= $dados->fields['pedido_simples_situacao']           ?></td>
+                                <td class="text-right"  ><?= $dados->fields['pedido_simples_situacao']           ?></td>
                                 <td class="text-center">
                                     <button class="btn btn-success" onclick="movPage('adm_pdv_simple','view','<?= $dados->fields['pedido_simples_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <?php 
+                                    <?php
                                     if ( $dados->fields['pedido_simples_situacao'] == '1' ){?>
-
                                         <button class="btn btn-info" onclick="movPage('adm_pdv_simple','edit','<?= $dados->fields['pedido_simples_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
                                             <i class="fas fa-edit"></i>
                                         </button>
-
                                     <?php } ?>
                                     <!-- <button class="btn btn-danger" onclick="movPage('adm_pdv_simple','delete','<?= $dados->fields['pedido_simples_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar.">
                                         <i class="fas fa-trash"></i>
                                     </button> -->
-                                    
+
                                 </td>
                             </tr>
-                                
-                                <?php $dados->MoveNext(); } ?>
-                                
-                            <?php }else{ ?>
+                            <?php   $dados->MoveNext();
+                                }
+                            }else{ ?>
                             <tr>
                                 <td colspan="4" class="text-center">Não existem dados a serem listados!!!</td>
                             </tr>
                             <?php } ?>
-                            
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <!-- /.card-body -->
+    <!-- /.card-body -->
         <div class="card-footer  align-content-center">
             <div class="row text-center fix-center">
-                <div class="col-sm-12 text-center align-items-center">   
-                    <label><?php paginacao( 'menu_sys.php', $intPaginaAtual, $intLimite, $qtdRows ); ?></label>                    
+                <div class="col-sm-12 text-center align-items-center">
+                    <label><?php paginacao( 'menu_sys.php', $intPaginaAtual, $intLimite, $qtdRows ); ?></label>
                 </div>
             </div>
         </div>
-        <!-- /.card-footer-->
-      </div>
-      <!-- /.card -->
-      <?php } else {
-          
-          if ( $_SESSION['id'] != "" ){
+    <!-- /.card-footer-->
+    </div>
+    <!-- /.card -->
+    <?php } else {
+
+        if ( $_SESSION['id'] != "" ){
             #Monta SQL para busca
-            $sql = "SELECT  ped.pedido_simples_id	        , ped.pedido_simples_data_abertura
-                        , 	ped.pedido_simples_situacao	    , ped.participante_id 
-                        ,	CASE 
-                                WHEN ped.pedido_simples_situacao = '1' THEN 'ABERTO'
-                                WHEN ped.pedido_simples_situacao = '1' THEN 'Cancelado'
-                                WHEN ped.pedido_simples_situacao = '1' THEN 'Eliminado'
-                                WHEN ped.pedido_simples_situacao = '1' THEN 'Pago'
-                                WHEN ped.pedido_simples_situacao = '1' THEN 'Pendente'
-                            END AS situacao_descricao
-                        ,	cpf_cnpj(p.participante_codigo,p.participante_tipo)|| ' - ' || p.participante_nome  AS participante_descricao
-                        ,	sum(tip.item_pedido_valor_total) AS total
-                        ,	sum(tip.item_pedido_valor_desconto) AS desconto
-                        ,	sum(tip.item_pedido_quantidade) AS quantidade
-                        FROM public.t_pedido_simples AS ped
-                        INNER JOIN t_participante AS p ON ( p.participante_id = ped.participante_id  )
-                        LEFT JOIN t_item_pedido AS tip ON ( tip.pedido_simples_id = ped.pedido_simples_id  )
-                             WHERE ped.pedido_simples_id = '{$_SESSION['id']}'
-                             GROUP BY 1,2,3,4,5,6;";
-               
-               
-               
+            $sql = "
+                SELECT  ped.pedido_simples_id	        , ped.pedido_simples_data_abertura
+                    , 	ped.pedido_simples_situacao	    , ped.participante_id
+                    ,	CASE
+                            WHEN ped.pedido_simples_situacao = '1' THEN 'ABERTO'
+                            WHEN ped.pedido_simples_situacao = '1' THEN 'Cancelado'
+                            WHEN ped.pedido_simples_situacao = '1' THEN 'Eliminado'
+                            WHEN ped.pedido_simples_situacao = '1' THEN 'Pago'
+                            WHEN ped.pedido_simples_situacao = '1' THEN 'Pendente'
+                        END AS situacao_descricao
+                    ,	cpf_cnpj(p.participante_codigo,p.participante_tipo)|| ' - ' || p.participante_nome  AS participante_descricao
+                    ,	SUM(tip.item_pedido_valor_total) AS total
+                    ,	SUM(tip.item_pedido_valor_desconto) AS desconto
+                    ,	SUM(tip.item_pedido_quantidade) AS quantidade
+                FROM    public.t_pedido_simples AS ped
+                INNER JOIN t_participante AS p ON ( p.participante_id = ped.participante_id  )
+                LEFT  JOIN t_item_pedido AS tip ON ( tip.pedido_simples_id = ped.pedido_simples_id  )
+                WHERE   ped.pedido_simples_id = '{$_SESSION['id']}'
+                GROUP BY    1,2,3,4,5,6;";
+
             #Resgata os valores do Banco
             $dados = $bd->Execute($sql);
-            
+
             //Verificando se a empresa matriz está vinculada
             $descricaoEmpresaMatriz = $dados->fields['empresa_matriz_id'] !== "" ? formataCpfCnpj($dados->fields['empresa_cnpj_matriz'],$dados->fields['empresa_tipo_pessoa_matriz'])." - ".$dados->fields['empresa_razao_social_matriz'] : "";
-          }
-           
-           #Validamos as funcionalidades          
-           
-           if      ( $_SESSION["op"] == "view"   ){ $description = "Visualização dos "; $disabled = "disabled"; }
-           else if ( $_SESSION["op"] == "insert" ){ $description = "Insira os "; }
-           else if ( $_SESSION["op"] == "delete" ){ $description = "Deletar esses ";  $disabled = "disabled"; }
-           else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
-          
-          ?>
-      
-      <div class="card body-view">
-        <div class="card-header">          
-          
-          <div class="row">
-                              
-                <div class="col-sm-12">           
-                    <label><?= $description ?> Dados do Pedido</label>
-               </div>
-              
-          </div>
-            
+        }
+
+        #Validamos as funcionalidades
+        if      ( $_SESSION["op"] == "view"   ){ $description = "Visualização dos "; $disabled = "disabled"; }
+        else if ( $_SESSION["op"] == "insert" ){ $description = "Insira os "; }
+        else if ( $_SESSION["op"] == "delete" ){ $description = "Deletar esses ";  $disabled = "disabled"; }
+        else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
+        ?>
+
+    <div class="card body-view">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-sm-12">
+                <label><?= $description ?> Dados do Pedido</label>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="<?= $_SERVER['localhost']?>/sys/_man/manutencao/mainAdmPdvSimple.php" method="post" id="frmDados">
-                <ul class="nav nav-tabs" role="tablist">
-                    
-                    <li class="nav-item">
-                        <a href="#pedido_geral" id="aba-pedido-geral"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?>" >Dados Gerais</a>
-                    </li>   
-                    <li class="nav-item">
-                        <a href="#pedido_item" id="aba-pedido-item"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "aba-pedido-item" ? "active" : "" ) ?>" >Itens</a>
-                    </li>   
-                    <li class="nav-item">
-                        <a href="#pedido_contato" id="aba-pedido-contato"  role="tab" data-toggle="tab" class="escondido nav-link <?= ( $_SESSION['aba'] == "aba-pedido-contato" ? "active" : "" ) ?>" >Contato</a>
-                    </li>  
-                </ul>
-                
-                <div class="tab-content">
-                    <div class="tab-pane <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?> margin-top-15" id="pedido_geral" role="tabpanel">
-                        <div class="row">                            
-                            <div class="row col-sm-12">
-                                <div  class="col-sm-2 mb-2">
-                                    <label for="pedido_numero">Número :<h1><?php print $dados->fields['pedido_simples_id'] ?></h1></label>                                
-                                </div>
-                                <div  class="col-sm-2 mb-2">
-                                    <label for="data_abertura">Data de Abertura Pedido:</label>
-                                    <input type="date" class="form-control  cnpj" id="data_abertura" name="data_abertura" value="<?php print $dados->fields['pedido_simples_data_abertura']?>" <?=$disabled?>/>
-                                </div>                                
-                                <div  class="col-sm-2 form-group">
-                                    <label or="pedido_total">Valor Total:</label>
-                                    <input type="text" class="form-control " id="pedido_total" name="pedido_total" value="<?php print $dados->fields['total']?>" readonly/>
-                                </div>
-                                <div  class="col-sm-2 form-group">
-                                    <label or="qtd_itens">Quantidade de Itens:</label>
-                                    <input type="text" class="form-control " id="qtd_itens" name="qtd_itens" value="<?php print $dados->fields['quantidade']?>" readonly/>
-                                </div>
-                                <div  class="col-sm-2 form-group">
-                                    <label or="valor_desconto">Total em Desconto:</label>
-                                    <input type="text" class="form-control " id="valor_desconto" name="valor_desconto" value="<?php print $dados->fields['desconto']?>" readonly/>
-                                </div>
-                                <div  class="col-sm-2 form-group ">
-                                    <label or="pedido_situacao">Situação:</label>
-                                    <select class="form-control  " id="pedido_situacao" name="pedido_situacao" <?=$disabled?>>
-                                        <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
-                                        <option value="1" <?php print $dados->fields['pedido_situacao'] == "1" ? "selected" : ""  ?>>1 - Aberto</option>
-                                        <option value="2" <?php print $dados->fields['pedido_situacao'] == "2" ? "selected" : ""  ?>>2 - Cancelado</option>
-                                        <option value="3" <?php print $dados->fields['pedido_situacao'] == "3" ? "selected" : ""  ?>>3 - Eliminado</option>
-                                        <option value="4" <?php print $dados->fields['pedido_situacao'] == "4" ? "selected" : ""  ?>>4 - Pago</option>
-                                        <option value="5" <?php print $dados->fields['pedido_situacao'] == "5" ? "selected" : ""  ?>>5 - Pendente</option>
-                                    </select>
-                                </div>      
+    </div>
+    <div class="card-body">
+        <form action="<?= $_SERVER['localhost']?>/sys/_man/manutencao/mainAdmPdvSimple.php" method="post" id="frmDados">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a href="#pedido_geral" id="aba-pedido-geral"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?>" >Dados Gerais</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#pedido_item" id="aba-pedido-item"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "aba-pedido-item" ? "active" : "" ) ?>" >Itens</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#pedido_contato" id="aba-pedido-contato"  role="tab" data-toggle="tab" class="escondido nav-link <?= ( $_SESSION['aba'] == "aba-pedido-contato" ? "active" : "" ) ?>" >Contato</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?> margin-top-15" id="pedido_geral" role="tabpanel">
+                    <div class="row">
+                        <div class="row col-sm-12">
+                            <div  class="col-sm-2 mb-2">
+                                <label for="pedido_numero">Número :<h1><?php print $dados->fields['pedido_simples_id'] ?></h1></label>
                             </div>
-                            <div class="row col-sm-12">                                
-                                <div  class="col-sm-12  mb-2">
-                                    <label or="pedido_cliente">Dados do Cliente:</label>
-                                    <input type="text" class="form-control   search" id="cliente_busca" name="t_participante" value="<?php print $dados->fields['participante_descricao']; ?>" <?=$disabled?>/>
-                                    <input type="hidden" class="form-control  " id="pedido_cliente_id" name="pedido_cliente_id" value="<?php print $dados->fields['participante_id']?>" <?=$disabled?>/>
-                                </div>
+                            <div  class="col-sm-2 mb-2">
+                                <label for="data_abertura">Data de Abertura:</label>
+                                <input type="date" class="form-control  cnpj" id="data_abertura" name="data_abertura" value="<?php print $dados->fields['pedido_simples_data_abertura']?>" <?=$disabled?>/>
+                            </div>
+                            <div  class="col-sm-2 form-group">
+                                <label or="pedido_total">Valor Total:</label>
+                                <input type="text" class="form-control " id="pedido_total" name="pedido_total" value="<?php print $dados->fields['total']?>" readonly/>
+                            </div>
+                            <div  class="col-sm-2 form-group">
+                                <label or="qtd_itens">Quantidade de Itens:</label>
+                                <input type="text" class="form-control " id="qtd_itens" name="qtd_itens" value="<?php print $dados->fields['quantidade']?>" readonly/>
+                            </div>
+                            <div  class="col-sm-2 form-group">
+                                <label or="valor_desconto">Total em Desconto:</label>
+                                <input type="text" class="form-control " id="valor_desconto" name="valor_desconto" value="<?php print $dados->fields['desconto']?>" readonly/>
+                            </div>
+                            <div  class="col-sm-2 form-group ">
+                                <label or="pedido_situacao">Situação:</label>
+                                <select class="form-control  " id="pedido_situacao" name="pedido_situacao" <?=$disabled?>>
+                                    <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
+                                    <option value="1" <?php print $dados->fields['pedido_situacao'] == "1" ? "selected" : ""  ?>>1 - Aberto</option>
+                                    <option value="2" <?php print $dados->fields['pedido_situacao'] == "2" ? "selected" : ""  ?>>2 - Cancelado</option>
+                                    <option value="3" <?php print $dados->fields['pedido_situacao'] == "3" ? "selected" : ""  ?>>3 - Eliminado</option>
+                                    <option value="4" <?php print $dados->fields['pedido_situacao'] == "4" ? "selected" : ""  ?>>4 - Pago</option>
+                                    <option value="5" <?php print $dados->fields['pedido_situacao'] == "5" ? "selected" : ""  ?>>5 - Pendente</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12">
+                            <div  class="col-sm-12  mb-2">
+                                <label or="pedido_cliente">Dados do Cliente:</label>
+                                <input type="text" class="form-control   search" id="cliente_busca" name="t_participante" value="<?php print $dados->fields['participante_descricao']; ?>" <?=$disabled?>/>
+                                <input type="hidden" class="form-control  " id="pedido_cliente_id" name="pedido_cliente_id" value="<?php print $dados->fields['participante_id']?>" <?=$disabled?>/>
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane  <?= ( $_SESSION['aba'] == "aba-pedido-item" ? "active" : "" ) ?> margin-top-15" id="pedido_item" role="tabpanel">
-                        <div class="row mb-2">
-                            <div  class="col-sm-1 form-group ">
-                                <label or="item_pedido_tabela">Tab. Preço:</label>
-                                <select class="form-control  " id="item_pedido_tabela" name="item_pedido_tabela" <?=$disabled?>>
-                                    <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
-                                    <option value="A" >1 - A</option>
-                                </select>
-                            </div> 
-                            <div  class="col-sm-4  mb-2">
-                                <label or="pedido_item">Dados do Item:</label>
-                                <input type="text" class="form-control   search" id="item_busca" name="t_item" value="" <?=$disabled?>/>
-                                <input type="hidden" class="form-control  " id="pedido_item_id" name="pedido_item_id" value="" <?=$disabled?>/>
-                            </div>                            
-                            <div  class="col-sm-2 form-group ">
-                                <label or="item_pedido_valor_unitario">Valor Unitário:</label>
-                                <input type="text" class="form-control  money" id="item_pedido_valor_unitario" name="item_pedido_valor_unitario" value="" <?=$disabled?>/>
-                            </div> 
-                            <div  class="col-sm-1 form-group ">
-                                <label or="item_pedido_quantidade">Quantidade:</label>
-                                <input type="text" class="form-control  " id="item_pedido_quantidade" name="item_pedido_quantidade" value="" <?=$disabled?>/>
-                            </div> 
-                            <div  class="col-sm-2 form-group ">
-                                <label or="item_pedido_valor_desconto">Valor Desconto:</label>
-                                <input type="text" class="form-control money " id="item_pedido_valor_desconto" name="item_pedido_valor_desconto" value="" <?=$disabled?>/>
-                            </div> 
-                            <div  class="col-sm-2 form-group ">
-                                <label or="item_pedido_valor_total">Total:</label>
-                                <input type="text" class="form-control money " id="item_pedido_valor_total" name="item_pedido_valor_total" value="" readonly/>
-                            </div> 
-                            <div  class="col-sm-12 form-group" style="padding-top: 29.5px;">
-                                <button type="button" class="btn btn-info" id="btnAdicionaItem" style="width: 100%; " disabled >
-                                    <span class="fas fa-plus"></span> Adicionar Item
-                                </button>
-                            </div>
-                            <?php
-                            if  ( $_SESSION['id'] != "" ){
-                                $itens = $bd->Execute($sql = 
-                                "SELECT tip.pedido_simples_id 
-                                ,	t_item.item_codigo || ' - ' ||t_item.item_descricao AS item
-                                ,	tip.item_pedido_id 
-                                ,	tip.item_pedido_tabela_preco 
-                                ,	tip.item_pedido_quantidade 
-                                ,	tip.item_pedido_valor_unitario 
-                                ,	tip.item_pedido_valor_desconto 
-                                ,	tip.item_pedido_valor_total 
-                                  FROM t_item_pedido AS tip 
-                                  INNER JOIN t_item ON ( t_item.item_id  = tip.item_pedido_produto_id  )
-                                WHERE tip.pedido_simples_id = {$_SESSION['id']};");
-                                ?>
-
-                                <div class="col-sm-12 row"> 
-                                    <table class="table" id="itens_table">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" width="5%"  >#            </th>
-                                                <th class="text-center" width="35%" >Item       </th>
-                                                <th class="text-center" width="10%" >Tb. Preço  </th>
-                                                <th class="text-center" width="10%" >Quantidade </th>
-                                                <th class="text-center" width="10%" >R$ Unt.    </th>
-                                                <th class="text-center" width="10%" >R$ Desconto</th>
-                                                <th class="text-center" width="10%" >R$ TOTAL   </th>
-                                                <th class="text-center" width="10%" >Ações      </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                            while ( !$itens->EOF ){ ?>
-                                                <tr>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_id']                ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item']                          ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_tabela_preco']      ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_quantidade']        ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_valor_unitario']    ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_valor_desconto']    ?></td>
-                                                    <td class="text-center"><?php print $itens->fields['item_pedido_valor_total']       ?></td>
-                                                    <td class="text-center">
-                                                        <button type="button" class="btn btn-danger btnRemoveItem" id="btnRemoveItem_<?php print $itens->fields['item_pedido_id']?>" name="<?php print $itens->fields['item_pedido_id']?>" <?=$disabled?>>
-                                                            <span class="fas fa-trash"></span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                                $itens->MoveNext();
-                                            }
-                                            ?>
-                                        </tbody>        
-                                    </table>
-                                </div>  
-                                
-                            <?php } ?>
-                        </div>                        
-                    </div>                    
                 </div>
-            </form>
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer  align-content-center">
-            <div class="row">          
-                <?php if ( $_SESSION['op'] == "insert" || $_SESSION['op'] == "edit" ){ ?>
-                <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-primary form-control" id="btnSalvar">
-                      <span class="fas fa-save"></span>
-                      Salvar
-                  </button>                  
-               </div>
-                <?php } ?>
-                <?php if ( $_SESSION['op'] == "delete" ){ ?>
-                    <div class="col-sm-2 ">                  
-                      <button type="button" class="btn btn-danger form-control" id="btnExcluir">
-                          <span class="fas fa-trash"></span>
-                          Excluir
-                      </button>                  
-                   </div>
-                <?php } ?>
-                <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_pdv_simple','','', 'movimentacao','','')">
-                      <span class="fas fa-retweet"></span>
-                      Voltar
-                  </button>                  
-               </div>                              
-          </div>
-        </div>
-        <!-- /.card-footer-->
-      </div>  
-      
-      <?php } ?>
-    
-    
+                <div class="tab-pane  <?= ( $_SESSION['aba'] == "aba-pedido-item" ? "active" : "" ) ?> margin-top-15" id="pedido_item" role="tabpanel">
+                    <div class="row mb-2">
+                        <div  class="col-sm-3 form-group ">
+                            <label or="item_pedido_tabela">Tab. Preço:</label>
+                            <select class="form-control  " id="item_pedido_tabela" name="item_pedido_tabela" <?=$disabled?>>
+                                <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
+                                <option value="A" >1 - A</option>
+                            </select>
+                        </div>
+                        <div  class="col-sm-9  mb-2">
+                            <label or="pedido_item">Dados do Item:</label>
+                            <input type="text" class="form-control   search" id="item_busca" name="t_item" value="" <?=$disabled?>/>
+                            <input type="hidden" class="form-control  " id="pedido_item_id" name="pedido_item_id" value="" <?=$disabled?>/>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div  class="col-sm-2 form-group">
+                            <label or="item_pedido_valor_unitario">Valor Unitário:</label>
+                            <input type="text" class="form-control  money" id="item_pedido_valor_unitario" name="item_pedido_valor_unitario" value="" <?=$disabled?>/>
+                        </div>
+                        <div  class="col-sm-2 form-group">
+                            <label or="item_pedido_quantidade">Quantidade:</label>
+                            <input type="text" class="form-control" id="item_pedido_quantidade" name="item_pedido_quantidade" value="" <?=$disabled?>/>
+                        </div>
+                        <div  class="col-sm-2 form-group">
+                            <label or="item_pedido_valor_desconto">Valor Desconto:</label>
+                            <input type="text" class="form-control money" id="item_pedido_valor_desconto" name="item_pedido_valor_desconto" value="" <?=$disabled?>/>
+                        </div>
+                        <div  class="col-sm-2 form-group">
+                            <label or="item_pedido_valor_total">Total:</label>
+                            <input type="text" class="form-control money" id="item_pedido_valor_total" name="item_pedido_valor_total" value="" readonly/>
+                        </div>
+                        <div  class="col-sm-12 form-group" style="padding-top: 29.5px;">
+                            <button type="button" class="btn btn-info" id="btnAdicionaItem" style="width: 100%; " disabled >
+                                <span class="fas fa-plus"></span> Adicionar Item
+                            </button>
+                        </div>
+                        <?php
+                        if  ( $_SESSION['id'] != "" ){
+                            $itens = $bd->Execute($sql =
+                            "SELECT tip.pedido_simples_id
+                            ,	t_item.item_codigo || ' - ' ||t_item.item_descricao AS item
+                            ,	tip.item_pedido_id
+                            ,	tip.item_pedido_tabela_preco
+                            ,	tip.item_pedido_quantidade
+                            ,	tip.item_pedido_valor_unitario
+                            ,	tip.item_pedido_valor_desconto
+                            ,	tip.item_pedido_valor_total
+                                FROM t_item_pedido AS tip
+                                INNER JOIN t_item ON ( t_item.item_id  = tip.item_pedido_produto_id  )
+                            WHERE tip.pedido_simples_id = {$_SESSION['id']};");
+                            ?>
 
-      
-    </section>
-    <!-- /.content -->
-  </div>
-  
+                            <div class="col-sm-12 row">
+                                <table class="table" id="itens_table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" width="5%"  >#            </th>
+                                            <th class="text-center" width="35%" >Item       </th>
+                                            <th class="text-center" width="10%" >Tb. Preço  </th>
+                                            <th class="text-center" width="10%" >Quantidade </th>
+                                            <th class="text-center" width="10%" >R$ Unt.    </th>
+                                            <th class="text-center" width="10%" >R$ Desconto</th>
+                                            <th class="text-center" width="10%" >R$ TOTAL   </th>
+                                            <th class="text-center" width="10%" >Ações      </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        while ( !$itens->EOF ){ ?>
+                                            <tr>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_id']                ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item']                          ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_tabela_preco']      ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_quantidade']        ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_valor_unitario']    ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_valor_desconto']    ?></td>
+                                                <td class="text-center"><?php print $itens->fields['item_pedido_valor_total']       ?></td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btnRemoveItem" id="btnRemoveItem_<?php print $itens->fields['item_pedido_id']?>" name="<?php print $itens->fields['item_pedido_id']?>" <?=$disabled?>>
+                                                        <span class="fas fa-trash"></span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                            $itens->MoveNext();
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer  align-content-center">
+        <div class="row">
+            <?php if ( $_SESSION['op'] == "insert" || $_SESSION['op'] == "edit" ){ ?>
+            <div class="col-sm-2 ">
+                <button type="button" class="btn btn-primary form-control" id="btnSalvar">
+                    <span class="fas fa-save"></span>
+                    Salvar
+                </button>
+            </div>
+            <?php } ?>
+            <?php if ( $_SESSION['op'] == "delete" ){ ?>
+                <div class="col-sm-2 ">
+                    <button type="button" class="btn btn-danger form-control" id="btnExcluir">
+                        <span class="fas fa-trash"></span>
+                        Excluir
+                    </button>
+                </div>
+            <?php } ?>
+            <div class="col-sm-2 ">
+                <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_pdv_simple','','', 'movimentacao','','')">
+                    <span class="fas fa-retweet"></span>
+                    Voltar
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-footer-->
+    </div>
+
+    <?php } ?>
+</section>
 <?php include_once "../../_man/search/_searchData.php"; ?>
 <script type="text/javascript">
-    
+
     function removeMaskMoney (x){
         x = ""+x;
         if ((x.replace(",", ".") != x )){
@@ -453,19 +397,19 @@
 
     $(document).ready(function($){
 
-        
-        //Máscaras e validações        
+
+        //Máscaras e validações
         $('.money').mask('000.000.000.000.000,00', {reverse: true});
-        $(".money").change(function(){ $("#value").html($(this).val().replace(/\D/g,''))});        
+        $(".money").change(function(){ $("#value").html($(this).val().replace(/\D/g,''))});
         $("#empresa_cep").mask("99.999-999");
         $(".telefone_fixo").mask("(99) 9999-9999");
         $("#empresa_tipo_pessoa").on("change",function(){ addMascarasCPF_CNPJ();  });
-        
+
         $("#empresa_tipo").on("change", function(){ validaEmpresaMatriz(); });
 
         $("#aba-pedido-item, #aba-participante-contato").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").hide(); });
         $("#aba-pedido-geral").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").show(); });
-        
+
 
         //Calculando os valores totais
         $(".money, #item_pedido_quantidade").on("change", function(){
@@ -477,7 +421,7 @@
             var unitario   = removeMaskMoney($("#item_pedido_valor_unitario").val())    > 0 ? removeMaskMoney($("#item_pedido_valor_unitario").val()) : 0 ;
             var desconto   = removeMaskMoney($("#item_pedido_valor_desconto").val())    > 0 ? removeMaskMoney($("#item_pedido_valor_desconto").val()) : 0 ;
             var total      = 0;
-            
+
             //Calculando o Total
             total = ( quantidade * unitario ) - desconto;
 
@@ -488,11 +432,11 @@
             }
 
         });
-                           
+
        //Fim - Máscaras e Validações
-       
-       
-       
+
+
+
        //Função que valida os dados inseridos no banco de dados.
        $(".unique").on("change", function(){
            var v1   = "t_empresas";
@@ -500,42 +444,42 @@
            var v3   = "=";
            var v4   = $(this).val();
            var v    = "duplicate";
-           
+
            validaData(v1, v2, v3, v4, v);
        });
-       
+
        $("#empresa_cep").on("change",function(){
            $(".cep").prop("disabled",true);
-           
+
             $.ajax({
                 url: "<?= $_SERVER[localhost] ?>/sys/_man/rest_api/api_cep_correios.php",
                 type: "post",
                 dataType: "json",
-                data: { 
+                data: {
                     cep: $(this).val()
                 },
                 success: function(retorno){
-                    
+
                     $(".cep").prop("disabled", false);
                     $("#empresa_uf").val(retorno.dados.estado);
                     $("#empresa_codigo_municipio_descricao").val(retorno.dados.cod_cidade + " - " + retorno.dados.cidade);
                     $("#empresa_codigo_municipio").val(retorno.dados.cod_cidade);
                 }
-            }); 
+            });
        });
-       
+
 
         $(".search").on("keypress", function(){
            var table = $(this).prop("name");
            var input = $(this).prop("id");
-           
-           $(".search").autocomplete({                        
+
+           $(".search").autocomplete({
                 source: function( request, response){
                     $.ajax({
                         url: "<?= $_SERVER["localhost"] ?>/sys/_man/search/_searchData.php",
                         type: "post",
                         dataType: "json",
-                        data: { 
+                        data: {
                             descricao: request.term,
                             table: table,
                             tipo: "busca_item"
@@ -562,26 +506,26 @@
                     $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
                 }
             });
-           
+
         });
-        
+
         //Movimentações do botões que farão a função de modificar os itens
         $("#btnAdicionaItem").on("click", function(){ movimentaItens("novo", "", "item_pedido") });
         $(".btnRemoveItem").on("click", function(){ movimentaItens("delete", $(this).prop("name"), "item_pedido") });
 
         // $("#btnAdicionarEndereco").on("click", function(){ movimentaItens("novo","","endereco"); });
         // $(".btnRemoveItem"       ).on("click", function(){ movimentaItens("delete",$(this).prop("name"),"endereco"); });
-        // $("#btnAdicionarContato" ).on("click", function(){ movimentaItens("novo","","contato"); });        
-        // $(".btnRemoveItemContato").on("click", function(){ movimentaItens("delete",$(this).prop("name"),"contato");  });     
+        // $("#btnAdicionarContato" ).on("click", function(){ movimentaItens("novo","","contato"); });
+        // $(".btnRemoveItemContato").on("click", function(){ movimentaItens("delete",$(this).prop("name"),"contato");  });
 
         function movimentaItens(tipo,id, method){
             $.ajax({
                 url: "<?= $_SERVER['localhost'] ?>/sys/_man/manutencao/mainAdmPdvSimple.php",
                 type: "post",
                 dataType: "text",
-                data: { 
+                data: {
                     op: method,
-                    type: tipo,          
+                    type: tipo,
                     id_movim: id,
                     item_pedido_tabela_preco      : $("#item_pedido_tabela").val(),
                     item_pedido_item_id           : $("#pedido_item_id").val(),
@@ -593,11 +537,11 @@
                 success: function(retorno){
                     location.reload();
                 }
-            }); 
+            });
         }
 
-        
-                          
+
+
     });
     </script>
 
