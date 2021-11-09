@@ -12,7 +12,7 @@ if(!isset($_SESSION["autoriza"])){
 
     <script language="javascript" type="text/javascript" charset="UTF-8">
         alert('Você não tem permissão para acessar esse arquivo.');
-        window.location.href = "../sys/";
+        window.location.href = "../mmflow/";
     </script>
 
 <?php }
