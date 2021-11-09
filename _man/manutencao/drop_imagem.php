@@ -7,8 +7,8 @@
 session_start();
 
 $name  = "user_{$_SESSION['user_id']}.jpg";                    //Definindo um novo nome para o arquivo
-$dir   = "{$_SERVER["DOCUMENT_ROOT"]}/sys/dist/img/";          //Diretório para uploads     
+$dir   = "{$_SERVER["DOCUMENT_ROOT"]}/mmflow/dist/img/";          //Diretório para uploads     
 
 unlink($dir.$name);
 
-header("Location: /sys/index.php");
+header("Location: /mmflow/index.php");

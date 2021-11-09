@@ -13,7 +13,7 @@
     session_destroy();
     
 //    $bd->Close();   
-//    header("location: /sys/index.php" );
+//    header("location: /mmflow/index.php" );
 //    header("Location: .$newURL.php");
 
 //die();

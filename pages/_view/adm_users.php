@@ -165,7 +165,7 @@
       </div>
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/sys/_man/manutencao/mainAdmUser.php" method="post" id="frmDados">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmUser.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link active" >Dados Usuário</a>
@@ -273,7 +273,7 @@
     <div class="row col-sm-12 profile">
         <div  class="col-sm-2  mb-2">
             <label for="user_photo">Foto de Perfil (JPG):</label>
-            <form method="POST" action="<?= $_SERVER["localhost"] ?>/sys/_man/manutencao/upload_imagem.php" enctype="multipart/form-data">
+            <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/upload_imagem.php" enctype="multipart/form-data">
                 <input  class="form-group" id="arquivo" name="arquivo" type="file" >
                 <input  class="form-group" type="submit" value="Upload" >
             </form>
@@ -286,7 +286,7 @@
                 </div>
             </div>            
             <div  class="col-sm-2  mb-2 ">
-                <form method="POST" action="<?= $_SERVER["localhost"] ?>/sys/_man/manutencao/drop_imagem.php">
+                <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/drop_imagem.php">
                     <input  class="form-group text-danger" type="submit" value="Remover Imagem" >
                 </form>
             </div>
@@ -364,7 +364,7 @@ $(document).ready(function($){
 
     function buscaSelect(){
         $.ajax({
-            url: "<?= $_SERVER["localhost"] ?>/sys/_man/search/_searchSelect.php",
+            url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchSelect.php",
             type: "post",
             dataType: "json",
             data: { 
@@ -386,7 +386,7 @@ $(document).ready(function($){
 
     function buscaTableLinha(){
         $.ajax({
-            url: "<?= $_SERVER["localhost"] ?>/sys/_man/search/_selectTableLinha.php",
+            url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_selectTableLinha.php",
             type: "post",
             dataType: "json",
             data: { 
@@ -406,7 +406,7 @@ $(document).ready(function($){
 
     function refeshPermissao(){                
         $.ajax({
-            url: "<?= $_SERVER["localhost"] ?>/sys/_man/manutencao/mainAdmUser.php",
+            url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/mainAdmUser.php",
             type: "post",
             dataType: "text",
             data: { 
@@ -444,7 +444,7 @@ $(document).ready(function($){
        $(".cep").prop("disabled",true);
 
         $.ajax({
-            url: "<?= $_SERVER["localhost"] ?>/sys/_man/rest_api/api_cep_correios.php",
+            url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/rest_api/api_cep_correios.php",
             type: "post",
             dataType: "json",
             data: { 
@@ -467,7 +467,7 @@ $(document).ready(function($){
        $(".search").autocomplete({                        
             source: function( request, response){
                 $.ajax({
-                    url: "<?= $_SERVER["localhost"] ?>/sys/_man/search/_searchData.php",
+                    url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchData.php",
                     type: "post",
                     dataType: "json",
                     data: { 

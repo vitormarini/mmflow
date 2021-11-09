@@ -422,7 +422,7 @@
 <?php include_once './_import/scripts.php'; ?>
 <?php include_once './_import/modals.php'; ?>
 
-<script src="<?=$_SERVER['localhost']?>/sys/_man/functions.js"></script>
+<script src="<?=$_SERVER['localhost']?>/mmflow/_man/functions.js"></script>
 <script type="text/javascript">
     function movPage(destino, op, id, tipo, menu, submenu){
       $.ajax({

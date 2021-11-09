@@ -156,7 +156,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="<?= $_SERVER['localhost'] ?>/sys/_man/manutencao/mainAdmMenus.php" method="post" id="frmDados">
+            <form action="<?= $_SERVER['localhost'] ?>/mmflow/_man/manutencao/mainAdmMenus.php" method="post" id="frmDados">
                 <div class="row">
                     <div class="col-sm-5">
                         <label for="menu_descricao" >Descrição do Menu:</label>

@@ -147,7 +147,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="<?= $_SERVER['localhost']?>/sys/_man/manutencao/mainAdmSubMenus.php" method="post" id="frmDados">
+            <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmSubMenus.php" method="post" id="frmDados">
                 <div class="form-group row">
                     <div class="col-sm-2">
                         <label for="menu_descricao" >Menu Principal:</label>

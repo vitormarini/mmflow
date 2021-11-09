@@ -164,7 +164,7 @@
 
       </div>
       <div class="card-body">
-          <form action="<?= $_SERVER['localhost']?>/sys/_man/manutencao/mainAdmItem.php" method="post" id="frmDados">
+          <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmItem.php" method="post" id="frmDados">
               <ul class="nav nav-tabs" role="tablist">
                   <li class="nav-item">
                       <a href="#participante_geral" id="aba-participante-geral"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?>" >Dados Gerais</a>
@@ -879,7 +879,7 @@
         
         function movimentaItens(tipo,id, method){
             $.ajax({
-                url: "<?= $_SERVER['localhost'] ?>/sys/_man/manutencao/mainAdmParticipante.php",
+                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/manutencao/mainAdmParticipante.php",
                 type: "post",
                 dataType: "text",
                 data: { 
@@ -942,7 +942,7 @@
            $(".cep").prop("disabled",true);
            
             $.ajax({
-                url: "<?= $_SERVER['localhost'] ?>/sys/_man/rest_api/api_cep_correios.php",
+                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/api_cep_correios.php",
                 type: "post",
                 dataType: "json",
                 data: { 
@@ -967,7 +967,7 @@
            $(".search").autocomplete({                        
                 source: function( request, response){
                     $.ajax({
-                        url: "<?= $_SERVER["localhost"] ?>/sys/_man/search/_searchData.php",
+                        url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchData.php",
                         type: "post",
                         dataType: "json",
                         data: { 
