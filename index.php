@@ -31,11 +31,7 @@
       <p class="login-box-msg">Digite seu usário e senha 2 :</p>
 
       <form action="./_man/validaLogin.php" method="post" id="frmDados">
-        <div class="input-group mb-3">
-            <select class="form-control" id="empresas" name="empresas">
-                <option value="1"> 1 - Humana Alimentar</option>
-            </select>
-        </div>
+        <input type="hidden" id="empresas" name="empresas">
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="<?php print date("Y"); ?>" id="periodo" name="periodo"onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             <div class="input-group-append">
@@ -80,22 +76,54 @@
     <!-- /.login-card-body -->
   </div>
 </div>
+<div class="modal fade" id="modal_empresas" name="modal_empresas">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ESCOLHA EMPRESA</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">                
+                <div class="col-lg-12">                    
+                    <select class="form-control" id="empresa_modal" name="empresa_modal">
+                        <option value="1"> 1 - Humana Alimentar</option>
+                    </select>
+                </div>                
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnContinuar" name="btnContinuar">Continuar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <!-- /.login-box -->
 <?php include_once './_import/scripts.php'; ?>
 
 <script src="_man/functions.js"></script>
 <script type="text/javascript">
     
-    $(document).ready( function(){
-                
-       //Função para registrar evendo no banco de dados.
-       $("#btnLogin").on("click", function(){    
-        login('menu_sys.php');
-    
+$(document).ready( function(){
+            
+    //Função para registrar evendo no banco de dados.
+    $("#btnLogin").on("click", function(){    
+        $("#modal_empresas").modal("show");           
     });              
-       
-                          
+    
+    $("#btnContinuar").on("click",function(){
+        setTimeout(function () {
+            $("#modal_empresas").modal("hide");
+            location.href = "" + ret;
+        }, 1000);
+        $("#empresas").val( $("#empresa_modal option:selected").val() );        
+        login('menu_sys.php');
     });
+                        
+});
 </script>
 </body>
 </html>
