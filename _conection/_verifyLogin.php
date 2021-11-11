@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Programa que verifica a conexão com o usuário, se ainda está permanente
  * Author: Vitor Hugo Marini
