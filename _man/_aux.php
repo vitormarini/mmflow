@@ -693,12 +693,12 @@ function colocaMaiusculo(){
         $var     = str_replace("  "," ",$var);
         
         //Alfabeto
-        $var     = str_replace(array("a","ã","á","â","à","Ã","Á","Â","À"),"A",$var);
-        $var     = str_replace(array("c","ç"),"C",$var);
-        $var     = str_replace(array("e","é","è","ê","É","È","Ê"),"E",$var);
-        $var     = str_replace(array("i","í","ì","Í","Ì"),"I",$var);
-        $var     = str_replace(array("o","ó","ò","õ","ô","Ó","Ò","Ô","Õ"),"O",$var);        
-        $var     = str_replace(array("u","ú","ù","û","Ú","Ù","Û"),"U",$var);
+        //$var     = str_replace(array("a","ã","á","â","à","Ã","Á","Â","À"),"A",$var);
+        //$var     = str_replace(array("c","ç"),"C",$var);
+        //$var     = str_replace(array("e","é","è","ê","É","È","Ê"),"E",$var);
+        //$var     = str_replace(array("i","í","ì","Í","Ì"),"I",$var);
+        //$var     = str_replace(array("o","ó","ò","õ","ô","Ó","Ò","Ô","Õ"),"O",$var);        
+        //$var     = str_replace(array("u","ú","ù","û","Ú","Ù","Û"),"U",$var);
                                         
         return $var;
     }

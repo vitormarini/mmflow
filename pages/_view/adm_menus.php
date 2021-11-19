@@ -4,40 +4,42 @@
    <!-- INICIAMOS O MODO TELA -->
     <?php  if ( $_SESSION['op'] == "" ){
 
-      $buscas = explode("&",$_SESSION["buscas"]);
-      $filtro_busca = $where = "";
-      if ( count($buscas) > 0 ){
-          $where = 
-          "WHERE menu_id IS NOT NULL 
-             AND ( menu_descricao ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                OR menu_url       ILIKE '%".explode("=", $buscas[0])[1]."%' )";
+        $buscas = explode("&",$_SESSION["buscas"]);
+        $filtro_busca = $where = "";
+        if ( !empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
+            $where = 
+            "WHERE menu_id IS NOT NULL 
+             AND ( menu_descricao ILIKE '%{$filtro_busca}%' 
+                OR menu_url       ILIKE '%{$filtro_busca}%' )";
 
-          $filtro_busca = explode("=", $buscas[0])[1];
-      } 
+            $filtro_busca = explode("=", $buscas[0])[1];
+        } 
     ?>        
 <!-- Default box -->
     <div class="card body-view">
         <div class="card-header">
-            <div class="row">
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_menus','insert','', 'movimentacao','','')">
-                        <span class="fas fa-plus"></span>
-                        Novo Item
-                    </button>                  
-                </div>             
-                <div class="col-sm-8">
-                    <div class="col-sm-12">                        
-                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca ?>" placeholder="Busque pela Descrição ou Url..."/>
+            <form role="search" method="post" action="menu_sys.php">
+                <div class="row">
+                    <div class="col-sm-2">                  
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_menus','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>                  
+                    </div>             
+                    <div class="col-sm-8">
+                        <div class="col-sm-12">                        
+                            <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Descrição ou Url..."/>
+                        </div>
+                    </div>              
+                    <div class="col-sm-2">                  
+                        <button type="submit" class="btn btn-info buscas" id="btnBusca">
+                            <span class="fas fa-search"></span>
+                            Pesquisar
+                        </button>                  
                     </div>
-                </div>              
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_menus','','', 'movimentacao','','')">
-                        <span class="fas fa-search"></span>
-                        Pesquisar
-                    </button>                  
                 </div>
-            </div>
-
+            </form>
             <?php
             #Preparamos o filtro da pesquisa
             $intPaginaAtual = ( $_SESSION['p'] );
@@ -48,9 +50,7 @@
             #buscamos os dados
             $sql = "SELECT menu_id, menu_descricao, menu_icon, menu_url FROM public.t_menu {$where} ORDER BY 1;";
 
-
             $dados = $bd->Execute($sql);
-
 
             #Setamos a quantidade de itens na busca
             $qtdRows = $dados->RecordCount();

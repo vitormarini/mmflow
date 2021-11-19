@@ -1,40 +1,45 @@
 <!-- Main content -->
 <section class="content">
    <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
-        $buscas = explode("&",$_SESSION["buscas"]);
+    <?php  
+    if ( $_SESSION['op'] == "" ){
         $filtro_busca = $where = "";
-        if ( count($buscas) > 0 ){
+        if ( !empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
             $where = 
             "WHERE menu_sub_id IS NOT NULL 
-               AND ( menu_submenu_descricao ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                  OR menu_submenu_url       ILIKE '%".explode("=", $buscas[0])[1]."%' )";
+               AND ( menu_submenu_descricao ILIKE '%{$filtro_busca}%' 
+                  OR menu_submenu_url       ILIKE '%{$filtro_busca}%'
+                  OR t_menu.menu_descricao  ILIKE '%{$filtro_busca}%'
+                  OR menu_submenu_categoria ILIKE '%{$filtro_busca}%' )";
 
-            $filtro_busca = explode("=", $buscas[0])[1];
+            $filtro_busca = $_POST['filtro_busca'];
         } 
     ?>
     <!-- Default box -->
     <div class="card body-view">
         <div class="card-header">
-            <div class="row">
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_submenus','insert','', 'movimentacao','','')">
-                      <span class="fas fa-plus"></span>
-                      Novo Item
-                  </button>                  
-                </div>
-                <div class="col-sm-8">
-                    <div class="col-sm-12">                        
-                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Descrição ou Url..."/>
+            <form role="search" method="post" action="menu_sys.php">
+                <div class="row">
+                    <div class="col-sm-2">                  
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_submenus','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>                  
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="col-sm-12">                        
+                            <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Descrição do menu, submenu e categoria ou Url..."/>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">                  
+                        <button type="submit" class="btn btn-info" id="btnBusca">
+                            <span class="fas fa-search"></span>
+                            Pesquisar
+                        </button>                  
                     </div>
                 </div>
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_submenus','','', 'movimentacao','','')">
-                        <span class="fas fa-search"></span>
-                        Pesquisar
-                    </button>                  
-               </div>
-            </div>
+            </form>
             <?php      
             #Preparamos o filtro da pesquisa
             $intPaginaAtual = ( $_SESSION['p'] );
@@ -43,11 +48,11 @@
             $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );                                   
 
             #buscamos os dados
-            $sql = "SELECT menu_sub_id, menu_submenu_descricao, menu_submenu_icon, menu_submenu_url, t_menu.menu_descricao, menu_submenu_categoria
-                     FROM public.t_menu_sub
-                     INNER JOIN t_menu ON ( t_menu.menu_id = t_menu_sub.menu_id ) 
-                     {$where} ORDER BY 1;";
-
+            $sql = "SELECT  menu_sub_id, menu_submenu_descricao, menu_submenu_icon, menu_submenu_url, t_menu.menu_descricao, menu_submenu_categoria
+                    FROM    t_menu_sub
+                    INNER JOIN t_menu ON ( t_menu.menu_id = t_menu_sub.menu_id ) 
+                    {$where} 
+                    ORDER BY 1;";                     
 
             $dados = $bd->Execute($sql);
 

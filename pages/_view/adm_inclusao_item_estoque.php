@@ -1,41 +1,40 @@
 <!-- Main content -->
 <section class="content">
     <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
-
-    $buscas = explode("&",$_SESSION["buscas"]);
-    $filtro_busca = $where = "";
-    if ( count($buscas) > 0 ){
-        $where =
-        "WHERE ped.pedido_simples_id IS NOT NULL
-            AND ( ped.pedido_simples_id::text ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-
-        $filtro_busca = explode("=", $buscas[0])[1];
-    }
+    <?php  
+    if ( $_SESSION['op'] == "" ){        
+        $filtro_busca = $where = "";
+        if (!empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
+            $where =
+            "WHERE ped.pedido_simples_id IS NOT NULL
+                AND ( ped.pedido_simples_id::text ILIKE '%{$filtro_busca}%' )";            
+        }
     ?>
     <!-- Default box -->
     <div class="card body-view">
         <div class="card-header">
-            <div class="row">
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_inclusao_item_estoque','insert','', 'movimentacao','','')">
-                        <span class="fas fa-plus"></span>
-                        Novo Item
-                    </button>
-                </div>
-                <div class="col-sm-8">
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+            <form role="search" method="post" action="menu_sys.php">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_inclusao_item_estoque','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-info" id="btnBusca">
+                            <span class="fas fa-search"></span>
+                            Pesquisar
+                        </button>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_inclusao_item_estoque','','', 'movimentacao','','')">
-                        <span class="fas fa-search"></span>
-                        Pesquisar
-                    </button>
-                </div>
-            </div>
-
+            </form>
             <?php
             #Preparamos o filtro da pesquisa
             $intPaginaAtual = ( $_SESSION['p'] );
@@ -45,7 +44,7 @@
 
             #buscamos os dados
             $sql = "
-                SELECT  ped.pedido_simples_id	        , ped.pedido_simples_data_abertura
+                SELECT  ped.pedido_simples_id	        , databrasil(ped.pedido_simples_data_abertura) AS pedido_simples_data_abertura
                     , 	ped.pedido_simples_situacao	    , ped.participante_id
                     ,	CASE
                             WHEN ped.pedido_simples_situacao = '1' THEN 'ABERTO'
@@ -80,11 +79,11 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th width="10%" class="text-center">Número Pedido   </th>
-                                <th width="10%" class="text-center">Data            </th>
-                                <th width="30%" class="text-center">Cliente         </th>
-                                <th width="20%" class="text-center">Situação        </th>
-                                <th width="20%" class="text-center">Valor Total     </th>
+                                <th width="13%" class="text-center">Número Pedido   </th>
+                                <th width="08%" class="text-center">Data            </th>
+                                <th width="42%" class="text-center">Cliente         </th>
+                                <th width="12%" class="text-center">Situação        </th>
+                                <th width="15%" class="text-right" >Valor Total     </th>
                                 <th width="10%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
@@ -93,11 +92,11 @@
                             if ( $dados->RecordCount() > 0 ){
                                 while ( !$dados->EOF ) { ?>
                             <tr>
-                                <td class="text-center"><?= $dados->fields['pedido_simples_id']                 ?></td>
-                                <td class="text-left"  ><?= $dados->fields['pedido_simples_data_abertura']      ?></td>
-                                <td class="text-left"  ><?= $dados->fields['participante_descricao']            ?></td>
-                                <td class="text-left"  ><?= $dados->fields['situacao_descricao']                ?></td>
-                                <td class="text-left"  ><?= $dados->fields['pedido_simples_situacao']           ?></td>
+                                <td class="text-center"><?= $dados->fields['pedido_simples_id']                                 ?></td>
+                                <td class="text-left"  ><?= $dados->fields['pedido_simples_data_abertura']                      ?></td>
+                                <td class="text-left"  ><?= $dados->fields['participante_descricao']                            ?></td>
+                                <td class="text-center"><?= $dados->fields['situacao_descricao']                                ?></td>
+                                <td class="text-right" ><?= number_format($dados->fields['pedido_simples_situacao'] ,2,",",".") ?></td>
                                 <td class="text-center">
                                     <button class="btn btn-success" onclick="movPage('adm_inclusao_item_estoque','view','<?= $dados->fields['pedido_simples_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
                                         <i class="fas fa-eye"></i>
@@ -120,7 +119,7 @@
                                 }
                             }else{ ?>
                             <tr>
-                                <td colspan="4" class="text-center">Não existem dados a serem listados!!!</td>
+                                <td colspan="6" class="text-center">Não existem dados a serem listados!!!</td>
                             </tr>
                             <?php } ?>
                         </tbody>

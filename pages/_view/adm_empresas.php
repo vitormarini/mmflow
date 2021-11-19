@@ -1,42 +1,42 @@
 <!-- Main content -->
 <section class="content">
+    
    <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
+    <?php  if ( $_SESSION['op'] == "" ){  
 
-        $buscas = explode("&",$_SESSION["buscas"]);
         $filtro_busca = $where = "";
-        if ( count($buscas) > 0 ){
+        if ( !empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
             $where = 
             "WHERE empresa_id IS NOT NULL 
-               AND ( empresa_cnpj ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                  OR empresa_razao_social       ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-
-            $filtro_busca = explode("=", $buscas[0])[1];
+               AND ( empresa_cnpj           ILIKE '%{$filtro_busca}%' 
+                  OR empresa_razao_social   ILIKE '%{$filtro_busca}%' )";            
         } 
     ?>
   <!-- Default box -->
   <div class="card body-view">
-    <div class="card-header">          
-        <div class="row">
-            <div class="col-sm-2">                  
-                <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_empresas','insert','', 'movimentacao','','')">
-                  <span class="fas fa-plus"></span>
-                  Novo Item
-              </button>                  
-            </div>
-            <div class="col-sm-8">
-                <div class="col-sm-12">                        
-                    <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+    <div class="card-header">  
+        <form role="search" method="post" action="menu_sys.php">
+            <div class="row">
+                <div class="col-sm-2">                  
+                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_empresas','insert','', 'movimentacao','','')">
+                    <span class="fas fa-plus"></span>
+                    Novo Item
+                </button>                  
+                </div>
+                <div class="col-sm-8">
+                    <div class="col-sm-12">                        
+                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+                    </div>
+                </div>
+                <div class="col-sm-2">                  
+                <button type="submit" class="btn btn-info">
+                    <span class="fas fa-search"></span>
+                    Pesquisar
+                </button>                  
                 </div>
             </div>
-            <div class="col-sm-2">                  
-              <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_empresas','','', 'movimentacao','','')">
-                  <span class="fas fa-search"></span>
-                  Pesquisar
-              </button>                  
-            </div>
-        </div>
-
+        </form>
        <?php      
         #Preparamos o filtro da pesquisa
         $intPaginaAtual = ( $_SESSION['p'] );
@@ -52,7 +52,6 @@
                     ,   empresa_id
                 FROM    t_empresas {$where} 
                 ORDER BY empresa_cnpj;";
-
 
         $dados = $bd->Execute($sql);
 
@@ -110,7 +109,7 @@
                             } 
                         }else{ ?>
                         <tr>
-                            <td colspan="4" class="text-center">Não existem dados a serem listados!!!</td>
+                            <td colspan="8" class="text-center">Não existem dados a serem listados!!!</td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -424,7 +423,7 @@
            $(".cep").prop("disabled",true);
            
             $.ajax({
-                url: "<?= $_SERVER[localhost] ?>/mmflow/_man/rest_api/api_cep_correios.php",
+                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/api_cep_correios.php",
                 type: "post",
                 dataType: "json",
                 data: { 

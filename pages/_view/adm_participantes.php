@@ -1,42 +1,41 @@
 <!-- Main content -->
 <section class="content">
    <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
-
-      $buscas = explode("&",$_SESSION["buscas"]);
-      $filtro_busca = $where = "";
-      if ( count($buscas) > 0 ){
-          $where = 
-          "WHERE participante_id IS NOT NULL 
-             AND ( participante_codigo     ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                OR participante_nome       ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-
-          $filtro_busca = explode("=", $buscas[0])[1];
+    <?php  
+    if ( $_SESSION['op'] == "" ){
+        if ( !empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
+            $where = 
+            "WHERE   participante_id IS NOT NULL 
+                AND ( participante_codigo     ILIKE '%{$filtro_busca}%' 
+                   OR participante_nome       ILIKE '%{$filtro_busca}%' )";          
       } 
     ?>
 
   <!-- Default box -->
   <div class="card body-view">
-    <div class="card-header">          
-        <div class="row">
-            <div class="col-sm-2">                  
-                <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_participantes','insert','', 'movimentacao','','')">
-                  <span class="fas fa-plus"></span>
-                  Novo Item
-                </button>
-            </div>
-            <div class="col-sm-8">
-                <div class="col-sm-12">                        
-                    <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+    <div class="card-header">  
+        <form role="search" method="post" action="menu_sys.php">        
+            <div class="row">
+                <div class="col-sm-2">                  
+                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_participantes','insert','', 'movimentacao','','')">
+                    <span class="fas fa-plus"></span>
+                    Novo Item
+                    </button>
                 </div>
+                <div class="col-sm-8">
+                    <div class="col-sm-12">                        
+                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+                    </div>
+                </div>
+                <div class="col-sm-2">                  
+                    <button type="submit" class="btn btn-info buscas" id="btnBusca">
+                        <span class="fas fa-search"></span>
+                        Pesquisar
+                    </button>                  
             </div>
-            <div class="col-sm-2">                  
-                <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_participantes','','', 'movimentacao','','')">
-                    <span class="fas fa-search"></span>
-                    Pesquisar
-                </button>                  
-           </div>
-        </div>
+            </div>
+        </form>
         <?php      
         #Preparamos o filtro da pesquisa
         $intPaginaAtual = ( $_SESSION['p'] );
@@ -49,10 +48,11 @@
                     ,   participante_codigo_pais                   ,   participante_tipo                              ,   participante_ie
                     ,   participante_ie_st                         ,   participante_suframa                           ,   participante_nit
                     ,   participante_im                            
-                    ,   CASE participante_cliente WHEN 'S' THEN 'SIM' ELSE 'NAO' END AS participante_cliente
+                    ,   CASE participante_cliente    WHEN 'S' THEN 'SIM' ELSE 'NAO' END AS participante_cliente
                     ,   CASE participante_fornecedor WHEN 'S' THEN 'SIM' ELSE 'NAO' END AS participante_fornecedor                    
                     ,   participante_representante
-                FROM    t_participante {$where} ORDER BY 2;";
+                FROM    t_participante {$where} 
+                ORDER BY 2;";
 
         $dados = $bd->Execute($sql);
 
@@ -73,8 +73,8 @@
                     <thead>
                         <tr>
                             <th width="05%" class="text-center">Tipo            </th>
-                            <th width="10%" class="text-left">Código          </th>
-                            <th width="40%" class="text-left">Nome            </th>
+                            <th width="10%" class="text-left"  >Código          </th>
+                            <th width="40%" class="text-left"  >Nome            </th>
                             <th width="08%" class="text-center">Cliente         </th>
                             <th width="08%" class="text-center">Fornecedor      </th>
                             <th width="10%" class="text-center">IE              </th>
@@ -87,11 +87,11 @@
                             while ( !$dados->EOF ) { ?>
                         <tr>
                             <td class="text-center"><?= $dados->fields['participante_tipo']             ?></td>
-                            <td class="text-left"><?= formataCpfCnpj($dados->fields['participante_codigo'],$dados->fields['participante_tipo'])    ?></td>
+                            <td class="text-left"  ><?= formataCpfCnpj($dados->fields['participante_codigo'],$dados->fields['participante_tipo'])    ?></td>
                             <td class="text-left"  ><?= $dados->fields['participante_nome']             ?></td>
-                            <td class="text-center"  ><?= $dados->fields['participante_cliente']          ?></td>
-                            <td class="text-center"  ><?= $dados->fields['participante_fornecedor']       ?></td>
-                            <td class="text-center"  ><?= $dados->fields['participante_ie']               ?></td>
+                            <td class="text-center"><?= $dados->fields['participante_cliente']          ?></td>
+                            <td class="text-center"><?= $dados->fields['participante_fornecedor']       ?></td>
+                            <td class="text-center"><?= $dados->fields['participante_ie']               ?></td>
                             <td class="text-center">
                                 <button class="btn btn-success" onclick="movPage('adm_participantes','view','<?= $dados->fields['participante_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
                                     <i class="fas fa-eye"></i>

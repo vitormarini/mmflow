@@ -1,41 +1,41 @@
 <!-- Main content -->
 <section class="content">
     <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
-        $buscas = explode("&",$_SESSION["buscas"]);
+    <?php  
+    if ( $_SESSION['op'] == "" ){        
         $filtro_busca = $where = "";
-        if ( count($buscas) > 0 ){
+        if ( !empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
             $where =
             "WHERE ped.pedido_simples_id IS NOT NULL
-                AND ( ped.pedido_simples_id::text ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-
-            $filtro_busca = explode("=", $buscas[0])[1];
+                AND ( ped.pedido_simples_id::text ILIKE '%{$filtro_busca}%' )";            
         }
     ?>
 
     <!-- Default box -->
     <div class="card body-view">
         <div class="card-header">
-            <div class="row">
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_pdv_simple','insert','', 'movimentacao','','')">
-                        <span class="fas fa-plus"></span>
-                        Novo Item
-                    </button>
-                </div>
-                <div class="col-sm-8">
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+            <form role="search" method="post" action="menu_sys.php">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_pdv_simple','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pelo número do pedido..."/>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-info" id="btnBusca">
+                            <span class="fas fa-search"></span>
+                            Pesquisar
+                        </button>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_pdv_simple','','', 'movimentacao','','')">
-                        <span class="fas fa-search"></span>
-                        Pesquisar
-                    </button>
-                </div>
-            </div>
-
+            </form>
             <?php
             #Preparamos o filtro da pesquisa
             $intPaginaAtual = ( $_SESSION['p'] );
@@ -54,10 +54,10 @@
                                 WHEN ped.pedido_simples_situacao = '5' THEN 'Pendente'
                             END AS situacao_descricao
                         ,	cpf_cnpj(p.participante_codigo,p.participante_tipo)|| ' - ' || p.participante_nome  AS participante_descricao
-                        FROM public.t_pedido_simples AS ped
-                        INNER JOIN t_participante AS p ON ( p.participante_id = ped.participante_id  )
+                    FROM    t_pedido_simples AS ped
+                    INNER JOIN t_participante AS p ON ( p.participante_id = ped.participante_id  )
                     {$where}
-                        AND ped.pedido_simples_situacao NOT IN ( '3' ) ";
+                        AND ped.pedido_simples_situacao NOT IN ('3') ";
 
 
             $dados = $bd->Execute($sql);
@@ -68,9 +68,9 @@
             ?>
 
             <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                <i class="fas fa-minus"></i>
-            </button>
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
         </div>
         <div class="card-body">
@@ -80,7 +80,7 @@
                         <thead>
                             <tr>
                                 <th width="15%" class="text-center">Número Pedido   </th>
-                                <th width="10%" class="text-center">Data   </th>
+                                <th width="10%" class="text-center">Data            </th>
                                 <th width="35%" class="text-center">Cliente         </th>
                                 <th width="15%" class="text-left"  >Situação        </th>
                                 <th width="10%" class="text-right" >Valor Total     </th>
@@ -116,7 +116,7 @@
                                 }
                             }else{ ?>
                             <tr>
-                                <td colspan="4" class="text-center">Não existem dados a serem listados!!!</td>
+                                <td colspan="6" class="text-center">Não existem dados a serem listados!!!</td>
                             </tr>
                             <?php } ?>
                         </tbody>

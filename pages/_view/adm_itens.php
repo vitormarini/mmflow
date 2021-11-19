@@ -2,42 +2,43 @@
 <section class="content">
 
    <!-- INICIAMOS O MODO TELA -->
-    <?php  if ( $_SESSION['op'] == "" ){
-
-      $buscas = explode("&",$_SESSION["buscas"]);
-      $filtro_busca = $where = "";
-      if ( count($buscas) > 0 ){
-          $where = 
-          "WHERE item_id IS NOT NULL 
-             AND ( item_codigo    ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                OR item_descricao ILIKE '%".explode("=", $buscas[0])[1]."%' 
-                OR item_ncm       ILIKE '%".explode("=", $buscas[0])[1]."%' )";
-
-          $filtro_busca = explode("=", $buscas[0])[1];
+    <?php  
+    if ( $_SESSION['op'] == "" ){
+        $buscas = explode("&",$_SESSION["buscas"]);
+        $filtro_busca = $where = "";
+        if (!empty($_POST['filtro_busca']) ){
+            $filtro_busca = retira_caracteres($_POST['filtro_busca']);
+            $where = 
+            "WHERE item_id IS NOT NULL 
+                AND ( item_codigo    ILIKE '%{$filtro_busca}%' 
+                   OR item_descricao ILIKE '%{$filtro_busca}%' 
+                   OR item_ncm       ILIKE '%{$filtro_busca}%' )";
       } 
     ?>
     <!-- Default box -->
     <div class="card body-view">
-        <div class="card-header">          
-            <div class="row">
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_itens','insert','', 'movimentacao','','')">
-                        <span class="fas fa-plus"></span>
-                        Novo Item
-                    </button>                  
-                </div>
-                <div class="col-sm-8">
-                    <div class="col-sm-12">                        
-                        <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $filtro_busca?>" placeholder="Busque pelo Código, Descrição, NCM..."/>
+        <div class="card-header">  
+            <form role="search" method="post" action="menu_sys.php">        
+                <div class="row">
+                    <div class="col-sm-2">                  
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_itens','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>                  
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="col-sm-12">                        
+                            <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pelo Código, Descrição, NCM..."/>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">                  
+                        <button type="submit" class="btn btn-info" id="btnBusca">
+                            <span class="fas fa-search"></span>
+                            Pesquisar
+                        </button>                  
                     </div>
                 </div>
-                <div class="col-sm-2">                  
-                    <button type="button" class="btn btn-info buscas" id="btnBusca" onclick="movPage('adm_itens','','', 'movimentacao','','')">
-                        <span class="fas fa-search"></span>
-                        Pesquisar
-                    </button>                  
-                </div>
-            </div>
+            </form>
             <?php      
              #Preparamos o filtro da pesquisa
              $intPaginaAtual = ( $_SESSION['p'] );
@@ -48,8 +49,8 @@
              #buscamos os dados
              $sql = "SELECT item_id             ,   item_codigo		,   item_descricao 
                         ,   item_codigo_barra 	,   item_und_inv	,   item_tipo 
-                        ,   item_ncm 		,   item_ex_ipi		,   item_cod_gen 
-                        ,   item_cod_lst 	,   item_aliq_icms      ,   item_cest 
+                        ,   item_ncm 		    ,   item_ex_ipi		,   item_cod_gen 
+                        ,   item_cod_lst 	    ,   item_aliq_icms  ,   item_cest 
                         ,   item_situacao
                      FROM t_item ti  {$where} 
                      ORDER BY 2;";
@@ -72,11 +73,11 @@
                         <thead>
                             <tr>
                                 <th width="10%">Código          </th>
-                                <th width="50%">Descrição       </th>
+                                <th width="40%">Descrição       </th>
                                 <th width="10%">NCM             </th>
                                 <th width="10%">Unidade         </th>
                                 <th width="10%">Tipo            </th>
-                                <th width="10%" class="text-center">Ações           </th>
+                                <th width="20%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +107,7 @@
                                 } 
                             }else{ ?>
                             <tr>
-                                <td colspan="7" class="text-center">Não existem dados a serem listados!!!</td>
+                                <td colspan="6" class="text-center">Não existem dados a serem listados!!!</td>
                             </tr>
                             <?php } ?>
                         </tbody>
