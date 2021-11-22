@@ -30,3 +30,30 @@
         </div>
     </div>
 </div>    
+
+<!-- MODAL DAS EMPRESAS -->
+<div class="modal fade" id="modal_empresas" name="modal_empresas">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ESCOLHA EMPRESA</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">                
+                <div class="col-lg-12">                    
+                    <select class="form-control" id="empresa_modal" name="empresa_modal">
+                        <option value="1"> 1 - Humana Alimentar </option>
+                    </select>
+                </div>                
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnContinuar" name="btnContinuar">Continuar</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

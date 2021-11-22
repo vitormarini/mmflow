@@ -131,12 +131,18 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
       </li>
-    </ul>
+        
+    </ul>    
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
+        <li class="nav-item alert-danger">
+            <a class="nav-link " data-widget="navbar-search" role="button" id="btnEmpresa" name="btnEmpresa" data-empresa="<?= $_SESSION['empresa'] ?>">
+                <?= $_SESSION['empresa_desc'] ?>
+            </a>        
+        </li>
       <!-- Navbar Search -->
-<!--      <li class="nav-item">
+      <!--<li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fas fa-search"></i>
         </a>
@@ -155,7 +161,7 @@
             </div>
           </form>
         </div>
-      </li>-->
+      </li> -->
 
       <!-- Messages Dropdown Menu -->
       <li class="nav-item">
@@ -170,7 +176,7 @@
         </div>
 
     </ul>
-  </nav>
+  </nav>  
   <!-- /.navbar -->
 
   <!-- Main Sidebar Container -->
@@ -459,9 +465,31 @@
         window.setInterval( atualizaContador, 600000 );
 
         //Função para registrar evendo no banco de dados.
-       $("#btnSalvar").on("click", function(){
+        $("#btnSalvar").on("click", function(){
             validateSave('index.php');
-       });
+        });
+
+        $("#btnEmpresa").on("click",function(){
+            $("#empresa_modal").val( $(this).data("empresa") );
+            $("#modal_empresas").modal("show");
+        });
+
+        $("#btnContinuar").on("click",function() {
+            $.ajax({
+                url: "./_man/validaLogin.php",
+                method: "post",
+                dataType: "text",
+                data: {
+                    op              : "troca_empresa",
+                    empresas        : $("#empresa_modal option:selected").val(),
+                    empresas_desc   : $("#empresa_modal option:selected").text(),
+                },
+                success: function (retorno) {
+                    location.reload();
+                }
+            });
+            return false; 
+        });
 
     });
 

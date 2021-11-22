@@ -8,7 +8,8 @@ include_once "../_conection/_conect.php";
 include_once "./_aux.php";
 
 $pass = md5($_POST['pass']);
-$user = retiraAcentos($_POST['user']);
+$user = $_POST['op'] == "troca_empresa" ? retiraAcentos($_SESSION['user_nickname']) : retiraAcentos($_POST['user']);
+$and  = $_POST['op'] == "troca_empresa" ? "" : "AND   user_pass = '{$pass}'";
 
 $data = $bd->Execute($sql = 
 "SELECT user_id 
@@ -19,7 +20,7 @@ $data = $bd->Execute($sql =
 ,	1 AS login
  FROM 	t_user 
 WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
-  AND   user_pass = '{$pass}';");    
+  {$and};");
   
 
 //Valida a inserção do usuário e verificando se existe ou não o valor
@@ -40,6 +41,8 @@ if ( $data->fields['login'] == 1){
     $_SESSION['buscas']         = "";    
     $_SESSION['p']              = "1";    //Página da movimentação da Linha
     $_SESSION['autoriza']       = true;    //Página da movimentação da Linha
+    $_SESSION['empresa']        = $_POST['empresas'];
+    $_SESSION['empresa_desc']   = $_POST['empresas_desc'];
     
     
     $retorno = "OK";
