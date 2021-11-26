@@ -44,7 +44,7 @@
             <div class="modal-body">                
                 <div class="col-lg-12">                    
                     <select class="form-control" id="empresa_modal" name="empresa_modal">
-                        <option value="1"> 1 - Humana Alimentar </option>
+                        <option value="1"> 1 - Humana Alimentar </option>                        
                     </select>
                 </div>                
             </div>

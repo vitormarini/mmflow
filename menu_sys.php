@@ -137,7 +137,7 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <li class="nav-item alert-danger">
-            <a class="nav-link " data-widget="navbar-search" role="button" id="btnEmpresa" name="btnEmpresa" data-empresa="<?= $_SESSION['empresa'] ?>">
+            <a class="btn btn-danger" data-widget="navbar-search" role="button" id="btnEmpresa" name="btnEmpresa" data-empresa="<?= $_SESSION['empresa'] ?>">
                 <?= $_SESSION['empresa_desc'] ?>
             </a>        
         </li>
@@ -475,20 +475,7 @@
         });
 
         $("#btnContinuar").on("click",function() {
-            $.ajax({
-                url: "./_man/validaLogin.php",
-                method: "post",
-                dataType: "text",
-                data: {
-                    op              : "troca_empresa",
-                    empresas        : $("#empresa_modal option:selected").val(),
-                    empresas_desc   : $("#empresa_modal option:selected").text(),
-                },
-                success: function (retorno) {
-                    location.reload();
-                }
-            });
-            return false; 
+            selecionaEmpresa("troca_empresa");
         });
 
     });

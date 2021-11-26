@@ -154,7 +154,7 @@
         <div class="card-body">
             <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmSubMenus.php" method="post" id="frmDados">
                 <div class="form-group row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <label for="menu_descricao" >Menu Principal:</label>
                         <select class="form-control requeri" id="menu_id" name="menu_id">
                             <option value="" <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>> Selecione </option>
@@ -167,7 +167,7 @@
                             ?>
                       </select>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                       <label for="menu_descricao" >Categoria:</label>
                       <select class="form-control requeri" id="menu_submenu_categoria" name="menu_submenu_categoria">
                           <option value="" <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>> Selecione </option>        

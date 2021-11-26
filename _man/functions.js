@@ -60,7 +60,8 @@ function login() {
         data: $("#frmDados").serialize(),
         success: function (retorno) {
             if (retorno == "OK") {
-                location.href = "menu_sys.php";
+                //location.href = "menu_sys.php";
+                $("#modal_empresas").modal("show");
             } else {
                 alert('Usuario e/ou senha incorreto(s)');
                 location.href = "index.php";
@@ -126,4 +127,29 @@ function validaData(v1, v2, v3, v4, v) {
             }
         }
     });
+}
+
+function selecionaEmpresa(retorno) {
+    $.ajax({
+        url: "./_man/validaLogin.php",
+        method: "post",
+        dataType: "text",
+        data: {
+            op: "troca_empresa",
+            empresas: $("#empresa_modal option:selected").val(),
+            empresas_desc: $("#empresa_modal option:selected").text(),
+        },
+        success: function (retorno) {
+            if (retorno == "login") {
+                setTimeout(function () {
+                    $("#modal_empresas").modal("hide");
+                    location.href = "menu_sys.php";
+                }, 1000);
+            } else {
+                location.reload();
+            }
+
+        }
+    });
+    return false;
 }

@@ -89,18 +89,12 @@
 $(document).ready( function(){
             
     //Função para registrar evendo no banco de dados.
-    $("#btnLogin").on("click", function(){    
-        $("#modal_empresas").modal("show");           
+    $("#btnLogin").on("click", function(){          
+        login('menu_sys.php');
     });              
     
     $("#btnContinuar").on("click",function(){
-        setTimeout(function () {
-            $("#modal_empresas").modal("hide");
-            location.href = "" + ret;
-        }, 1000);
-        $("#empresas").val( $("#empresa_modal option:selected").val() );        
-        $("#empresas_desc").val( $("#empresa_modal option:selected").text() );     
-        login('menu_sys.php');
+        selecionaEmpresa("login");        
     });
                         
 });
