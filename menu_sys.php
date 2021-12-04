@@ -381,7 +381,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                  <h1><?= $local->fields['sub'] ?></h1>
+                  <h4><?= $local->fields['sub'] ?></h4>
                 </div>
                 <?php if(!empty($local->fields['sub'])){ ?>
                 <div class="col-sm-6">
@@ -409,7 +409,7 @@
   ?>
   </div>
   <!-- /.content-wrapper -->
-  <footer class="main-footer fixed-bottom">
+  <footer class="main-footer fixed-bottom escondido">
     <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini">SYS Tema - ERP</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">

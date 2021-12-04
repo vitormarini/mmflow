@@ -32,7 +32,7 @@ $data = bdInsert(
             , /*08*/ '{$_POST['user_resp_1']}'       
             , /*10*/ '{$_POST['user_resp_2']}'        
             , /*11*/ '{$_POST['user_celular']}'      
-            , /*12*/ '{$_POST['terms']}'",
+            , /*12*/ '{$_POST['terms']}'"
         );
 
             

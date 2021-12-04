@@ -144,7 +144,7 @@ function selecionaEmpresa(retorno) {
                 setTimeout(function () {
                     $("#modal_empresas").modal("hide");
                     location.href = "menu_sys.php";
-                }, 1000);
+                }, 500);
             } else {
                 location.reload();
             }
