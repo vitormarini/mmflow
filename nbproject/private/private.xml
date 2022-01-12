@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/validaLogin.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_conection/_bd.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_conection/_conect.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/response/consultaDFe.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_conection/_verifyLogin.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/functions.js</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/index.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/response/ControllerSefaz.php</file>
+        </group>
     </open-files>
 </project-private>

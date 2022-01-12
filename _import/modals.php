@@ -59,17 +59,66 @@
 </div>
 
 <!-- modal visualiza nota -->
-<div class="modal fade" id="modal-xl" id="openNota" name="openNota">
+<div class="modal fade" id="modalDetalhesNota" name="modalDetalhesNota">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-              <h4 class="modal-title">Extra Large Modal</h4>
+              <h4 class="modal-title text-center">Detalhes NF-e</h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <p>One fine body&hellip;</p>
+                <div class="row">
+                    <div class="col-12 col-sm-12">
+                        <div class="card card-primary card-tabs">
+                            <div class="card-header p-0 pt-1">
+                                <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="dados-gerais-tab" data-toggle="pill" href="#dados-gerais" role="tab" aria-controls="dados-gerais" aria-selected="true"> Dados Gerais </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dados-produtos-servicos-tab" data-toggle="pill" href="#dados-produtos-servicos" role="tab" aria-controls="dados-produtos-servicos" aria-selected="false"> Produtos/Serviços </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dados-totais-tab" data-toggle="pill" href="#dados-totais" role="tab" aria-controls="dados-totais" aria-selected="false"> Totais </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dados-transporte-tab" data-toggle="pill" href="#dados-transporte" role="tab" aria-controls="dados-transporte" aria-selected="false"> Transporte </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dados-duplicata-tab" data-toggle="pill" href="#dados-duplicata" role="tab" aria-controls="dados-duplicata" aria-selected="false"> Duplicata </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="dados-info-gerais-tab" data-toggle="pill" href="#dados-info-gerais" role="tab" aria-controls="dados-info-gerais" aria-selected="false"> Informações Gerais </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <div class="tab-content" id="custom-tabs-one-tabContent">
+                                    <div class="tab-pane fade show active" id="dados-gerais" role="tabpanel" aria-labelledby="dados-gerais-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="dados-produtos-servicos" role="tabpanel" aria-labelledby="dados-produtos-servicos-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="dados-totais" role="tabpanel" aria-labelledby="dados-totais-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="dados-transporte" role="tabpanel" aria-labelledby="dados-transporte-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="dados-duplicata" role="tabpanel" aria-labelledby="dados-duplicata-tab">
+                                        
+                                    </div>
+                                    <div class="tab-pane fade" id="dados-info-gerais" role="tabpanel" aria-labelledby="dados-info-gerais-tab">
+                                        
+                                    </div>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
