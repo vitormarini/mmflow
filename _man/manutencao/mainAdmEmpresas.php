@@ -45,9 +45,9 @@ $empresa_telefone_principal = str_replace(array(".","-"," ","(",")"),"",$_POST['
 $empresa_telefone_secundario= str_replace(array(".","-"," ","(",")"),"",$_POST['empresa_telefone_secundario']);
 $empresa_email              = trim($_POST['empresa_email']);
 
-print "<pre>";
-print_r( $_POST );
-exit;
+//print "<pre>";
+//print_r( $_POST );
+//exit;
 
 #INSERT
 if ( $op == "insert" ){
