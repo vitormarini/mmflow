@@ -16,6 +16,7 @@
         border: 1px solid #C0C0C0;
         background-color: #C0C0C0;        
     }
+
 </style>
 <link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>
 <section class="content">

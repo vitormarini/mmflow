@@ -1,3 +1,34 @@
+<style>
+    .inputfile { width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute;  z-index: -1; }
+    
+    label[for = "arquivo_pfx"]{
+        color: #fff;
+        background-color: #5cb85c;
+        max-width: 80%;
+        font-size: 16px;        
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;       
+        padding: 5px 15px;
+        margin-bottom: 0px;
+    }
+
+    .inputfile:focus + label,
+    .inputfile.has-focus + label {
+        outline: 1px dotted #000;
+        outline: -webkit-focus-ring-color auto 5px;
+    }
+    
+    #arquivo_pfx:focus + label,
+    #arquivo_pfx.has-focus + label,
+    label[for='arquivo_fci']:hover {
+        background-color: #449d44;
+    } 
+    
+    #envio_arquivo      { margin-top: 20px;      }
+    #insercao_manual    { font-size: 12px;       } 
+</style>
 <!-- Main content -->
 <section class="content">
     
@@ -175,7 +206,7 @@
 
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmEmpresas.php" method="post" id="frmDados">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmEmpresas.php" method="post" id="frmDados" enctype="multipart/form-data">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#empresa_geral" id="aba-empresa-geral"  role="tab" data-toggle="tab" class="nav-link active" >Dados Gerais</a>
@@ -185,6 +216,9 @@
                 </li>   
                 <li class="nav-item">
                     <a href="#empresa_contato" id="aba-empresa-contato"  role="tab" data-toggle="tab" class="nav-link " >Contato</a>
+                </li>   
+                <li class="nav-item">
+                    <a href="#empresa_consulta_dfe" id="aba-empresa-consulta-dfe"  role="tab" data-toggle="tab" class="nav-link " >Consulta DF-e</a>
                 </li>   
             </ul>
 
@@ -305,23 +339,36 @@
                 <div class="tab-pane  margin-top-15" id="empresa_contato" role="tabpanel">
                     <div class="row mb-2">
                         <div class="col-sm-12 row">
-
                             <div  class="col-sm-4 form-group">
                                 <label for="empresa_telefone_principal">Telefone Principal:</label>
                                 <input type="text" class="form-control requeri telefone_fixo" id="empresa_telefone_principal" name="empresa_telefone_principal" value="<?php print $dados->fields['empresa_telefone_principal']?>" <?=$disabled?>/>
                             </div>
-
                             <div  class="col-sm-4 form-group" >
                                 <label for="empresa_telefone_secundario">Telefone Secundário:</label>
                                 <input type="text" class="form-control telefone_fixo" id="empresa_telefone_secundario" name="empresa_telefone_secundario" value="<?php print $dados->fields['empresa_telefone_secundario']?>" <?=$disabled?>/>
                             </div>
-
-
                             <div  class="col-sm-4 form-group">
                                 <label for="empresa_email">E-mail:</label>
                                 <input type="text" class="form-control " id="empresa_email" name="empresa_email" value="<?php print $dados->fields['empresa_email']?>" <?=$disabled?>/>
                             </div>
-
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="empresa_consulta_dfe" role="tabpanel">
+                    <div class="row">
+                        <div class="row col-sm-4">                           
+                            <div class="text-left">
+                                Selecione o arquivo .pfx do certificado digital que deseja importar.
+                            </div>
+                            <input type="file" id="arquivo_pfx" name="arquivo_pfx" class="inputfile inputfile-1" accept=".pfx">                            
+                            <label for="arquivo_pfx" class="fix-center">
+                                <span class="glyphicon glyphicon-arrow-up margin-right-10"></span>                        
+                                <span class="nome-arquivo" id="nome-arquivo" name="nome-arquivo">Escolha um arquivo...</span>
+                            </label>
+                        </div>
+                        <div id="" class="row col-sm-3 text-center">                        
+                            <label> Senha </label>
+                            <input class="form-control" type="password" id="senha" name="senha">                        
                         </div>
                     </div>
                 </div>
@@ -478,7 +525,22 @@
            
         });
         
-        
+        //Mostra o nome do arquivo escolhido para o usuário
+        $("#arquivo_pfx").on("change", function(e){           
+            //Obtem nome do arquivo
+            var nomeArquivo = "";
+            if(e.target.value) nomeArquivo = e.target.value.split("\\").pop();
+                            
+            //Mostra o nome do arquivo se algo for selecionado
+            if(nomeArquivo){
+                $("label[for='arquivo_pfx']").find(".nome-arquivo").html(nomeArquivo);
+                $("#btnProsseguir").removeClass("disabled");
+            }
+            else{
+                $("label[for='arquivo_pfx']").find(".nome-arquivo").html("Escolha um arquivo...");
+                $("#btnProsseguir").addClass("disabled");
+            }           
+        });
 
         
                           

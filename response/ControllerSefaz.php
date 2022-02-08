@@ -10,8 +10,8 @@
 */
 date_default_timezone_set('America/Sao_Paulo');
 
-require_once "../vendor/autoload.php";
-include_once( '../_man/_aux.php' );
+require_once "../../vendor/autoload.php";
+include_once( '../../_man/_aux.php' );
 use NFePHP\NFe\Tools;
 use NFePHP\Common\Certificate;
 use NFePHP\NFe\Common\Standardize;

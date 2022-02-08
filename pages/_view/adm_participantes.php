@@ -33,7 +33,7 @@
                         <span class="fas fa-search"></span>
                         Pesquisar
                     </button>                  
-            </div>
+                </div>
             </div>
         </form>
         <?php      
@@ -72,12 +72,12 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th width="05%" class="text-center">Tipo            </th>
-                            <th width="10%" class="text-left"  >Código          </th>
-                            <th width="40%" class="text-left"  >Nome            </th>
-                            <th width="08%" class="text-center">Cliente         </th>
-                            <th width="08%" class="text-center">Fornecedor      </th>
-                            <th width="10%" class="text-center">IE              </th>
+                            <th width="03%" class="text-center">Tipo            </th>
+                            <th width="15%" class="text-left"  >Código          </th>
+                            <th width="41%" class="text-left"  >Nome            </th>
+                            <th width="07%" class="text-center">Cliente         </th>
+                            <th width="07%" class="text-center">Fornecedor      </th>
+                            <th width="08%" class="text-center">IE              </th>
                             <th width="19%" class="text-center">Ações           </th>
                         </tr>
                     </thead>

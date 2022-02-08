@@ -4,29 +4,34 @@
  * Data Criação : 14/06/2021
  * Descrição: O programa é responsável por coletar as informações registradas na base de dados da SEFAZ
  */
+//include_once "../_conection/_conect.php";
+include_once "../../_conection/_conect.php";
+//include_once "./_aux.php";
 
-require_once "/var/www/html/gestao/vendor/autoload.php";
+require_once "../../vendor/autoload.php";
 use NFePHP\NFe\Tools;
 use NFePHP\Common\Certificate;
 use NFePHP\NFe\Common\Standardize;
 
-include_once( '../../request/requestEmail.php' );
-include_once( '../../response/ControllerSefaz.php' );
+//include_once( '../../request/requestEmail.php' );
+include_once( '../ControllerSefaz.php' );
+include_once('../verificaCertificadoDigital.php');
 #include_once( '/var/www/html/gestao/bdAuto.php' ); #Conexão com o Banco de dados Gestão, sem que haja a iteração de algum usuário
-include_once( '../../_man/_aux.php' );
+//include_once( '../../_man/_aux.php' );
 
-include_once '../../response/verificaCertificadoDigital.php';
+
+//include_once '../../response/verificaCertificadoDigital.php';
 
 #Buscando a empresa
-$dadosEmpresa       = $bd->Execute($sql = "SELECT cgc, razao_social FROM empresas  WHERE id_empresa = '1';");
-$cnpjEmpresa        = $dadosEmpresa->fields['cgc'];
-$dataConsulta       = date("Y-m-d");
-$horaConsulta       = date("H:i:s");
+//$dadosEmpresa       = $bd->Execute($sql = "SELECT cgc, razao_social FROM empresas  WHERE id_empresa = '1';");
+//$cnpjEmpresa        = $dadosEmpresa->fields['cgc'];
+//$dataConsulta       = date("Y-m-d");
+//$horaConsulta       = date("H:i:s");
 
-$config      = requestConfig($dadosEmpresa->fields['cgc'], $dadosEmpresa->fields['razao_social']);
+$config      = requestConfig('40322434840', 'LINKSYM');
 $configJson  = json_encode($config);
-$content     = file_get_contents('/var/www/html/gestao/certificado/'.$dadosEmpresa->fields['cgc'].'.pfx');
-$password    = 'lino1748';  
+$content     = file_get_contents('../40322434840_000001010600220.pfx');
+$password    = 'zokt@322';  
 
 #Verificando a última Consulta
 $lastConsult = $bd->Execute($sql = "SELECT data_consulta, hora_consulta, id_t_dfe_service, lastnsu FROM t_dfe_service  ORDER BY 4 DESC,1 DESC, 2 DESC LIMIT 1;");
@@ -34,22 +39,22 @@ $lasNsu      = $bd->Execute($sql = "SELECT nsu::int AS lastnsu FROM t_dfe_servic
 
 //Acessando e configurando o Certificado Digital
 $tools = new Tools($configJson, Certificate::readPfx($content, $password));
-$dataValidade = readCert('/var/www/html/gestao/certificado/'.$dadosEmpresa->fields['cgc'].'.pfx', $password, 'VALIDADE') ;  
-print"<pre>";
-print_r($dataValidade);
-exit;
+$dataValidade = readCert('../40322434840_000001010600220.pfx', 'zokt@322', 'VALIDADE') ;  
+//print"<pre>";
+//print_r($dataValidade);
+//exit;
 
 //Único modelo de nota que é favorecido para esse tipo de Consulta além de rodar somente em ambiente de PRODUÇÃO
 $tools->model('55');
 $tools->setEnvironment(1);
 
 //Atualizamos esses valores de NSU para validar a quantidade de Documentos resgatados e não vir repetido as mesmas informações.
-$ultNSU    = $lastConsult->fields['lastnsu'];
+$ultNSU    = 1;
 $maxNSU    = $ultNSU;
 $loopLimit = 50;
 $iCount    = 0; 
 //Consultando o E-mail para efetuar o download de Notas Fiscais emitidas e que estão no E-mail
-requestEmail("nfe");    
+//requestEmail("nfe");    
 
 
 //Iniciando a sequencia de Consultas dos Documentos da RFB
@@ -61,21 +66,27 @@ while ($ultNSU <= $maxNSU) {
 
     //Valida a chamada da Consulta e Reporta o erro, tendo que tratar.
     try {      
+        
+        
+        
         $dataConsulta       = date("Y-m-d");   
         $horaConsulta       = date("H:i:s");
         
         //Atualizando o valor da última consulta
-        $bd->Execute("INSERT INTO t_dfe_service ( data_consulta, hora_consulta, user_consulta, lastnsu ) VALUES ('{$dataConsulta}', '{$horaConsulta}', '94', '{$ultNSU}');");          
+        $bd->Execute("INSERT INTO t_dfe_service ( data_consulta, hora_consulta, user_consulta, lastnsu ) VALUES ('{$dataConsulta}', '{$horaConsulta}', '94', '{$ultNSU}');");      
+        
+        exit("tamra vindilino");
+        
         $resp = $tools->sefazDistDFe($ultNSU);    
-        print"<pre>";
-        print_r($resp);        
-       
+        
     } catch (\Exception $e) {                
         $timeOut = true;
     }
 
     if ( !$timeOut ){
-
+//print"<pre>";
+//        print_r($resp);        
+//        exit("tamraa");
         #Leitura do XML pelo DOM
         $dom = new \DOMDocument();
         $dom->loadXML($resp);
@@ -270,6 +281,10 @@ while ($ultNSU <= $maxNSU) {
         }
     }else{
         $ultNSU ++;
+        
+        print"<pre>";
+        print_r($resp);        
+        exit("tamraa");
     }
 
     #AQUI Validamos o LOOP, tomando cuidado pra não ficar Infinito
