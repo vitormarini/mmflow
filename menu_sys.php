@@ -466,10 +466,14 @@
 
         //Função para registrar evendo no banco de dados.
         $("#btnSalvar").on("click", function(){
+            $(this).prop("disabled",true);
             validateSave('index.php');
         });
 
         $("#btnEmpresa").on("click",function(){
+            var cnpj = $(this).text().trim().split(" - ")[0];
+            retornaEmpresas(cnpj);
+            
             $("#empresa_modal").val( $(this).data("empresa") );
             $("#modal_empresas").modal("show");
         });

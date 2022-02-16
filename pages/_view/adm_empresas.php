@@ -206,7 +206,7 @@
 
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmEmpresas.php" method="post" id="frmDados" enctype="multipart/form-data">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmEmpresas.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#empresa_geral" id="aba-empresa-geral"  role="tab" data-toggle="tab" class="nav-link active" >Dados Gerais</a>
@@ -218,7 +218,7 @@
                     <a href="#empresa_contato" id="aba-empresa-contato"  role="tab" data-toggle="tab" class="nav-link " >Contato</a>
                 </li>   
                 <li class="nav-item">
-                    <a href="#empresa_consulta_dfe" id="aba-empresa-consulta-dfe"  role="tab" data-toggle="tab" class="nav-link " >Consulta DF-e</a>
+                    <a href="#empresa_consulta_dfe" id="aba-empresa-consulta-dfe"  role="tab" data-toggle="tab" class="nav-link escondido" >Consulta DF-e</a>
                 </li>   
             </ul>
 

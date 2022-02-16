@@ -10,6 +10,7 @@ include_once "./_aux.php";
 $pass = md5($_POST['pass']);
 $user = $_POST['op'] == "troca_empresa" ? retiraAcentos($_SESSION['user_nickname']) : retiraAcentos($_POST['user']);
 $and  = $_POST['op'] == "troca_empresa" ? "" : "AND   user_pass = '{$pass}'";
+$cnpj = retira_caracteres($_POST['cnpj']);
 
 $data = $bd->Execute($sql = 
 "SELECT user_id 
@@ -18,10 +19,10 @@ $data = $bd->Execute($sql =
 ,	user_tipo 
 ,	user_nickname 
 ,	1 AS login
- FROM 	t_user 
+ FROM 	t_user moda
 WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
+    --AND ( empresa_cnpj = '{$cnpj}' )
   {$and};");
-  
 
 //Valida a inserção do usuário e verificando se existe ou não o valor
 if ( $data->fields['login'] == 1){
