@@ -26,7 +26,8 @@ $varBd["pass"] = "mttpocos";
 //$varBd["pass"] = "mttpocos";
 
 //$bd = novaConexao($varBd["sgbd"], $varBd["host"] , $varBd["base"], $varBd["user"], $varBd["pass"]);    
-$bd = $objBDNovo = novaConexao("postgres", "179.188.16.134:5432", "base_mmflow", "base_mmflow", "mttpocos");       
+$bd = $objBDNovo = novaConexao("postgres", "179.188.16.134:5432", "base_mmflow", "base_mmflow", "mttpocos");
+//$bd = $objBDNovo = novaConexao("postgres", "localhost:5432", "mmflow", "mmflow", "mttpocos");       
     
 /**
  * Realiza conexão persistente com o banco de dados

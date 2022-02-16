@@ -70,6 +70,13 @@
                 "json",
                 "schema"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/justinrainbow/json-schema/issues",
+                "source": "https://github.com/justinrainbow/json-schema/tree/5.2.11"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2021-07-22T09:24:00+00:00"
         },
         {
@@ -107,6 +114,13 @@
             ],
             "description": "PHP Class Encoding featuring popular Encoding::toUTF8() function --formerly known as forceUTF8()-- that fixes mixed encoded strings.",
             "homepage": "https://github.com/neitanod/forceutf8",
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/neitanod/forceutf8/issues",
+                "source": "https://github.com/neitanod/forceutf8/tree/master"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2019-12-10T14:09:14+00:00"
         },
         {
@@ -175,6 +189,13 @@
                 "nfephp",
                 "sped"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/nfephp-org/sped-common/issues",
+                "source": "https://github.com/nfephp-org/sped-common/tree/v5.0.57"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2021-10-03T12:28:51+00:00"
         },
         {
@@ -239,6 +260,13 @@
                 "nfephp",
                 "sped"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/nfephp-org/sped-gtin/issues",
+                "source": "https://github.com/nfephp-org/sped-gtin/tree/v1.0.9"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2021-11-23T17:55:43+00:00"
         },
         {
@@ -312,6 +340,13 @@
                 "nfephp",
                 "sped"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "issues": "https://github.com/nfephp-org/sped-nfe/issues",
+                "source": "https://github.com/nfephp-org/sped-nfe/tree/v5.0.126"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2021-10-21T12:24:09+00:00"
         },
         {
@@ -359,6 +394,12 @@
                 "psr",
                 "psr-3"
             ],
+<<<<<<< HEAD
+=======
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
             "time": "2021-05-03T11:20:27+00:00"
         }
     ],
@@ -370,5 +411,9 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+<<<<<<< HEAD
     "plugin-api-version": "1.1.0"
+=======
+    "plugin-api-version": "2.1.0"
+>>>>>>> 1fb681e7d30d0f43b85049c32db70968f3fd3d15
 }
