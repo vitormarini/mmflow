@@ -559,126 +559,7 @@ function colocaMaiusculo(){
         
             return $retorno;
     }
-    
-     //Tratamentos para gerar/recuperar códigos EAN-13
-    function codigoEan(&$bd, $numeroEanProduto, &$empresa){
         
-        //Verifica se códigos disponíveis acabaram
-        if($numeroEanProduto <= 99999){
-
-            //Calcula o dígito de verificação do código ean
-            $codigoCompleto  = $empresa->fields["codigo_pais_ean"] . $empresa->fields["codigo_empresa_ean"] . $numeroEanProduto;
-
-            
-            $codigoCompleto .= digitoVerificadorEan13($codigoCompleto);
-            
-            //Retorno dos dados
-            $retorno = array(
-                "situacao"    => "OK",
-                "tipo"        => "novo",
-                "eanCompleto" => $codigoCompleto
-            );
-
-        }    
-        
-        //Quando não existirem mais códigos
-        else{
-            
-            $liberados = $bd->Execute($sql = "
-                SELECT      id_codigo_barra, codigo_produto, codigo_completo 
-                FROM        codigo_barra 
-                WHERE       liberado IS TRUE
-                ORDER BY    codigo_produto ASC
-                LIMIT       1
-            ");
-                
-            //Reutiliza os códigos liberados, fazendo os devidos ajustes
-            if($liberados->RecordCount() > 0){
-                
-                //Retorno dos dados
-                $retorno = array(
-                    "situacao"         => "OK",
-                    "tipo"             => "reutilizado",
-                    "idReutilizado"    => $liberados->fields["id_codigo_barra"],
-                    "numeroEanProtuto" => $liberados->fields["codigo_produto"],
-                    "eanCompleto"      => $liberados->fields["codigo_completo"]                    
-                );    
-                
-            }
-                
-            //Impossível gerar novos códigos pois todos estão sendo utilizados
-            else {
-
-                //Retorno dos dados
-                $retorno = array(
-                    "situacao" => "ERRO",
-                    "mensagem" => "Esgotado o número de códigos EAN disponíveis. Libere códigos antigos para realizar a operação"
-                ); 
-
-            }               
-            
-        }
-        
-        //Retorno da chamada
-        return $retorno;
-        
-    }
-    
-    function insertLastData( $idFicha , $idCadastoGeral){
-        //Instanciando a variável global BD
-        global $bd;
-
-        //Iniciando o Retorno
-        $retorno = false;
-
-        //LOOP que verifica quando tem ou não um item a ser ajustado
-        while ($retorno == false){
-            $lastItem = $bd->Execute("SELECT id_cadastro_geral, nivel, ordem, id_ficha_item FROM ft_ficha_item WHERE id_ficha = {$idFicha} AND ajustado = 'N' ORDER BY id_ficha_item ASC LIMIT 1;");
-
-            if ( $lastItem->fields['id_cadastro_geral'] != "" ){
-                $buscaFilhotes = $bd->Execute($sql = 
-                "SELECT ft_itens.id_materia_prima  ,	ft_itens.id_cadastro_geral ,	ft_itens.valor_unitario  ,	ft_itens.hora_homem  ,	ft_itens.hora_maquina  ,	ft_itens.quantidade  ,	ft_itens.id_unidade 
-                   FROM ft_cadastro_geral_item AS ft_itens
-                  WHERE id_ft_cadastro_geral_pai = {$lastItem->fields['id_cadastro_geral']} ORDER BY ordem_exibe, id_ft_cadastro_geral_item ASC;");
-                  
-                $ordemFilhotes = $lastItem->fields['ordem'] + 1;
-                $fichaSuperior = $lastItem->fields['id_ficha_item'];
-                $nivelFilhote  = $lastItem->fields['nivel'] + 1;   
-
-                while ( !$buscaFilhotes->EOF ){
-
-                    $sqlInsertItem = "INSERT INTO ft_ficha_item (     id_ficha                                      , id_materia_prima                                      , id_cadastro_geral   
-                                                                    , id_unidade                                    , quantidade                                            , valor_unitario
-                                                                    , ordem                                         , hora_homem                                            , hora_maquina 
-                                                                    , id_ficha_item_sup                             , nivel                                                 , ajustado
-                                                                    , id_pai_filhotes )
-                                                           VALUES (   '{$idFicha}'                                  , '{$buscaFilhotes->fields['id_materia_prima']}'        ,  '{$buscaFilhotes->fields['id_cadastro_geral']}'
-                                                                    , '{$buscaFilhotes->fields['id_unidade']}'      , '{$buscaFilhotes->fields['quantidade']}'              ,  '{$buscaFilhotes->fields['valor_unitario']}'
-                                                                    , '{$ordemFilhotes}'                            , '{$buscaFilhotes->fields['hora_homem']}'              ,  '{$buscaFilhotes->fields['hora_maquina']}'  
-                                                                    , '{$fichaSuperior}'                            , '{$nivelFilhote}'                                     , 'N'
-                                                                    , '{$idCadastoGeral}');";
-
-                    if ( $bd->Execute(replaceEmptyFields($sqlInsertItem)) ){ $ordemFilhotes ++; }
-
-                    $buscaFilhotes->MoveNext();
-                }                
-            }
-            if ( $lastItem->fields['id_ficha_item'] != "" ){
-                $bd->Execute("UPDATE ft_ficha_item SET ajustado = 'S' WHERE id_ficha_item = '{$lastItem->fields['id_ficha_item']}';");
-            }
-            //Atualizando a linha no banco, uma vez que já foi ajustada.            
-
-            #VERIFICANDO SE EXISTE MAIS ALGUM ITEM QUE NÃO FOI AJUSTADO
-            $buscaItemAjuste = $bd->Execute("SELECT count(*) AS a_ajustar FROM ft_ficha_item WHERE id_ficha = {$idFicha} AND ajustado = 'N';");
-            if ( $buscaItemAjuste->fields['a_ajustar'] <= 0 ){
-                $retorno = true;
-            }
-        }
-
-        $bd->Execute("SELECT reordena_ft({$idFicha}); SELECT recalcula_ft({$idFicha});");
-        return $retorno;    
-    }
-    
     /**
      * Função que retira todos os caracteres especiais da variável
      */
@@ -703,7 +584,7 @@ function colocaMaiusculo(){
         return $var;
     }
     
-        function paginacao( $strTela, $intPagina, $intLimite, $intTotal, $tipoRetorno = "TELA") {
+    function paginacao( $strTela, $intPagina, $intLimite, $intTotal, $tipoRetorno = "TELA") {
         $intProxima    = $intPagina + 1;
         $intAnterior   = $intPagina - 1;
         $intUltima     = ceil( $intTotal / $intLimite );

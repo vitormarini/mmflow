@@ -53,7 +53,7 @@
             $sql = "SELECT  user_id         , user_nome             , user_nickname
                         ,   user_email      , user_dt_nascimento    , user_tipo
                         ,   user_quest_1    , user_quest_2          , user_resp_1
-                        ,   user_resp_2     , user_celular,terms
+                        ,   user_resp_2     , terms                 , mask_phone(user_celular) AS user_celular
                     FROM t_user  {$where} 
                     ORDER BY 2;";
 
@@ -135,7 +135,7 @@
         #Monta SQL para busca
         $sql = "SELECT  user_id     , user_nome             , user_nickname
                     ,   user_email  , user_dt_nascimento    , user_tipo
-                    ,   user_celular
+                    ,   mask_phone(user_celular) AS user_celular
                    FROM t_user 
                   WHERE user_id = '{$_SESSION['id']}';";
 
@@ -175,7 +175,6 @@
                     <a href="#user_permissao" id="aba-user-permissoes"  role="tab" data-toggle="tab" class="nav-link " >Permissões de Acesso</a>
                 </li>   
             </ul>
-
             <div class="tab-content">
                 <div class="tab-pane active margin-top-15" id="user_geral" role="tabpanel">
                     <div class="row">
@@ -184,58 +183,67 @@
                                 <label or="user_nome">Nome Usuário:</label>
                                 <input type="text" class="form-control requeri unique" id="user_nome" name="user_nome" value="<?php print $dados->fields['user_nome']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-2  mb-2">
+                            <div  class="col-sm-4  mb-2">
                                 <label for="user_nickname">Nickname:</label>
                                 <input type="text" class="form-control requeri unique" id="user_nickname" name="user_nickname" value="<?php print $dados->fields['user_nickname']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-1  mb-2">
-                                <label for="user_dt_nascimento">Dt Nascimento:</label>
+                            <div  class="col-sm-4  mb-2">
+                                <label for="user_email">E-mail:</label>
+                                <input type="text" class="form-control requeri" id="user_email" name="user_email" value="<?php print $dados->fields['user_email']?>" <?=$disabled?>/>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12">
+                            <div  class="col-sm-2 mb-2">
+                                <label for="user_dt_nascimento">Data Nascimento:</label>
                                 <input type="date" class="form-control requeri" id="user_dt_nascimento" name="user_dt_nascimento" value="<?php print $dados->fields['user_dt_nascimento']?>" <?=$disabled?>/>
                             </div>
                             <div class="col-sm-2 mb-2">
                                 <label for="user_tipo"> Tipo de Usuário:</label>
-                                <div class="form-group input-group  ">
+                                <div class="form-group input-group">
                                     <select class="form-control" id="user_tipo" name="user_tipo">
                                         <option value="COMUM"  <?php print $dados->fields['user_tipo'] == "COMUM"   ? "selected" : "" ?>>1 - USUÁRIO SISTEMA</option>
                                         <option value="ADM"    <?php print $dados->fields['user_tipo'] == "ADM"     ? "selected" : "" ?>>2 - ADMINISTRADOR  </option>
                                         <option value="SERVER" <?php print $dados->fields['user_tipo'] == "SERVER"  ? "selected" : "" ?>>3 - SERVER         </option>
                                     </select>                      
                                 </div>
-                            </div>
-                            <div  class="col-sm-2  mb-2">
-                                <label for="user_email">E-mail:</label>
-                                <input type="text" class="form-control requeri" id="user_email" name="user_email" value="<?php print $dados->fields['user_email']?>" <?=$disabled?>/>
-                            </div>
-                            <div  class="col-sm-1  mb-2">
+                            </div>                            
+                            <div  class="col-sm-3 mb-2">
                                 <label for="user_celular">Celular:</label>
-                                <input type="text" class="form-control requeri" id="user_celular" name="user_celular" value="<?php print $dados->fields['user_celular']?>" <?=$disabled?>/>
+                                <input type="text" class="form-control requeri" id="user_celular" name="user_celular" value="<?php print $dados->fields['user_celular']?>" onkeypress="maskphone(this, mphone);" onblur="maskphone(this, mphone);" <?=$disabled?>/>
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane  margin-top-15" id="user_permissao" role="tabpanel">
                     <div class="row mb-2">
                         <div class="col-sm-12 row">
-
                             <div  class="col-sm-2 form-group">
                                 <label for="user_menu">Selecione o Menu:</label>
                                 <select class="form-control" id="user_menu" name="user_menu">
                                     <option value="">Selecione</option>
                                 <?php
                                 while ( !$dataMenu->EOF ){ ?>
-                                    <option value="<?php print $dataMenu->fields['menu_id'] ?>" ><?php print $dataMenu->fields['menu_descricao'] ?>         </option>                                        
+                                    <option value="<?php print $dataMenu->fields['menu_id'] ?>" ><?php print $dataMenu->fields['menu_descricao'] ?> </option>
                                 <?php
                                     $dataMenu->MoveNext();
                                 }?>
                                 </select>
                             </div>                                                                
-
                             <div  class="col-sm-2 form-group busca_categoria">
                                 <label for="user_menu_categoria">Selecione a Categoria:</label>
                                 <select class="form-control" id="user_menu_categoria" name="user_menu_categoria"></select>
                             </div>     
-
+<!--                            <div  class="col-sm-2 form-group busca_categoria">
+                                <label for="user_menu_categoria">Selecione a Categoria:</label>
+                                <select class="mdb-select md-form" multiple>
+                                    <option value="" disabled selected>Choose your country</option>
+                                    <option value="1">USA</option>
+                                    <option value="2">Germany</option>
+                                    <option value="3">France</option>
+                                    <option value="4">Poland</option>
+                                    <option value="5">Japan</option>
+                                </select>                                  
+                            </div>     -->
                             <div class="col-sm-4 busca_categoria" style="padding-top: 27.5px;" >                  
                                 <button type="button" class="btn btn-info form-control" id="btnBuscar" style="width: 100%;" >
                                     <span class="fas fa-search"></span>
@@ -248,10 +256,8 @@
                                     Atualizar Permissões
                                 </button>                  
                             </div>
-
                         </div>
                         <div class="col-sm-4 row text-center col-sm-auto" >
-
                             <table class="table" id="tableItens">
                                 <thead>
                                     <tr>
@@ -262,10 +268,7 @@
                                 <tbody>
                                 </tbody>
                             </table>
-
                         </div>
-
-
                     </div>
                 </div>
             </div>
@@ -334,7 +337,7 @@
 <script type="text/javascript">
     
 $(document).ready(function($){
-    var tableTd = "";
+    var tableTd = "";    
 
     //Máscaras e validações        
     $("#tableItens, .busca_categoria, #btnNovo").hide();

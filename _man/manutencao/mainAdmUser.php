@@ -24,7 +24,7 @@ $user_nickname          = trim($_POST['user_nickname']);
 $user_dt_nascimento     = trim($_POST['user_dt_nascimento']);
 $user_tipo              = trim($_POST['user_tipo']);
 $user_email             = trim($_POST['user_email']);
-$user_celular           = trim($_POST['user_celular']);
+$user_celular           = str_replace(" ","",retira_caracteres($_POST['user_celular']));
 
 #INSERT
 if ( $op == "insert" ){
