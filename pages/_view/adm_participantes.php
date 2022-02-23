@@ -133,7 +133,7 @@
 
     if ( $_SESSION['id'] != "" ){
         #Monta SQL para busca
-        $sql = "SELECT 	participante_id                            ,   participante_codigo                            ,   participante_nome
+        $sql = "SELECT 	participante_id                            ,   cpf_cnpj(participante_codigo,'') AS participante_codigo                           ,   participante_nome
                     ,   participante_codigo_pais                   ,   participante_tipo                              ,   participante_ie
                     ,   participante_ie_st                         ,   participante_suframa                           ,   participante_nit
                     ,   participante_im                            ,   participante_cliente                           ,   participante_fornecedor
@@ -210,7 +210,7 @@
                         <div class="row col-sm-12">
                             <div  class="col-sm-2 mb-2">
                                 <label for="participante_codigo" class="requi">Código Parcipante:</label>
-                                <input type="text" class="form-control requeri cnpj" id="participante_codigo" name="participante_codigo" value="<?php print $dados->fields['participante_codigo']?>" <?=$disabled?> title="CPF, CNPJ ou Outro/">
+                                <input type="text" class="form-control requeri" id="participante_codigo" name="participante_codigo" value="<?php print $dados->fields['participante_codigo']?>" <?=$disabled?> title="CPF, CNPJ ou Outro/" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);">
                             </div>
                             <div  class="col-sm-2 form-group ">
                                 <label for="participante_ie" class="requi">Inscrição Estadual:</label>
@@ -516,170 +516,165 @@
 </section>
 <?php include_once "../../_man/search/_searchData.php"; ?>
 <script type="text/javascript">
-    
-      $("button").on("click",function(){
-           console.log("teste") 
+$(document).ready(function($){
+
+        
+    //Máscaras e validações        
+    //addMascarasCPF_CNPJ();
+
+    $("#empresa_cep").mask("99.999-999");
+    $(".telefone_fixo").mask("(99) 9999-9999");
+    $("#participante_endereco_cep").mask("99.999-999");
+    //$("#participante_tipo"   ).on("change",function(){ addMascarasCPF_CNPJ();        });
+
+    $("#btnAdicionarEndereco").on("click", function(){ movimentaItens("novo","","endereco"); });
+    $(".btnRemoveItem"       ).on("click", function(){ movimentaItens("delete",$(this).prop("name"),"endereco"); });
+    $("#btnAdicionarContato" ).on("click", function(){ movimentaItens("novo","","contato"); });        
+    $(".btnRemoveItemContato").on("click", function(){ movimentaItens("delete",$(this).prop("name"),"contato");  });        
+
+    $("#aba-participante-endereco, #aba-participante-contato").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").hide(); });
+    $("#aba-participante-geral").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").show(); });
+
+
+
+    function addMascarasCPF_CNPJ(){
+        var tipo = $("#participante_tipo").val();
+
+        if ( tipo === "J" )      {  $("#participante_codigo").mask("99.999.999/9999-99"); }           
+        else if ( tipo === "F" ) {  $("#participante_codigo").mask("999.999.999-99");     }          
+        else if ( tipo === "E" ) {  $("#participante_codigo").mask("999.9999");           }            
+        else                     {  $("#participante_codigo").mask("999.9999");           }
+    }        
+
+
+    function movimentaItens(tipo,id, method){
+        $.ajax({
+            url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/manutencao/mainAdmParticipante.php",
+            type: "post",
+            dataType: "text",
+            data: { 
+                op: method,
+                type: tipo,          
+                id_movim: id,
+                participante_endereco_tipo          : $("#participante_endereco_tipo").val(),
+                participante_endereco_cep           : $("#participante_endereco_cep").val(),
+                participante_endereco_uf            : $("#participante_endereco_uf").val(),
+                participante_codigo_municipio       : $("#participante_codigo_municipio").val(),
+                participante_endereco_logradouro    : $("#participante_endereco_logradouro").val(),
+                participante_endereco_numero        : $("#participante_endereco_numero").val(),
+                participante_endereco_bairro        : $("#participante_endereco_bairro").val(),
+                participante_endereco_complemento   : $("#participante_endereco_complemento").val(),
+                participante_contato_tipo           : $("#participante_contato_tipo").val(),
+                participante_contato_descricao      : $("#participante_contato_descricao").val(),
+                participante_contato_descricao_email: $("#participante_contato_descricao_email").val()
+            },
+            success: function(retorno){
+                location.reload();
+            }
+        }); 
+    }        
+
+   //Fim - Máscaras e Validações               
+   $("#participante_contato_tipo").on("click",function(){
+       var value = $(this).val();          
+
+        $("#participante_contato_descricao_email").addClass("escondido");
+        $("#participante_contato_descricao").removeClass("escondido");
+
+       if ( value == 1 ){
+           $("#participante_contato_descricao").attr("placeholder","Insira o contato telefônico.");
+           $("#participante_contato_descricao").mask("(18) 9999-9999");
+       }
+       else if ( value == 2 ){
+           $("#participante_contato_descricao").attr("placeholder","Insira o número do celular!");
+           $("#participante_contato_descricao").mask("(18) 9 9999-9999");
+       }
+       else if ( value == 3 ){
+           $("#participante_contato_descricao").addClass("escondido");
+           $("#participante_contato_descricao_email").removeClass("escondido");
+           $("#participante_contato_descricao_email").attr("placeholder","Inserir um e-mail válido!");
+       }
+
+   });
+
+   //Função que valida os dados inseridos no banco de dados.
+   $(".unique").on("change", function(){
+       var v1   = "t_participante";
+       var v2   = $(this).prop("name");
+       var v3   = "=";
+       var v4   = $(this).val();
+       var v    = "duplicate";
+
+       validaData(v1, v2, v3, v4, v);
+   });
+
+   $("#participante_endereco_cep").on("change",function(){
+       $(".cep").prop("disabled",true);
+
+        $.ajax({
+            url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/api_cep_correios.php",
+            type: "post",
+            dataType: "json",
+            data: { 
+                cep: $(this).val()
+            },
+            success: function(retorno){
+
+                $(".cep").prop("disabled", false);
+                $("#participante_endereco_uf").val(retorno.dados.estado);
+                $("#participante_endereco_descricao").val(retorno.dados.cod_cidade + " - " + retorno.dados.cidade);
+                $("#participante_codigo_municipio").val(retorno.dados.cod_cidade);
+            }
+        }); 
+    });                                                   
+
+    $(".search").on("keypress", function(){
+       var table = $(this).prop("name");
+       var input = $(this).prop("id");
+
+       $("#"+input).removeClass("alert-success");
+
+       $(".search").autocomplete({                        
+            source: function( request, response){
+                $.ajax({
+                    url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchData.php",
+                    type: "post",
+                    dataType: "json",
+                    data: { 
+                        descricao: request.term,
+                        table: table,
+                        tipo: "codigo_pais"
+                    },
+                    success: function(data){
+                        response($.map(data.dados, function(item){
+                            return {
+                                id    : item.ret_1,
+                                value : item.ret_1 + ' - ' + item.ret_2
+                            };
+                        }));
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui){
+                $('#participante_codigo_pais').val(ui.item.id);
+                $("#"+input).addClass("alert-success");
+            },
+            open: function() {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function() {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            }
         });
-    
-    $(document).ready(function($){
 
-        
-        //Máscaras e validações        
-        addMascarasCPF_CNPJ();
-        
-        $("#empresa_cep").mask("99.999-999");
-        $(".telefone_fixo").mask("(99) 9999-9999");
-        $("#participante_endereco_cep").mask("99.999-999");
-        $("#participante_tipo"   ).on("change",function(){ addMascarasCPF_CNPJ();        });
-        
-        $("#btnAdicionarEndereco").on("click", function(){ movimentaItens("novo","","endereco"); });
-        $(".btnRemoveItem"       ).on("click", function(){ movimentaItens("delete",$(this).prop("name"),"endereco"); });
-        $("#btnAdicionarContato" ).on("click", function(){ movimentaItens("novo","","contato"); });        
-        $(".btnRemoveItemContato").on("click", function(){ movimentaItens("delete",$(this).prop("name"),"contato");  });        
-                                
-        $("#aba-participante-endereco, #aba-participante-contato").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").hide(); });
-        $("#aba-participante-geral").on("click",function(){ $("#btnSalvar, #btnExcluir, #btnVoltar").show(); });
-
-      
-        
-        function addMascarasCPF_CNPJ(){
-            var tipo = $("#participante_tipo").val();
-                      
-            if ( tipo === "J" )      {  $("#participante_codigo").mask("99.999.999/9999-99"); }           
-            else if ( tipo === "F" ) {  $("#participante_codigo").mask("999.999.999-99");     }          
-            else if ( tipo === "E" ) {  $("#participante_codigo").mask("999.9999");           }            
-            else                     {  $("#participante_codigo").mask("999.9999");           }
-        }        
-        
-        
-        function movimentaItens(tipo,id, method){
-            $.ajax({
-                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/manutencao/mainAdmParticipante.php",
-                type: "post",
-                dataType: "text",
-                data: { 
-                    op: method,
-                    type: tipo,          
-                    id_movim: id,
-                    participante_endereco_tipo          : $("#participante_endereco_tipo").val(),
-                    participante_endereco_cep           : $("#participante_endereco_cep").val(),
-                    participante_endereco_uf            : $("#participante_endereco_uf").val(),
-                    participante_codigo_municipio       : $("#participante_codigo_municipio").val(),
-                    participante_endereco_logradouro    : $("#participante_endereco_logradouro").val(),
-                    participante_endereco_numero        : $("#participante_endereco_numero").val(),
-                    participante_endereco_bairro        : $("#participante_endereco_bairro").val(),
-                    participante_endereco_complemento   : $("#participante_endereco_complemento").val(),
-                    participante_contato_tipo           : $("#participante_contato_tipo").val(),
-                    participante_contato_descricao      : $("#participante_contato_descricao").val(),
-                    participante_contato_descricao_email: $("#participante_contato_descricao_email").val()
-                },
-                success: function(retorno){
-                    location.reload();
-                }
-            }); 
-        }        
-                                   
-       //Fim - Máscaras e Validações               
-       $("#participante_contato_tipo").on("click",function(){
-           var value = $(this).val();          
-           
-            $("#participante_contato_descricao_email").addClass("escondido");
-            $("#participante_contato_descricao").removeClass("escondido");
-           
-           if ( value == 1 ){
-               $("#participante_contato_descricao").attr("placeholder","Insira o contato telefônico.");
-               $("#participante_contato_descricao").mask("(18) 9999-9999");
-           }
-           else if ( value == 2 ){
-               $("#participante_contato_descricao").attr("placeholder","Insira o número do celular!");
-               $("#participante_contato_descricao").mask("(18) 9 9999-9999");
-           }
-           else if ( value == 3 ){
-               $("#participante_contato_descricao").addClass("escondido");
-               $("#participante_contato_descricao_email").removeClass("escondido");
-               $("#participante_contato_descricao_email").attr("placeholder","Inserir um e-mail válido!");
-           }
-                                 
-       });
-       
-       //Função que valida os dados inseridos no banco de dados.
-       $(".unique").on("change", function(){
-           var v1   = "t_participante";
-           var v2   = $(this).prop("name");
-           var v3   = "=";
-           var v4   = $(this).val();
-           var v    = "duplicate";
-           
-           validaData(v1, v2, v3, v4, v);
-       });
-       
-       $("#participante_endereco_cep").on("change",function(){
-           $(".cep").prop("disabled",true);
-           
-            $.ajax({
-                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/api_cep_correios.php",
-                type: "post",
-                dataType: "json",
-                data: { 
-                    cep: $(this).val()
-                },
-                success: function(retorno){
-                    
-                    $(".cep").prop("disabled", false);
-                    $("#participante_endereco_uf").val(retorno.dados.estado);
-                    $("#participante_endereco_descricao").val(retorno.dados.cod_cidade + " - " + retorno.dados.cidade);
-                    $("#participante_codigo_municipio").val(retorno.dados.cod_cidade);
-                }
-            }); 
-        });                                                   
-
-        $(".search").on("keypress", function(){
-           var table = $(this).prop("name");
-           var input = $(this).prop("id");
-           
-           $("#"+input).removeClass("alert-success");
-           
-           $(".search").autocomplete({                        
-                source: function( request, response){
-                    $.ajax({
-                        url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchData.php",
-                        type: "post",
-                        dataType: "json",
-                        data: { 
-                            descricao: request.term,
-                            table: table,
-                            tipo: "codigo_pais"
-                        },
-                        success: function(data){
-                            response($.map(data.dados, function(item){
-                                return {
-                                    id    : item.ret_1,
-                                    value : item.ret_1 + ' - ' + item.ret_2
-                                };
-                            }));
-                        }
-                    });
-                },
-                minLength: 2,
-                select: function(event, ui){
-                    $('#participante_codigo_pais').val(ui.item.id);
-                    $("#"+input).addClass("alert-success");
-                },
-                open: function() {
-                    $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-                },
-                close: function() {
-                    $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-                }
-            });
-           
-        });
-        
-        
-
-        
-                          
     });
-    </script>
+
+
+
+
+
+});
+</script>
 
   <!-- /.content-wrapper -->

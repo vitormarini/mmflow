@@ -46,6 +46,8 @@ else if ( $_POST['busca'] == "t_empresas"){
     #Executa a linha de busca no banco
     $objDados = $bd->Execute($sql);
     while(!$objDados->EOF){
+//        $selected = $
+        
         $html .= '<option value="'.$objDados->fields[0].'">'.$objDados->fields[4].'</option>';
 
         $valida = true;

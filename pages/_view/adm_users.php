@@ -1,3 +1,5 @@
+<link href="dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
+<!--<link href="../../plugins/bootstra" rel="stylesheet" type="text/css" />-->
 <!-- Main content -->
 <section class="content">
 
@@ -229,13 +231,13 @@
                                 }?>
                                 </select>
                             </div>                                                                
-                            <div  class="col-sm-2 form-group busca_categoria">
-                                <label for="user_menu_categoria">Selecione a Categoria:</label>
-                                <select class="form-control" id="user_menu_categoria" name="user_menu_categoria"></select>
-                            </div>     
 <!--                            <div  class="col-sm-2 form-group busca_categoria">
                                 <label for="user_menu_categoria">Selecione a Categoria:</label>
-                                <select class="mdb-select md-form" multiple>
+                                <select class="form-control" id="user_menu_categoria" name="user_menu_categoria"></select>
+                            </div>     -->
+                            <div class="col-sm-2 form-group busca_categoria " >
+                                <label for="user_menu_categoria">Selecione a Categoria:</label>
+                                <select class="mdb-select md-form multiselect" multiple="multiple">
                                     <option value="" disabled selected>Choose your country</option>
                                     <option value="1">USA</option>
                                     <option value="2">Germany</option>
@@ -243,7 +245,7 @@
                                     <option value="4">Poland</option>
                                     <option value="5">Japan</option>
                                 </select>                                  
-                            </div>     -->
+                            </div>     
                             <div class="col-sm-4 busca_categoria" style="padding-top: 27.5px;" >                  
                                 <button type="button" class="btn btn-info form-control" id="btnBuscar" style="width: 100%;" >
                                     <span class="fas fa-search"></span>
@@ -334,10 +336,17 @@
 </section>
 <?php include_once '../../_import/modals.php'; ?>
 <?php include_once "../../_man/search/_searchData.php"; ?>
+
+<!--<script src="dist/js/bootstrap-multiselect.js"></script>-->
+<script src="plugins/bootstrap/js/bootstrap-multiselect.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+
 <script type="text/javascript">
     
 $(document).ready(function($){
     var tableTd = "";    
+    
+    $(".multiselect").multiselect();
 
     //Máscaras e validações        
     $("#tableItens, .busca_categoria, #btnNovo").hide();
