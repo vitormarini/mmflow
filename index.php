@@ -42,7 +42,7 @@
             </div>
         </div>          
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);">
+            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="far fa-address-card"></span>
@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Usuário" id="user" name="user">
+            <input type="text" class="form-control" placeholder="Usuário" id="user" name="user" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-user"></span>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="input-group mb-3">
-            <input type="password" class="form-control" placeholder="Senha" id="pass" name="pass">
+            <input type="password" class="form-control" placeholder="Senha" id="pass" name="pass" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="fas fa-lock"></span>
@@ -97,14 +97,18 @@
 $(document).ready( function(){
             
     //Função para registrar evendo no banco de dados.
-    $("#btnLogin").on("click", function(){          
-        login('menu_sys.php');
+    $("#btnLogin").on("click", function(){  
+        
+        if($("#cnpj").val() != "" && $("#user").val() != "" && $("#pass").val() != ""){
+           login('menu_sys.php');
+        }else{
+            alert("Formulário invalido!");
+        }
     });              
     
     $("#btnContinuar").on("click",function(){
         selecionaEmpresa("login");        
     });
-                        
 });
 </script>
 </body>

@@ -163,17 +163,17 @@
 
       if ( $_SESSION['id'] != "" ){
         #Monta SQL para busca
-        $sql = "SELECT 
-                    t_empresas.empresa_tipo	, t_empresas.empresa_razao_social          , t_empresas.empresa_nome_fantasia         , t_empresas.empresa_cnpj          , t_empresas.empresa_uf    , t_empresas.empresa_ie            , t_empresas.empresa_codigo_municipio
-                ,   t_empresas.empresa_im	, t_empresas.empresa_matriz                , t_empresas.empresa_situacao              , t_empresas.empresa_logradouro    , t_empresas.empresa_numero, t_empresas.empresa_complemento   , t_empresas.empresa_bairro		
-                ,   t_empresas.empresa_cep  , t_empresas.empresa_telefone_principal    , t_empresas.empresa_telefone_secundario   , t_empresas.empresa_email         , t_empresas.empresa_nire  , t_empresas.empresa_tipo_pessoa   
-                ,   matriz.empresa_id           AS empresa_matriz_id
-                ,   matriz.empresa_cnpj         AS empresa_cnpj_matriz
-                ,   matriz.empresa_tipo_pessoa  AS empresa_tipo_pessoa_matriz
-                ,   matriz.empresa_razao_social AS empresa_razao_social_matriz
-            FROM    public.t_empresas 
-       LEFT JOIN    t_empresas AS  matriz ON ( matriz.empresa_id = t_empresas.empresa_matriz::int AND t_empresas.empresa_tipo = 'FILIAL' )
-           WHERE    t_empresas.empresa_id = '{$_SESSION['id']}';";
+        $sql = "
+            SELECT t_empresas.empresa_tipo	, t_empresas.empresa_razao_social          , t_empresas.empresa_nome_fantasia         , t_empresas.empresa_cnpj          , t_empresas.empresa_uf    , t_empresas.empresa_ie            , t_empresas.empresa_codigo_municipio
+                , t_empresas.empresa_im	, t_empresas.empresa_matriz                , t_empresas.empresa_situacao              , t_empresas.empresa_logradouro    , t_empresas.empresa_numero, t_empresas.empresa_complemento   , t_empresas.empresa_bairro		
+                , t_empresas.empresa_cep  , t_empresas.empresa_telefone_principal    , t_empresas.empresa_telefone_secundario   , t_empresas.empresa_email         , t_empresas.empresa_nire  , t_empresas.empresa_tipo_pessoa   
+                , matriz.empresa_id           AS empresa_matriz_id
+                , cpf_cnpj(t_empresas.empresa_cnpj,'')         AS empresa_cnpj_matriz
+                , matriz.empresa_tipo_pessoa  AS empresa_tipo_pessoa_matriz
+                , matriz.empresa_razao_social AS empresa_razao_social_matriz
+            FROM t_empresas 
+            LEFT JOIN t_empresas AS  matriz ON ( matriz.empresa_id = t_empresas.empresa_matriz::int AND t_empresas.empresa_tipo = 'FILIAL' )
+            WHERE t_empresas.empresa_id = '{$_SESSION['id']}';";
 
 
 
@@ -181,7 +181,7 @@
         $dados = $bd->Execute($sql);
 
         //Verificando se a empresa matriz está vinculada
-        $descricaoEmpresaMatriz = $dados->fields['empresa_matriz_id'] !== "" ? formataCpfCnpj($dados->fields['empresa_cnpj_matriz'],$dados->fields['empresa_tipo_pessoa_matriz'])." - ".$dados->fields['empresa_razao_social_matriz'] : "";
+        $descricaoEmpresaMatriz = $dados->fields['empresa_matriz_id'] !== "" ? $dados->fields['empresa_cnpj_matriz']." - ".$dados->fields['empresa_razao_social_matriz'] : "";
       }
 
        #Validamos as funcionalidades          
@@ -248,7 +248,7 @@
                         <div class="row col-sm-12">
                             <div  class="col-sm-2 mb-2">
                                 <label for="empresa_cnpj">CNPJ:</label>
-                                <input type="text" class="form-control requeri cnpj" id="empresa_cnpj" name="empresa_cnpj" value="<?php print $dados->fields['empresa_cnpj']?>" <?=$disabled?>/>
+                                <input type="text" class="form-control requeri" id="empresa_cnpj" name="empresa_cnpj" value="<?php print $dados->fields['empresa_cnpj']?>"  onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" <?=$disabled?>/>
                             </div>
                             <div  class="col-sm-2 form-group ">
                                 <label or="empresa_ie">Inscrição Estadual:</label>
@@ -420,11 +420,11 @@
         
         //Máscaras e validações        
         validaEmpresaMatriz();
-        addMascarasCPF_CNPJ();
+        //addMascarasCPF_CNPJ();
         
         $("#empresa_cep").mask("99.999-999");
         $(".telefone_fixo").mask("(99) 9999-9999");
-        $("#empresa_tipo_pessoa").on("change",function(){ addMascarasCPF_CNPJ();  });
+        //$("#empresa_tipo_pessoa").on("change",function(){ addMascarasCPF_CNPJ();  });
         
         $("#empresa_tipo").on("change", function(){ validaEmpresaMatriz(); });
         
