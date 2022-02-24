@@ -71,7 +71,7 @@
         INNER JOIN t_menu ON ( t_menu.menu_id = t_menu_sub.menu_id )
         WHERE menu_submenu_url  = '{$_SESSION['tela_atual']}';");
   }else{
-      $title = "ERP  SYS - Tema";
+      $title = "Flow";
   }
 ?>
     <title> <?= $title ?></title>
@@ -184,7 +184,7 @@
     <!-- Brand Logo -->
     <a href="menu_sys.php" class="brand-link">
       <!--<img src="dist/img/linofavic.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
-      <span class="brand-text font-weight-light">SYS - Tema</span>
+      <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
     </a>
 
 
@@ -410,7 +410,7 @@
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer fixed-bottom escondido">
-    <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini">SYS Tema - ERP</a>.</strong>
+    <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini"><b>Flow</b> - ERP</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.<?php print date("m") ?>.01

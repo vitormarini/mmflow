@@ -23,12 +23,12 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Login </b>SYS Tema</a>
+    <a href="#"><b>Flow </b> Gestão</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Digite seu usário e senha 2 :</p>
+      <p class="login-box-msg">Digite os dados de acesso :</p>
 
       <form action="./_man/validaLogin.php" method="post" id="frmDados">
         <input type="hidden" id="empresas" name="empresas">
