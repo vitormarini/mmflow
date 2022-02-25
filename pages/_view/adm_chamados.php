@@ -36,6 +36,11 @@
                 OR empresa_cnpj           ILIKE '%{$filtro_busca}%' 
                 OR empresa_razao_social   ILIKE '%{$filtro_busca}%'";
         } 
+        if (  strlen($_POST['filtro_busca_select']) > 2 ){
+            $filtro_busca = $_POST['filtro_busca_select'];
+            $where = ($where != "" ? "AND " : "WHERE ").
+            "c_status = '{$filtro_busca}'";
+        } 
     ?>
     <!-- Default box -->
     <div class="card body-view">
@@ -44,13 +49,23 @@
                 <div class="row">
                     <div class="col-sm-2">                  
                         <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_chamados','insert','', 'movimentacao','','')">
-                        <span class="fas fa-plus"></span>
-                        Novo Item
-                    </button>                  
+                            <span class="fas fa-plus"></span>
+                            Novo Item
+                        </button>                  
                     </div>
-                    <div class="col-sm-8">
+                    <div class="col-sm-2">
                         <div class="col-sm-12">                        
-                            <input type="text" class="form-control buscas" id="filtro_busca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
+                            <select class="form-control buscas" id="filtro_busca_select" name="filtro_busca_select">
+                                <option value="">TODOS</option>
+                                <option value="ABERTO"      <?php print ($_POST['filtro_busca_select'] == "ABERTO" ? "selected" : "" ); ?>>ABERTO</option>
+                                <option value="EM_ANDAMENTO"<?php print ($_POST['filtro_busca_select'] == "EM_ANDAMENTO" ? "selected" : "" ); ?>>EM_ANDAMENTO</option>
+                                <option value="ENCERRADO"   <?php print ($_POST['filtro_busca_select'] == "ENCERRADO" ? "selected" : "" ); ?>>ENCERRADO</option>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="col-sm-12">                        
+                            <input type="text" class="form-control buscas" id="filtro_buscca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
                         </div>
                     </div>
                     <div class="col-sm-2">                  
@@ -84,8 +99,9 @@
                     , databrasil(c_data_fechamento::date) AS c_data_fechamento
                 FROM    t_chamados c 
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
+                {$where}
                 ORDER BY chamados_id;";
-
+// print"<pre>".$sql;exit;
             $dados = $bd->Execute($sql);
 
             #Setamos a quantidade de itens na busca
@@ -117,12 +133,19 @@
                     <tbody>
                         <?php 
                             while(!$dados->EOF){
+                                if ( $dados->fields['c_status'] == "EM_ANDAMENTO" ){
+                                    $status = '<td class="text-center alert-warning" title="EM ANDAMENTO"><span class="fas fa-tags" ></span></td>';
+                                }
+                                else if ( $dados->fields['c_status'] == "ABERTO" ){
+                                    $status = '<td class="text-center alert-info" title="ABERTO"><span class="fas fa-lock-open" ></span></td>';
+                                }
+                                else if ( $dados->fields['c_status'] == "ENCERRADO" ){
+                                    $status = '<td class="text-center alert-success" title="ENCERRADO"><span class="fas fa-lock" ></span></td>';
+                                }
+
                                 ?>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="fas fa-tags"></span>
-                                        <span class="fas fa-save"></span>
-                                    </td>
+                                <tr>                                    
+                                    <?php print $status; ?>
                                     <td class="text-center">#<?= $dados->fields['chamados_id']      ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['user_nome']         ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_responsavel']     ?></td>                                    
@@ -132,7 +155,7 @@
                                     <td class="text-center"><?= $dados->fields['c_data_fechamento'] ?></td>
                                     <td class="text-center">
                                         <button class="btn btn-success" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
-                                            <span class="fas fa-search openDetalhes"></span>
+                                            <span class="fas fa-plus openDetalhes"></span>
                                         </button>
                                     </td>
                                     <td class="text-center">
