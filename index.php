@@ -42,7 +42,7 @@
             </div>
         </div>          
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" required>
+            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" value="02.786.436/0001-83" required>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="far fa-address-card"></span>
@@ -78,9 +78,9 @@
 <!--      <p class="mb-1">
         <a href="forgot-password.html">Esqueci minha Senha</a>
       </p>-->
-      <p class="mb-0">
+      <!-- <p class="mb-0">
         <a href="register.php" class="text-center">Registrar Novo Membro</a>
-      </p>
+      </p> -->
     </div>
     <!-- /.login-card-body -->
   </div>

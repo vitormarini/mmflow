@@ -17,7 +17,7 @@
 <div class="col-sm-8 box-register">
   <div class="card card-outline card-primary">
     <div class="card-header text-center">
-        <a href="#" class="h1"><b>Register </b>SYS Tema</a>
+        <a href="#" class="h1"><b>Register usuário </b>FLow</a>
     </div>
     <div class="card-body">
         <p class="login-box-msg">Dados para registrar um <b>novo</b> membro!!! </p>
@@ -81,7 +81,7 @@
                     <div class="form-group input-group mb-4 ">
                         <select class="form-control" id="user_tipo" name="user_tipo">
                             <option value="COMUM"  selected>1 - USUÁRIO SISTEMA</option>
-                            <option value="ADM"    disabled>2 - ADMINISTRADOR  </option>
+                            <option value="ADM"    >2 - ADMINISTRADOR  </option>
                             <option value="SERVER" disabled>3 - SERVER         </option>
                         </select>                      
                     </div>

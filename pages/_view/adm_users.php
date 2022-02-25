@@ -57,10 +57,12 @@
             <form role="search" method="post" action="menu_sys.php">       
                 <div class="row">
                     <div class="col-sm-2">                  
-                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_users','insert','', 'movimentacao','','')">
-                            <span class="fas fa-plus"></span>
-                            Novo Item
-                        </button>                  
+                        <a href="register.php" class="text-center">
+                            <button type="button" class="btn btn-success" id="btnNovo">
+                                <span class="fas fa-plus"></span>
+                                Registrar Novo Membro
+                            </button>         
+                        </a>         
                     </div>
                     <div class="col-sm-8">
                         <div class="col-sm-auto">                        
@@ -202,14 +204,14 @@
         <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmUser.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link     " >Dados Usuário</a>
+                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link  active" >Dados Usuário</a>
                 </li>   
                 <li class="nav-item">
                     <a href="#user_permissao" id="aba-user-permissoes"  role="tab" data-toggle="tab" class="nav-link " >Permissões de Acesso</a>
                 </li>   
             </ul>
             <div class="tab-content">
-                <div class="tab-pane margin-top-15" id="user_geral" role="tabpanel">
+                <div class="tab-pane margin-top-15 active" id="user_geral" role="tabpanel">
                     <div class="row">
                         <div class="row col-sm-12">
                             <div  class="col-sm-4  mb-2">
@@ -245,6 +247,28 @@
                                 <input type="text" class="form-control requeri" id="user_celular" name="user_celular" value="<?php print $dados->fields['user_celular']?>" onkeypress="maskphone(this, mphone);" onblur="maskphone(this, mphone);" <?=$disabled?>/>
                             </div>
                         </div>
+                    </div>
+                    <div class="row col-sm-12 profile">
+                        <div  class="col-sm-2  mb-2">
+                            <label for="user_photo">Foto de Perfil (JPG):</label>
+                            <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/upload_imagem.php" enctype="multipart/form-data">
+                                <input  class="form-group" id="arquivo" name="arquivo" type="file" >
+                                <input  class="form-group" type="submit" value="Upload" >
+                            </form>
+                        </div>
+                        <?php
+                        if (file_exists("dist/img/user_{$dados->fields['user_id']}.jpg") ){ ?>
+                            <div  class="col-sm-1  mb-2">
+                                <div class="image" >
+                                    <img src="dist/img/user_<?=$dados->fields['user_id']?>.jpg" class="img-circle elevation-2" alt="Sem Imagem" style="width: 140px; height: 140px;">
+                                </div>
+                            </div>            
+                            <div  class="col-sm-2  mb-2 ">
+                                <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/drop_imagem.php">
+                                    <input  class="form-group text-danger" type="submit" value="Remover Imagem" >
+                                </form>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="tab-pane  margin-top-15" id="user_permissao" role="tabpanel">
@@ -305,29 +329,7 @@
                 </div>
             </div>
         </form>
-    </div>
-    <div class="row col-sm-12 profile">
-        <div  class="col-sm-2  mb-2">
-            <label for="user_photo">Foto de Perfil (JPG):</label>
-            <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/upload_imagem.php" enctype="multipart/form-data">
-                <input  class="form-group" id="arquivo" name="arquivo" type="file" >
-                <input  class="form-group" type="submit" value="Upload" >
-            </form>
-        </div>
-        <?php
-        if (file_exists("dist/img/user_{$dados->fields['user_id']}.jpg") ){ ?>
-            <div  class="col-sm-1  mb-2">
-                <div class="image" >
-                    <img src="dist/img/user_<?=$dados->fields['user_id']?>.jpg" class="img-circle elevation-2" alt="Sem Imagem" style="width: 140px; height: 140px;">
-                </div>
-            </div>            
-            <div  class="col-sm-2  mb-2 ">
-                <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/drop_imagem.php">
-                    <input  class="form-group text-danger" type="submit" value="Remover Imagem" >
-                </form>
-            </div>
-        <?php } ?>
-    </div>
+    </div>    
     <!-- /.card-body -->
     <div class="card-footer  align-content-center">
         <div class="row">          
