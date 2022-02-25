@@ -1,6 +1,37 @@
 <link href="dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
+<script src="plugins/bootstrap/js/bootstrap-multiselect.js"></script>
 <!--<link href="../../plugins/bootstra" rel="stylesheet" type="text/css" />-->
 <!-- Main content -->
+<style>
+    .selectBox {
+    position: relative;
+    }
+
+    .selectBox select {
+    width: 100%;
+    }
+
+    .overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    }
+
+    #checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+    }
+
+    #checkboxes label {
+    display: block;
+    }
+
+    #checkboxes label:hover {
+    background-color: #1e90ff;
+    }
+</style>
 <section class="content">
 
    <!-- INICIAMOS O MODO TELA -->
@@ -171,14 +202,14 @@
         <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmUser.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link active" >Dados Usuário</a>
+                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link     " >Dados Usuário</a>
                 </li>   
                 <li class="nav-item">
                     <a href="#user_permissao" id="aba-user-permissoes"  role="tab" data-toggle="tab" class="nav-link " >Permissões de Acesso</a>
                 </li>   
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active margin-top-15" id="user_geral" role="tabpanel">
+                <div class="tab-pane margin-top-15" id="user_geral" role="tabpanel">
                     <div class="row">
                         <div class="row col-sm-12">
                             <div  class="col-sm-4  mb-2">
@@ -235,17 +266,16 @@
                                 <label for="user_menu_categoria">Selecione a Categoria:</label>
                                 <select class="form-control" id="user_menu_categoria" name="user_menu_categoria"></select>
                             </div>     -->
-                            <div class="col-sm-2 form-group busca_categoria " >
-                                <label for="user_menu_categoria">Selecione a Categoria:</label>
-                                <select class="mdb-select md-form multiselect" multiple="multiple">
-                                    <option value="" disabled selected>Choose your country</option>
-                                    <option value="1">USA</option>
-                                    <option value="2">Germany</option>
-                                    <option value="3">France</option>
-                                    <option value="4">Poland</option>
-                                    <option value="5">Japan</option>
-                                </select>                                  
-                            </div>     
+                            <div class="col-sm-2 form-group escondido lista_sub" >
+                                <label for="user_menu">Selecione o Submenu:</label>
+                                <div class="selectBox form-control" onclick="showCheckboxes()">
+                                    Selecione  - <span class="fas fa-list nav-icon"></span>
+                                    <div class="overSelect"></div>
+                                </div>
+                                <div id="checkboxes">                                    
+                                </div>                                
+                                <!-- </div>     -->
+                            </div>
                             <div class="col-sm-4 busca_categoria" style="padding-top: 27.5px;" >                  
                                 <button type="button" class="btn btn-info form-control" id="btnBuscar" style="width: 100%;" >
                                     <span class="fas fa-search"></span>
@@ -342,12 +372,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 
 <script type="text/javascript">
-    
+
+    var expanded = false;
+    function showCheckboxes() {
+        var checkboxes = document.getElementById("checkboxes");
+        if (!expanded) {
+            checkboxes.style.display = "block";
+            expanded = true;
+        } else {
+            checkboxes.style.display = "none";
+            expanded = false;
+        }
+    }
+
 $(document).ready(function($){
     var tableTd = "";    
     
-    $(".multiselect").multiselect();
-
     //Máscaras e validações        
     $("#tableItens, .busca_categoria, #btnNovo").hide();
 
@@ -376,35 +416,42 @@ $(document).ready(function($){
     });
 
     function buscaSelect(){
+        $("#checkboxes").empty();
         $.ajax({
             url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchSelect.php",
             type: "post",
             dataType: "json",
             data: { 
-                busca: "submenu_categoria",
+                busca: "submenu_categoria_cb",
                 id: $("#user_menu").val(),
             },
             success: function(retorno){
                 if ( retorno.dados[0].status == "OK" ){
-                    $("#user_menu_categoria").append(retorno.dados[0].html); 
+                    $("#checkboxes").append(retorno.dados[0].html); 
                     $(".busca_categoria").show();
+                    $(".lista_sub").removeClass("escondido");
                 }else{
-                    $("#user_menu_categoria").val("");
-                    $("#tableItens > tbody, #user_menu_categoria").empty();
+                    $("#checkboxes").val("");
+                    $("#tableItens > tbody, #checkboxes").empty();
                     $("#tableItens, .busca_categoria").hide();
+                    $(".lista_sub").addClass("escondido");
                 }                    
             }
         });  
     }
 
     function buscaTableLinha(){
+        var checados = [];
+            $.each($("input[name='cb_list']:checked"), function(){           
+                checados.push("'"+$(this).val()+"'");
+            });
         $.ajax({
             url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_selectTableLinha.php",
             type: "post",
             dataType: "json",
             data: { 
                 busca: "submenu",
-                categoria: $("#user_menu_categoria").val(),
+                categoria: checados.join(","),
                 menu_id: $("#user_menu").val()
             },
             success: function(retorno){
@@ -436,6 +483,7 @@ $(document).ready(function($){
                     $("#user_menu, #user_menu_categoria").val("");
                     $("#tableItens > tbody, #user_menu_categoria").empty();
                     $("#tableItens, .busca_categoria").hide();
+                    $(".lista_sub").addClass("escondido");
                 }, 500);                   
             }
         });  
