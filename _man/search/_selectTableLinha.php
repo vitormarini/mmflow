@@ -14,8 +14,10 @@ $valida = false;
 
 #Validamos qual o select que iremos retornar
 if ( $_POST['busca'] == "submenu" ){
-    
-    $where = !empty($_POST['menu_id']) && !empty($_POST['categoria']) ? "WHERE menu_submenu_categoria = '{$_POST['categoria']}' AND menu_id = {$_POST['menu_id']}" : "";
+    // print"<pre>";
+    // print_r($_POST);
+    // exit;
+    $where = !empty($_POST['menu_id']) && !empty($_POST['categoria']) ? "WHERE menu_submenu_categoria IN ( {$_POST['categoria']} ) AND menu_id = {$_POST['menu_id']}" : "";
     
     $sql = "SELECT  menu_sub_id ,  menu_submenu_descricao FROM t_menu_sub  $where ORDER BY 2;";    
     

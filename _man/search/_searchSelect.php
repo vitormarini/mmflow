@@ -30,6 +30,29 @@ if ( $_POST['busca'] == "submenu_categoria" ){
         $objDados->MoveNext();
     }   
 }
+if ( $_POST['busca'] == "submenu_categoria_cb" ){
+    
+    #Retorno será um CheckBox
+    $html = "";
+
+    $where = !empty($_POST['id']) ? "WHERE menu_id = {$_POST['id']}" : "";
+    
+    $sql = "SELECT menu_submenu_categoria FROM t_menu_sub $where GROUP BY 1 ORDER BY 1;";    
+    
+    #Executa a linha de busca no banco
+    $objDados = $bd->Execute($sql);
+    while(!$objDados->EOF){
+        $html .= 
+        '<label for="'.$objDados->fields['menu_submenu_categoria'].'">
+            <input type="checkbox" id="'.$objDados->fields['menu_submenu_categoria'].'" name="cb_list"value="'.$objDados->fields['menu_submenu_categoria'].'" />
+                '.$objDados->fields['menu_submenu_categoria'].'
+        </label>';
+
+        $valida = true;
+
+        $objDados->MoveNext();
+    }   
+}
 
 else if ( $_POST['busca'] == "t_empresas"){
     $_POST['cnpj'] = substr(retira_caracteres($_POST['cnpj']),0,8);
