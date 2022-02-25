@@ -81,6 +81,7 @@
 </style>
 <!-- CSS -->
 <link rel="stylesheet" href="build/scss/jquery-ui-1.11.4.min.css">
+<link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>
 
 <script src="./plugins/jquery/jquery-1.12.1.min.js"></script>
 <script src="./plugins/jquery/jquery-ui-1.11.4.min.js"></script>
