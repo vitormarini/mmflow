@@ -30,7 +30,9 @@ else if ( $op == "edit" ){
                                     menu_submenu_descricao     = '{$dados['menu_submenu_descricao']}',
                                     menu_submenu_url           = '{$dados['menu_submenu_url']}',
                                     menu_submenu_icon          = '{$dados['menu_submenu_icon']}'
-                                             WHERE menu_sub_id =  {$id};"; 
+                                             WHERE menu_sub_id =  {$id};
+            UPDATE user_permission SET id_menu = '{$dados['menu_id']}' WHERE id_item = {$id};";
+ 
 }
 
 
