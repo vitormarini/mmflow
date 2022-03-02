@@ -9,9 +9,9 @@ include_once '../../_man/_aux.php';
 
 session_start();
 
-//print "<pre>"; print_r($_POST);
-//print "<pre>"; print_r($_SESSION);
-//exit;
+// print "<pre>"; print_r($_POST);
+// print "<pre>"; print_r($_SESSION);
+// exit;
 
 
 $op         = $_SESSION['op'];          //Ação
