@@ -22,7 +22,7 @@
             <form role="search" method="post" action="menu_sys.php">       
                 <div class="row">
                     <div class="col-sm-2">                  
-                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_departamentos','insert','', 'movimentacao','','')">
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_cargos','insert','', 'movimentacao','','')">
                             <span class="fas fa-plus"></span>
                             Novo
                         </button>                  
@@ -48,12 +48,12 @@
             $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );                                   
 
             #buscamos os dados
-            $sql = "SELECT  dpto_id         , dpto_nome             , dpto_descricao
+            $sql = "SELECT  cargo_id         , cargo_nome             
                             , CASE 
-                                    WHEN dpto_ativo = 'S' THEN 'Ativo'
+                                    WHEN cargo_ativo = 'S' THEN 'Ativo'
                                     ELSE 'INATIVO'
-                              END AS dpto_ativo_desc
-                    FROM t_departamentos  {$where} 
+                              END AS cargo_ativo_desc
+                    FROM t_cargos  {$where} 
                     ORDER BY 2;";
 
             $dados = $bd->Execute($sql);
@@ -77,7 +77,6 @@
                                 <th width="09%"> #           </th>
                                 <th width="10%">Situação     </th>
                                 <th width="20%">Nome         </th>
-                                <th width="46%">Descrição    </th>
                                 <th width="15%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
@@ -86,22 +85,21 @@
                             if ( $dados->RecordCount() > 0 ){ 
                                 while ( !$dados->EOF ) {
                                     
-                                    $alert = $dados->fields['dpto_ativo_desc'] == "Ativo" ? "" : "alert-danger";
+                                    $alert = $dados->fields['cargo_ativo_desc'] == "Ativo" ? "" : "alert-danger";
 
                                     ?>
                             <tr>
-                                <td class="text-left"><?= $dados->fields['dpto_id']                       ?></td>
-                                <td class="text-left <?= $alert ?>"><?= $dados->fields['dpto_ativo_desc']                       ?></td>
-                                <td class="text-left"><?= $dados->fields['dpto_nome']                       ?></td>
-                                <td class="text-left"><?= $dados->fields['dpto_descricao']                           ?></td>
+                                <td class="text-left"><?= $dados->fields['cargo_id']                       ?></td>
+                                <td class="text-left <?= $alert ?>"><?= $dados->fields['cargo_ativo_desc']                       ?></td>
+                                <td class="text-left"><?= $dados->fields['cargo_nome']                       ?></td>
                                 <td class="text-center">
-                                    <button class="btn btn-success" onclick="movPage('adm_departamentos','view','<?= $dados->fields['dpto_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
+                                    <button class="btn btn-success" onclick="movPage('adm_cargos','view','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="btn btn-info" onclick="movPage('adm_departamentos','edit','<?= $dados->fields['dpto_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
+                                    <button class="btn btn-info" onclick="movPage('adm_cargos','edit','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger" onclick="movPage('adm_departamentos','delete','<?= $dados->fields['dpto_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." hidden>
+                                    <button class="btn btn-danger" onclick="movPage('adm_cargos','delete','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." hidden>
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -154,40 +152,41 @@
        else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
 
        #Resgatando os Menus
-       $dataMenu = $bd->Execute($sql = "SELECT menu_descricao ,	menu_id FROM t_menu ORDER BY 1;");
+       $dataMenu = $bd->Execute($sql = "SELECT cargo_nome, cargo_cbo ,	cargo_id, cargo_ativo FROM t_cargos ORDER BY 1;");
       ?>
   <div class="card body-view">
     <div class="card-header">
       <div class="row">
             <div class="col-sm-12">           
-                <label><?= $description ?> Dados do Departamento</label>
+                <label><?= $description ?> Dados do Cargo</label>
             </div>
       </div>
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmDepartamento.php" method="post" id="frmDados">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmCargos.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link  active" >Dados Departamento</a>
+                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link  active" >Dados Cargo</a>
                 </li>     
             </ul>
             <div class="tab-content">
                 <div class="tab-pane margin-top-15 active" id="user_geral" role="tabpanel">
                     <div class="row">
                         <div class="row col-sm-12">
-                            <div  class="col-sm-4  mb-2">
-                                <label or="dpto_nome">Nome Departamento:</label>
-                                <input type="text" class="form-control requeri unique" id="dpto_nome" name="dpto_nome" value="<?php print $dados->fields['dpto_nome']?>" <?=$disabled?>/>
+                            <div  class="col-sm-4  mb-2">   
+                                <label or="dpto_cargo_nomenome">Nome Cargo:</label>
+                                <input type="text" class="form-control requeri  " id="cargo_nome" name="cargo_nome" value="<?php print $dados->fields['cargo_nome']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-6  mb-2">
-                                <label for="dpto_descricao">Descrição:</label>
-                                <input type="text" class="form-control requeri unique" id="dpto_descricao" name="dpto_descricao" value="<?php print $dados->fields['dpto_descricao']?>" <?=$disabled?>/>
-                            </div>                            
+                            <div  class="col-sm-4  mb-2">   
+                                <label or="cargo_cbo">CBO Cargo:</label>
+                                <input type="text" class="form-control requeri" id="cargo_cbo" name="cargo_cbo" value="<?php print $dados->fields['cargo_cbo']?>" <?=$disabled?>/>
+                            </div>
+                                                   
                             <div  class="col-sm-2  mb-2">
-                                <label or="dpto_ativo">Situação:</label>
-                                <select class="form-control" id="dpto_ativo" name="dpto_ativo">
-                                    <option value="S" <?php print $dados->fields['dpto_ativo'] == "S" ? "selected": ""?>>Sim</option>
-                                    <option value="N" <?php print $dados->fields['dpto_ativo'] == "N" ? "selected": ""?>>Não</option>
+                                <label or="cargo_ativo">Situação:</label>
+                                <select class="form-control" id="cargo_ativo" name="cargo_ativo">
+                                    <option value="S" <?php print $dados->fields['cargo_ativo'] == "S" ? "selected": ""?>>Sim</option>
+                                    <option value="N" <?php print $dados->fields['cargo_ativo'] == "N" ? "selected": ""?>>Não</option>
                                 </select>
                             </div>
                         </div>                        
@@ -216,7 +215,7 @@
                </div>
             <?php } ?>                    
             <div class="col-sm-2 ">                  
-              <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_departamentos','','', 'movimentacao','','')">
+              <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_cargos','','', 'movimentacao','','')">
                   <span class="fas fa-retweet"></span>
                   Voltar
               </button>                  

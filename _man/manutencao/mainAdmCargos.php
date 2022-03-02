@@ -18,14 +18,15 @@ $dados = $_POST;
 $retorno = "ERRO";
 
 #Validando os dados Cadastrais
-$dpto_nome              = trim($_POST['dpto_nome']);
-$dpto_descricao         = trim($_POST['dpto_descricao']);
-$dpto_ativo             = trim($_POST['dpto_ativo']);
+$cargo_ativo         = trim($_POST['cargo_ativo']);
+$cargo_cbo           = trim($_POST['cargo_cbo']);
+$cargo_nome          = trim($_POST['cargo_nome']);
+
 #INSERT
 if ( $op == "insert" ){
-    $sql = "INSERT INTO public.t_departamentos (
-                            	dpto_nome           ,	dpto_descricao      , dpto_ativo) 
-                     VALUES(    '$dpto_nome'        ,	'$dpto_descricao'   , '$dpto_ativo');";
+    $sql = "INSERT INTO public.t_cargos (
+                            	cargo_nome           , cargo_ativo      , cargo_cbo) 
+                     VALUES(    '$cargo_nome'        , '$cargo_ativo'   , '$cargo_cbo');";
 }
 
 else if ( $op == "edit" ){   
@@ -48,10 +49,10 @@ else if ( $op == "edit" ){
         
     }else{
           
-        $sql .= " UPDATE t_departamentos SET  dpto_nome           =   '$dpto_nome'
-                             ,	dpto_descricao       =   '$dpto_descricao'
-                             ,	dpto_ativo       =   '$dpto_ativo'
-                               WHERE dpto_id             =   {$id};"; 
+        $sql .= " UPDATE t_cargos SET  cargo_nome           =   '$cargo_nome'
+                             ,	cargo_cbo       =   '$cargo_cbo'
+                             ,	cargo_ativo       =   '$cargo_ativo'
+                               WHERE cargo_id             =   {$id};"; 
     }                          
 }
 

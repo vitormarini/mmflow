@@ -139,6 +139,10 @@
                     ,   participante_im                            ,   participante_cliente                           ,   participante_fornecedor        , participante_funcionario
                     ,   participante_cliente
                     ,   participante_representante                 ,   participante_codigo_pais||' - '||pais_nome AS participante_pais_descricao
+                    ,   participante_cargo_id
+                    ,   participante_dpto_id
+                    ,   participante_func_dt_adm
+                    ,   participante_func_dt_nasc
                 FROM   t_participante  
                 INNER JOIN t_paises AS pais ON ( pais.pais_codigo::Text = t_participante.participante_codigo_pais)
                 WHERE participante_id = '{$_SESSION['id']}';";
@@ -257,6 +261,50 @@
                                 <label for="participante_busca" class="requi">Código do País:</label>
                                 <input type="text" class="form-control   search " id="participante_busca" name="t_pais" value="<?php print $dados->fields['participante_pais_descricao'] ?>" <?=$disabled?> placeholder="Busque pelo Nome ou Código do Pais"/>
                                 <input type="hidden" class="form-control  require" id="participante_codigo_pais" name="participante_codigo_pais" value="<?php print $dados->fields['participante_codigo_pais']?>" <?=$disabled?>/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row escondido" id="parametros_funcionario" >
+                        <div  class="row    col-sm-8" style="background-color: lightblue;">
+                            <div  class="col-sm-3">
+                                <label for="participante_cargo_id" class="requi">Cargo:</label>
+                                <select class="form-control " id="participante_cargo_id" name="participante_cargo_id" <?=$disabled?>>
+                                    <option value="" >Selecione</option>
+                                    <?php 
+                                        $dadosCargo = $bd->Execute($sql = "SELECT cargo_id, cargo_nome  FROM t_cargos td WHERE cargo_ativo = 'S' ORDER BY 1");
+
+                                        while ( !$dadosCargo->EOF ){
+
+                                            print '<option value="'.$dadosCargo->fields['cargo_id'].'"'.( $dadosCargo->fields['cargo_id'] == $dados->fields['participante_cargo_id'] ? "selected" : "").'>'.$dadosCargo->fields['cargo_id'].' - '.$dadosCargo->fields['cargo_nome'].'</option>';
+
+                                            $dadosCargo->MoveNext();
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_dpto_id" class="requi">Departamento:</label>
+                                <select class="form-control " id="participante_dpto_id" name="participante_dpto_id" <?=$disabled?>>
+                                    <option value="" >Selecione</option>
+                                    <?php 
+                                        $dadosDpto = $bd->Execute($sql = "SELECT dpto_id, dpto_nome, dpto_descricao  FROM t_departamentos td WHERE dpto_ativo = 'S' ORDER BY 1");
+
+                                        while ( !$dadosDpto->EOF ){
+
+                                            print '<option value="'.$dadosDpto->fields['dpto_id'].'"'.( $dadosDpto->fields['dpto_id'] == $dados->fields['participante_dpto_id'] ? "selected" : "").'>'.$dadosDpto->fields['dpto_id'].' - '.$dadosDpto->fields['dpto_nome'].'</option>';
+
+                                            $dadosDpto->MoveNext();
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_func_dt_adm" class="requi">Dt Admissão:</label>
+                                <input type="date" class="form-control" id="participante_func_dt_adm" name="participante_func_dt_adm" value="<?php print $dados->fields['participante_func_dt_adm'] ?>" <?=$disabled?> placeholder="Busque pelo Nome ou Código do Pais"/>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_func_dt_nasc" class="requi">Dt Nascimento:</label>
+                                <input type="date" class="form-control" id="participante_func_dt_nasc" name="participante_func_dt_nasc" value="<?php print $dados->fields['participante_func_dt_nasc'] ?>" <?=$disabled?> placeholder="Busque pelo Nome ou Código do Pais"/>
                             </div>
                         </div>
                     </div>
@@ -533,12 +581,13 @@ $(document).ready(function($){
 
         
     //Máscaras e validações    
-    if ( $("#op").val() != "insert" )  addMascarasCPF_CNPJ();
+    if ( $("#op").val() != "insert" )  addMascarasCPF_CNPJ(); validaFuncionario();
 
     $("#empresa_cep").mask("99.999-999");
     $(".telefone_fixo").mask("(99) 9999-9999");
     $("#participante_endereco_cep").mask("99.999-999");
     $("#participante_tipo"   ).on("change",function(){ addMascarasCPF_CNPJ();        });
+    $("#participante_funcionario"   ).on("change",function(){ validaFuncionario();        });
 
     $("#btnAdicionarEndereco").on("click", function(){ movimentaItens("novo","","endereco"); });
     $(".btnRemoveItem"       ).on("click", function(){ movimentaItens("delete",$(this).prop("name"),"endereco"); });
@@ -568,6 +617,15 @@ $(document).ready(function($){
         else                     {  $("#participante_codigo").mask("999.9999");           }
     }        
 
+    //Validamos a apresentação dos campos relacionados a funcionários
+    function validaFuncionario(){
+        var funcionario = $("#participante_funcionario").val();
+
+        $("#parametros_funcionario").addClass("escondido");
+        console.log(funcionario);exit;
+        if ( funcionario == "S" ) $("#parametros_funcionario").removeClass("escondido");    
+
+    }
 
     function movimentaItens(tipo,id, method){
         $.ajax({
