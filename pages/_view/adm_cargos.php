@@ -1,37 +1,3 @@
-<link href="dist/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css" />
-<script src="plugins/bootstrap/js/bootstrap-multiselect.js"></script>
-<!--<link href="../../plugins/bootstra" rel="stylesheet" type="text/css" />-->
-<!-- Main content -->
-<style>
-    .selectBox {
-    position: relative;
-    }
-
-    .selectBox select {
-    width: 100%;
-    }
-
-    .overSelect {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    }
-
-    #checkboxes {
-    display: none;
-    border: 1px #dadada solid;
-    }
-
-    #checkboxes label {
-    display: block;
-    }
-
-    #checkboxes label:hover {
-    background-color: #1e90ff;
-    }
-</style>
 <section class="content">
 
    <!-- INICIAMOS O MODO TELA -->
@@ -44,10 +10,9 @@
         if ( !empty($_POST['filtro_busca']) ){
             $filtro_busca = retira_caracteres($_POST['filtro_busca']);
             $where = 
-            "WHERE user_id IS NOT NULL 
-                AND ( user_nome     ILIKE '%{$filtro_busca}%' 
-                   OR user_nickname ILIKE '%{$filtro_busca}%' 
-                   OR user_email    ILIKE '%{$filtro_busca}%' )";
+            "WHERE dpto_id IS NOT NULL 
+                AND ( dpto_nome      ILIKE '%{$filtro_busca}%' 
+                   OR dpto_descricao ILIKE '%{$filtro_busca}%' )";
         } 
     ?>
 
@@ -57,12 +22,10 @@
             <form role="search" method="post" action="menu_sys.php">       
                 <div class="row">
                     <div class="col-sm-2">                  
-                        <a href="register.php" class="text-center">
-                            <button type="button" class="btn btn-success" id="btnNovo">
-                                <span class="fas fa-plus"></span>
-                                Registrar Novo Membro
-                            </button>         
-                        </a>         
+                        <button type="button" class="btn btn-success" id="btnNovo" onclick="movPage('adm_cargos','insert','', 'movimentacao','','')">
+                            <span class="fas fa-plus"></span>
+                            Novo
+                        </button>                  
                     </div>
                     <div class="col-sm-8">
                         <div class="col-sm-auto">                        
@@ -85,11 +48,12 @@
             $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );                                   
 
             #buscamos os dados
-            $sql = "SELECT  user_id         , user_nome             , user_nickname
-                        ,   user_email      , user_dt_nascimento    , user_tipo
-                        ,   user_quest_1    , user_quest_2          , user_resp_1
-                        ,   user_resp_2     , terms                 , mask_phone(user_celular) AS user_celular
-                    FROM t_user  {$where} 
+            $sql = "SELECT  cargo_id         , cargo_nome             
+                            , CASE 
+                                    WHEN cargo_ativo = 'S' THEN 'Ativo'
+                                    ELSE 'INATIVO'
+                              END AS cargo_ativo_desc
+                    FROM t_cargos  {$where} 
                     ORDER BY 2;";
 
             $dados = $bd->Execute($sql);
@@ -110,32 +74,32 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th width="09%">                </th>
-                                <th width="15%">Usuário         </th>
-                                <th width="26%">Nome            </th>
-                                <th width="13%">Dt Nascimento   </th>
-                                <th width="22%">E-mail          </th>
+                                <th width="09%"> #           </th>
+                                <th width="10%">Situação     </th>
+                                <th width="20%">Nome         </th>
                                 <th width="15%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
                             if ( $dados->RecordCount() > 0 ){ 
-                                while ( !$dados->EOF ) { ?>
+                                while ( !$dados->EOF ) {
+                                    
+                                    $alert = $dados->fields['cargo_ativo_desc'] == "Ativo" ? "" : "alert-danger";
+
+                                    ?>
                             <tr>
-                                <td class="text-center"><img src="dist/img/user_<?=$dados->fields['user_id']?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 40px; height: 40px;"></td>
-                                <td class="text-left"><?= $dados->fields['user_nickname']                       ?></td>
-                                <td class="text-left"><?= $dados->fields['user_nome']                           ?></td>
-                                <td class="text-left"><?= dataBrasil($dados->fields['user_dt_nascimento'])      ?></td>
-                                <td class="text-left"><?= $dados->fields['user_email']                          ?></td>
+                                <td class="text-left"><?= $dados->fields['cargo_id']                       ?></td>
+                                <td class="text-left <?= $alert ?>"><?= $dados->fields['cargo_ativo_desc']                       ?></td>
+                                <td class="text-left"><?= $dados->fields['cargo_nome']                       ?></td>
                                 <td class="text-center">
-                                    <button class="btn btn-success" onclick="movPage('adm_users','view','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
+                                    <button class="btn btn-success" onclick="movPage('adm_cargos','view','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
                                         <i class="fas fa-eye"></i>
                                     </button>
-                                    <button class="btn btn-info" onclick="movPage('adm_users','edit','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
+                                    <button class="btn btn-info" onclick="movPage('adm_cargos','edit','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger" onclick="movPage('adm_users','delete','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." hidden>
+                                    <button class="btn btn-danger" onclick="movPage('adm_cargos','delete','<?= $dados->fields['cargo_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." hidden>
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -168,11 +132,9 @@
 
       if ( $_SESSION['id'] != "" ){
         #Monta SQL para busca
-        $sql = "SELECT  user_id     , user_nome             , user_nickname
-                    ,   user_email  , user_dt_nascimento    , user_tipo
-                    ,   mask_phone(user_celular) AS user_celular
-                   FROM t_user 
-                  WHERE user_id = '{$_SESSION['id']}';";
+        $sql = "SELECT  dpto_id     , dpto_nome             , dpto_descricao, dpto_ativo
+                   FROM t_departamentos 
+                  WHERE dpto_id = '{$_SESSION['id']}';";
 
 
 
@@ -190,143 +152,46 @@
        else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
 
        #Resgatando os Menus
-       $dataMenu = $bd->Execute($sql = "SELECT menu_descricao ,	menu_id  FROM t_menu ORDER BY 1;");
+       $dataMenu = $bd->Execute($sql = "SELECT cargo_nome, cargo_cbo ,	cargo_id, cargo_ativo FROM t_cargos ORDER BY 1;");
       ?>
   <div class="card body-view">
     <div class="card-header">
       <div class="row">
             <div class="col-sm-12">           
-                <label><?= $description ?> Dados do Usuário</label>
+                <label><?= $description ?> Dados do Cargo</label>
             </div>
       </div>
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmUser.php" method="post" id="frmDados">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmCargos.php" method="post" id="frmDados">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link  active" >Dados Usuário</a>
-                </li>   
-                <li class="nav-item">
-                    <a href="#user_permissao" id="aba-user-permissoes"  role="tab" data-toggle="tab" class="nav-link " >Permissões de Acesso</a>
-                </li>   
+                    <a href="#user_geral" id="aba-user-geral"  role="tab" data-toggle="tab" class="nav-link  active" >Dados Cargo</a>
+                </li>     
             </ul>
             <div class="tab-content">
                 <div class="tab-pane margin-top-15 active" id="user_geral" role="tabpanel">
                     <div class="row">
                         <div class="row col-sm-12">
-                            <div  class="col-sm-4  mb-2">
-                                <label or="user_nome">Nome Usuário:</label>
-                                <input type="text" class="form-control requeri unique" id="user_nome" name="user_nome" value="<?php print $dados->fields['user_nome']?>" <?=$disabled?>/>
+                            <div  class="col-sm-4  mb-2">   
+                                <label or="dpto_cargo_nomenome">Nome Cargo:</label>
+                                <input type="text" class="form-control requeri  " id="cargo_nome" name="cargo_nome" value="<?php print $dados->fields['cargo_nome']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-4  mb-2">
-                                <label for="user_nickname">Nickname:</label>
-                                <input type="text" class="form-control requeri unique" id="user_nickname" name="user_nickname" value="<?php print $dados->fields['user_nickname']?>" <?=$disabled?>/>
+                            <div  class="col-sm-4  mb-2">   
+                                <label or="cargo_cbo">CBO Cargo:</label>
+                                <input type="text" class="form-control requeri" id="cargo_cbo" name="cargo_cbo" value="<?php print $dados->fields['cargo_cbo']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-4  mb-2">
-                                <label for="user_email">E-mail:</label>
-                                <input type="text" class="form-control requeri" id="user_email" name="user_email" value="<?php print $dados->fields['user_email']?>" <?=$disabled?>/>
-                            </div>
-                        </div>
-                        <div class="row col-sm-12">
-                            <div  class="col-sm-2 mb-2">
-                                <label for="user_dt_nascimento">Data Nascimento:</label>
-                                <input type="date" class="form-control requeri" id="user_dt_nascimento" name="user_dt_nascimento" value="<?php print $dados->fields['user_dt_nascimento']?>" <?=$disabled?>/>
-                            </div>
-                            <div class="col-sm-2 mb-2">
-                                <label for="user_tipo"> Tipo de Usuário:</label>
-                                <div class="form-group input-group">
-                                    <select class="form-control" id="user_tipo" name="user_tipo">
-                                        <option value="COMUM"  <?php print $dados->fields['user_tipo'] == "COMUM"   ? "selected" : "" ?>>1 - USUÁRIO SISTEMA</option>
-                                        <option value="ADM"    <?php print $dados->fields['user_tipo'] == "ADM"     ? "selected" : "" ?>>2 - ADMINISTRADOR  </option>
-                                        <option value="SERVER" <?php print $dados->fields['user_tipo'] == "SERVER"  ? "selected" : "" ?>>3 - SERVER         </option>
-                                    </select>                      
-                                </div>
-                            </div>                            
-                            <div  class="col-sm-3 mb-2">
-                                <label for="user_celular">Celular:</label>
-                                <input type="text" class="form-control requeri" id="user_celular" name="user_celular" value="<?php print $dados->fields['user_celular']?>" onkeypress="maskphone(this, mphone);" onblur="maskphone(this, mphone);" <?=$disabled?>/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row col-sm-12 profile">
-                        <div  class="col-sm-2  mb-2">
-                            <label for="user_photo">Foto de Perfil (JPG):</label>
-                            <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/upload_imagem.php" enctype="multipart/form-data">
-                                <input  class="form-group" id="arquivo" name="arquivo" type="file" >
-                                <input  class="form-group" type="submit" value="Upload" >
-                            </form>
-                        </div>
-                        <?php
-                        if (file_exists("dist/img/user_{$dados->fields['user_id']}.jpg") ){ ?>
-                            <div  class="col-sm-1  mb-2">
-                                <div class="image" >
-                                    <img src="dist/img/user_<?=$dados->fields['user_id']?>.jpg" class="img-circle elevation-2" alt="Sem Imagem" style="width: 140px; height: 140px;">
-                                </div>
-                            </div>            
-                            <div  class="col-sm-2  mb-2 ">
-                                <form method="POST" action="<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/drop_imagem.php">
-                                    <input  class="form-group text-danger" type="submit" value="Remover Imagem" >
-                                </form>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>
-                <div class="tab-pane  margin-top-15" id="user_permissao" role="tabpanel">
-                    <div class="row mb-2">
-                        <div class="col-sm-12 row">
-                            <div  class="col-sm-2 form-group">
-                                <label for="user_menu">Selecione o Menu:</label>
-                                <select class="form-control" id="user_menu" name="user_menu">
-                                    <option value="">Selecione</option>
-                                <?php
-                                while ( !$dataMenu->EOF ){ ?>
-                                    <option value="<?php print $dataMenu->fields['menu_id'] ?>" ><?php print $dataMenu->fields['menu_descricao'] ?> </option>
-                                <?php
-                                    $dataMenu->MoveNext();
-                                }?>
+                                                   
+                            <div  class="col-sm-2  mb-2">
+                                <label or="cargo_ativo">Situação:</label>
+                                <select class="form-control" id="cargo_ativo" name="cargo_ativo">
+                                    <option value="S" <?php print $dados->fields['cargo_ativo'] == "S" ? "selected": ""?>>Sim</option>
+                                    <option value="N" <?php print $dados->fields['cargo_ativo'] == "N" ? "selected": ""?>>Não</option>
                                 </select>
-                            </div>                                                                
-<!--                            <div  class="col-sm-2 form-group busca_categoria">
-                                <label for="user_menu_categoria">Selecione a Categoria:</label>
-                                <select class="form-control" id="user_menu_categoria" name="user_menu_categoria"></select>
-                            </div>     -->
-                            <div class="col-sm-2 form-group escondido lista_sub" >
-                                <label for="user_menu">Selecione o Submenu:</label>
-                                <div class="selectBox form-control" onclick="showCheckboxes()">
-                                    Selecione  - <span class="fas fa-list nav-icon"></span>
-                                    <div class="overSelect"></div>
-                                </div>
-                                <div id="checkboxes">                                    
-                                </div>                                
-                                <!-- </div>     -->
                             </div>
-                            <div class="col-sm-4 busca_categoria" style="padding-top: 27.5px;" >                  
-                                <button type="button" class="btn btn-info form-control" id="btnBuscar" style="width: 100%;" >
-                                    <span class="fas fa-search"></span>
-                                    Buscar Itens
-                                </button>                  
-                            </div>
-                            <div class="col-sm-4 busca_categoria" style="padding-top: 27.5px;" >                  
-                                <button type="button" class="btn btn-danger form-control" id="btnAtualizaPermissoes" style="width: 100%;" >
-                                    <span class="fas fa-upload"></span> 
-                                    Atualizar Permissões
-                                </button>                  
-                            </div>
-                        </div>
-                        <div class="col-sm-4 row text-center col-sm-auto" >
-                            <table class="table" id="tableItens">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" width="10%">#</th>
-                                        <th class="text-left"   width="90%">SubMenu</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                        </div>                        
+                    </div>                
+                </div>                
             </div>
         </form>
     </div>    
@@ -350,7 +215,7 @@
                </div>
             <?php } ?>                    
             <div class="col-sm-2 ">                  
-              <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_users','','', 'movimentacao','','')">
+              <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_cargos','','', 'movimentacao','','')">
                   <span class="fas fa-retweet"></span>
                   Voltar
               </button>                  
@@ -368,25 +233,10 @@
 </section>
 <?php include_once '../../_import/modals.php'; ?>
 <?php include_once "../../_man/search/_searchData.php"; ?>
-
-<!--<script src="dist/js/bootstrap-multiselect.js"></script>-->
-<script src="plugins/bootstrap/js/bootstrap-multiselect.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 
 <script type="text/javascript">
-
-    var expanded = false;
-    function showCheckboxes() {
-        var checkboxes = document.getElementById("checkboxes");
-        if (!expanded) {
-            checkboxes.style.display = "block";
-            expanded = true;
-        } else {
-            checkboxes.style.display = "none";
-            expanded = false;
-        }
-    }
-
+    
 $(document).ready(function($){
     var tableTd = "";    
     
@@ -476,7 +326,7 @@ $(document).ready(function($){
                 arrId: tableTd,
                 id_menu: $("#user_menu").val(),
                 categoria: $("#user_menu_categoria").val(),
-                id_usuario: <?= $_SESSION['user_id'] ?>
+                id_usuario: <?= $_SESSION['id'] ?>
             },
             success: function(retorno){
                 $("#modal_success").modal("show");
@@ -564,3 +414,5 @@ $(document).ready(function($){
 
 });
 </script>
+
+  <!-- /.content-wrapper -->

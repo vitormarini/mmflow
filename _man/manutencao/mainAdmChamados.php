@@ -9,6 +9,14 @@ include_once '../../_man/_aux.php';
 
 session_start();
 
+<<<<<<< HEAD
+=======
+// print "<pre>"; print_r($_POST);
+// print "<pre>"; print_r($_SESSION);
+// exit;
+
+
+>>>>>>> e3450ec659a9fac9a7d6c3a574ce12674015cb28
 $op         = $_SESSION['op'];          //Ação
 $p          = $_SESSION['p'];           //Página da Busca
 $r          = $_SESSION['tela_atual'];  //Tela Atual

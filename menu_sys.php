@@ -396,8 +396,6 @@
     </section>
   <?php
 
-
-
   if ( $_SESSION['tela_atual'] != "VAZIO" ){
     if (file_exists('./pages/_view/'.$_SESSION['tela_atual'].'.php') ){
         include_once './pages/_view/'.$_SESSION['tela_atual'].'.php';

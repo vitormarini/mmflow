@@ -136,8 +136,13 @@
         $sql = "SELECT 	participante_id                            ,   cpf_cnpj(participante_codigo,'') AS participante_codigo                           ,   participante_nome
                     ,   participante_codigo_pais                   ,   participante_tipo                              ,   participante_ie
                     ,   participante_ie_st                         ,   participante_suframa                           ,   participante_nit
-                    ,   participante_im                            ,   participante_cliente                           ,   participante_fornecedor
+                    ,   participante_im                            ,   participante_cliente                           ,   participante_fornecedor        , participante_funcionario
+                    ,   participante_cliente
                     ,   participante_representante                 ,   participante_codigo_pais||' - '||pais_nome AS participante_pais_descricao
+                    ,   participante_cargo_id
+                    ,   participante_dpto_id
+                    ,   participante_func_dt_adm
+                    ,   participante_func_dt_nasc
                 FROM   t_participante  
                 INNER JOIN t_paises AS pais ON ( pais.pais_codigo::Text = t_participante.participante_codigo_pais)
                 WHERE participante_id = '{$_SESSION['id']}';";
@@ -162,7 +167,7 @@
         </div>
     </div>
     <div class="card-body">
-        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmParticipante.php" method="post" id="frmDados">
+        <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmParticipante.php" method="post" id="frmDados">        
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a href="#participante_geral" id="aba-participante-geral"  role="tab" data-toggle="tab" class="nav-link <?= ( $_SESSION['aba'] == "" ? "active" : "" ) ?>" >Dados Gerais</a>
@@ -187,14 +192,24 @@
                                     <option value="E" <?php print $dados->fields['participante_tipo'] == "E" ? "selected" : "" ?>>Exterior</option>
                                     <option value="O" <?php print $dados->fields['participante_tipo'] == "O" ? "selected" : "" ?>>Outros  </option>
                                 </select>
+                                <input type="hidden" id="op" name="op" value="<?php print $_SESSION['op'] ?>" />
                             </div>
-                            <div  class="col-sm-6  mb-2">
+                            <div  class="col-sm-4  mb-2">
                                 <label for="participante_nome"  class="requi">Nome Participante:</label>
                                 <input type="text" class="form-control requeri" id="participante_nome" name="participante_nome" value="<?php print $dados->fields['participante_nome']?>" <?=$disabled?>/>
                             </div>
                             <div  class="col-sm-2  mb-2">
+                                <label for="participante_funcionario" class="requi">É Funcionário?</label>
+                                <select class="form-control requeri" id="participante_funcionario" name="participante_funcionario">
+                                    <option value="">  Selecione </option>
+                                    <option value="S" <?php print $dados->fields['participante_funcionario'] == "S" ? "selected" : "" ?>>SIM  </option>
+                                    <option value="N" <?php print $dados->fields['participante_funcionario'] == "N" ? "selected" : "" ?>>NÃO</option>
+                                </select>
+                            </div>
+                            <div  class="col-sm-2  mb-2">
                                 <label for="participante_cliente" class="requi">É Cliente?</label>
                                 <select class="form-control requeri" id="participante_cliente" name="participante_cliente">
+                                    <option value="">  Selecione </option>
                                     <option value="S" <?php print $dados->fields['participante_cliente'] == "S" ? "selected" : "" ?>>SIM  </option>
                                     <option value="N" <?php print $dados->fields['participante_cliente'] == "N" ? "selected" : "" ?>>NÃO</option>
                                 </select>
@@ -202,6 +217,7 @@
                             <div  class="col-sm-2  mb-2">
                                 <label for="participante_fornecedor" class="requi">É Fornecedor?</label>
                                 <select class="form-control requeri" id="participante_fornecedor" name="participante_fornecedor">
+                                    <option value="">  Selecione </option>
                                     <option value="S" <?php print $dados->fields['participante_fornecedor'] == "S" ? "selected" : "" ?>>SIM  </option>
                                     <option value="N" <?php print $dados->fields['participante_fornecedor'] == "N" ? "selected" : "" ?>>NÃO</option>
                                 </select>
@@ -209,7 +225,7 @@
                         </div>
                         <div class="row col-sm-12">
                             <div  class="col-sm-2 mb-2">
-                                <label for="participante_codigo" class="requi">Código Parcipante:</label>
+                                <label for="participante_codigo" class="requi" id="text_cod_par">Código Parcipante:</label>
                                 <input type="text" class="form-control requeri" id="participante_codigo" name="participante_codigo" value="<?php print $dados->fields['participante_codigo']?>" <?=$disabled?> title="CPF, CNPJ ou Outro/" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);">
                             </div>
                             <div  class="col-sm-2 form-group ">
@@ -248,6 +264,50 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row escondido" id="parametros_funcionario" >
+                        <div  class="row    col-sm-8" style="background-color: lightblue;">
+                            <div  class="col-sm-3">
+                                <label for="participante_cargo_id" class="requi">Cargo:</label>
+                                <select class="form-control " id="participante_cargo_id" name="participante_cargo_id" <?=$disabled?>>
+                                    <option value="" >Selecione</option>
+                                    <?php 
+                                        $dadosCargo = $bd->Execute($sql = "SELECT cargo_id, cargo_nome  FROM t_cargos td WHERE cargo_ativo = 'S' ORDER BY 1");
+
+                                        while ( !$dadosCargo->EOF ){
+
+                                            print '<option value="'.$dadosCargo->fields['cargo_id'].'"'.( $dadosCargo->fields['cargo_id'] == $dados->fields['participante_cargo_id'] ? "selected" : "").'>'.$dadosCargo->fields['cargo_id'].' - '.$dadosCargo->fields['cargo_nome'].'</option>';
+
+                                            $dadosCargo->MoveNext();
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_dpto_id" class="requi">Departamento:</label>
+                                <select class="form-control " id="participante_dpto_id" name="participante_dpto_id" <?=$disabled?>>
+                                    <option value="" >Selecione</option>
+                                    <?php 
+                                        $dadosDpto = $bd->Execute($sql = "SELECT dpto_id, dpto_nome, dpto_descricao  FROM t_departamentos td WHERE dpto_ativo = 'S' ORDER BY 1");
+
+                                        while ( !$dadosDpto->EOF ){
+
+                                            print '<option value="'.$dadosDpto->fields['dpto_id'].'"'.( $dadosDpto->fields['dpto_id'] == $dados->fields['participante_dpto_id'] ? "selected" : "").'>'.$dadosDpto->fields['dpto_id'].' - '.$dadosDpto->fields['dpto_nome'].'</option>';
+
+                                            $dadosDpto->MoveNext();
+                                        }
+                                    ?>
+                                </select>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_func_dt_adm" class="requi">Dt Admissão:</label>
+                                <input type="date" class="form-control" id="participante_func_dt_adm" name="participante_func_dt_adm" value="<?php print $dados->fields['participante_func_dt_adm'] ?>" <?=$disabled?> placeholder="Busque pelo Nome ou Código do Pais"/>
+                            </div>
+                            <div  class="col-sm-3">
+                                <label for="participante_func_dt_nasc" class="requi">Dt Nascimento:</label>
+                                <input type="date" class="form-control" id="participante_func_dt_nasc" name="participante_func_dt_nasc" value="<?php print $dados->fields['participante_func_dt_nasc'] ?>" <?=$disabled?> placeholder="Busque pelo Nome ou Código do Pais"/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane  margin-top-15 <?= ( $_SESSION['aba'] == "aba-participante-endereco" ? "active" : "" ) ?>" id="participante_endereco" role="tabpanel">
 
@@ -266,6 +326,7 @@
                                     <option value="1">1 - Faturamento   </option>
                                     <option value="2">2 - Comercial     </option>
                                     <option value="3">3 - Entrega       </option>
+                                    <option value="4">4 - Residencial   </option>
                                 </select>
                             </div>
 
@@ -519,13 +580,14 @@
 $(document).ready(function($){
 
         
-    //Máscaras e validações        
-    //addMascarasCPF_CNPJ();
+    //Máscaras e validações    
+    if ( $("#op").val() != "insert" )  addMascarasCPF_CNPJ(); validaFuncionario();
 
     $("#empresa_cep").mask("99.999-999");
     $(".telefone_fixo").mask("(99) 9999-9999");
     $("#participante_endereco_cep").mask("99.999-999");
-    //$("#participante_tipo"   ).on("change",function(){ addMascarasCPF_CNPJ();        });
+    $("#participante_tipo"   ).on("change",function(){ addMascarasCPF_CNPJ();        });
+    $("#participante_funcionario"   ).on("change",function(){ validaFuncionario();        });
 
     $("#btnAdicionarEndereco").on("click", function(){ movimentaItens("novo","","endereco"); });
     $(".btnRemoveItem"       ).on("click", function(){ movimentaItens("delete",$(this).prop("name"),"endereco"); });
@@ -539,13 +601,31 @@ $(document).ready(function($){
 
     function addMascarasCPF_CNPJ(){
         var tipo = $("#participante_tipo").val();
+        $("#text_cod_par").html("Código Participante:");
 
-        if ( tipo === "J" )      {  $("#participante_codigo").mask("99.999.999/9999-99"); }           
-        else if ( tipo === "F" ) {  $("#participante_codigo").mask("999.999.999-99");     }          
+
+        if ( tipo === "J" )      {
+            console.log("Entrou")
+             $("#participante_codigo").mask("99.999.999/9999-99");          
+             $("#text_cod_par").html("CNPJ Participante:");
+        }
+        else if ( tipo === "F" ) {  
+            $("#participante_codigo").mask("999.999.999-99");   
+            $("#text_cod_par").html("CPF Participante:");
+        }          
         else if ( tipo === "E" ) {  $("#participante_codigo").mask("999.9999");           }            
         else                     {  $("#participante_codigo").mask("999.9999");           }
     }        
 
+    //Validamos a apresentação dos campos relacionados a funcionários
+    function validaFuncionario(){
+        var funcionario = $("#participante_funcionario").val();
+
+        $("#parametros_funcionario").addClass("escondido");
+        console.log(funcionario);exit;
+        if ( funcionario == "S" ) $("#parametros_funcionario").removeClass("escondido");    
+
+    }
 
     function movimentaItens(tipo,id, method){
         $.ajax({

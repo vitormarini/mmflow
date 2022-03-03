@@ -23,6 +23,7 @@ $participante_tipo              = trim($_POST['participante_tipo']);
 $participante_nome              = trim($_POST['participante_nome']);
 $participante_cliente           = trim($_POST['participante_cliente']);
 $participante_fornecedor        = trim($_POST['participante_fornecedor']);
+$participante_funcionario       = trim($_POST['participante_funcionario']);
 $participante_codigo            = str_replace(array('.','-','/'),'',trim($_POST['participante_codigo']));
 $participante_ie                = str_replace(array('.','-','/'),'',trim($_POST['participante_ie']));
 $participante_ie_st             = str_replace(array('.','-','/'),'',trim($_POST['participante_ie_st']));
@@ -31,6 +32,10 @@ $participante_suframa           = str_replace(array('.','-','/'),'',trim($_POST[
 $participante_nit               = str_replace(array('.','-','/'),'',trim($_POST['participante_nit']));
 $participante_situacao          = trim($_POST['participante_situacao']);
 $participante_codigo_pais       = trim($_POST['participante_codigo_pais']);
+$participante_cargo_id          = trim($_POST['participante_cargo_id']);
+$participante_dpto_id           = trim($_POST['participante_dpto_id']);
+$participante_func_dt_adm       = trim($_POST['participante_func_dt_adm']);
+$participante_func_dt_nasc      = trim($_POST['participante_func_dt_nasc']);    
 
 #INSERT
 if ( $op == "insert" ){        
@@ -39,11 +44,15 @@ if ( $op == "insert" ){
                             participante_tipo               ,	participante_nome           ,	participante_cliente 
                         ,	participante_fornecedor         ,	participante_codigo         ,	participante_ie
                         ,	participante_ie_st              ,	participante_im             ,	participante_suframa
-                        ,	participante_nit                ,	participante_situacao       ,	participante_codigo_pais ) 
+                        ,	participante_nit                ,	participante_situacao       ,	participante_codigo_pais
+                        ,   participante_funcionario        ,   participante_cargo_id       ,   participante_dpto_id
+                        ,   participante_func_dt_adm        ,   participante_func_dt_nasc) 
                      VALUES('$participante_tipo'            ,	'$participante_nome'        ,	'$participante_cliente'
                         ,	'$participante_fornecedor'      ,	'$participante_codigo'      ,	'$participante_ie'
                         ,	'$participante_ie_st'           ,	'$participante_im'          ,	'$participante_nit'
-                        ,	'$participante_nit'             ,	'$participante_situacao'    ,	'$participante_codigo_pais');";
+                        ,	'$participante_nit'             ,	'$participante_situacao'    ,	'$participante_codigo_pais'
+                        ,   '$participante_funcionario'     ,   '$participante_cargo_id'    ,   '$participante_dpto_id'
+                        ,   '$participante_func_dt_adm'     ,   '$participante_func_dt_nasc');";
 }
 
 else if ( $op == "edit" ){  
@@ -125,24 +134,27 @@ else if ( $op == "edit" ){
     }
     else{
           
-        $sql = " UPDATE t_participante SET      participante_tipo           = '$participante_tipo'        
+        $sql = " UPDATE t_participante SET  participante_tipo           = '$participante_tipo'        
                                         ,	participante_nome           = '$participante_nome' 
                                         ,	participante_cliente        = '$participante_cliente'
                                         ,	participante_fornecedor     = '$participante_fornecedor'      
                                         ,	participante_codigo         = '$participante_codigo'     
                                         ,	participante_ie             = '$participante_ie'
-                                        ,   	participante_ie_st          = '$participante_ie_st'   
+                                        ,   participante_ie_st          = '$participante_ie_st'   
                                         ,	participante_im             = '$participante_im'
                                         ,	participante_suframa        = '$participante_suframa'
                                         ,	participante_nit            = '$participante_nit'   
                                         ,	participante_situacao       = '$participante_situacao'
                                         ,	participante_codigo_pais    = '$participante_codigo_pais'
-                                    WHERE       participante_id             = {$id};"; 
+                                        ,	participante_funcionario    = '$participante_funcionario'
+                                        ,	participante_cargo_id       = '$participante_cargo_id'
+                                        ,	participante_dpto_id        = '$participante_dpto_id'
+                                        ,	participante_func_dt_nasc   = '$participante_func_dt_nasc'
+                                        ,	participante_func_dt_adm    = '$participante_func_dt_adm'
+                                    WHERE   participante_id             = {$id};"; 
     }                          
 }
-// print"<pre>";
-// print($sql);
-// exit;
+
 if ( $bd->Execute(replaceEmptyFields($sql)) ){
     $retorno = "OK";
     

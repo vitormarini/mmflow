@@ -49,6 +49,10 @@
 
             #buscamos os dados
             $sql = "SELECT  dpto_id         , dpto_nome             , dpto_descricao
+                            , CASE 
+                                    WHEN dpto_ativo = 'S' THEN 'Ativo'
+                                    ELSE 'INATIVO'
+                              END AS dpto_ativo_desc
                     FROM t_departamentos  {$where} 
                     ORDER BY 2;";
 
@@ -71,17 +75,23 @@
                         <thead>
                             <tr>
                                 <th width="09%"> #           </th>
-                                <th width="25%">Nome         </th>
-                                <th width="51%">Descrição    </th>
+                                <th width="10%">Situação     </th>
+                                <th width="20%">Nome         </th>
+                                <th width="46%">Descrição    </th>
                                 <th width="15%" class="text-center">Ações           </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
                             if ( $dados->RecordCount() > 0 ){ 
-                                while ( !$dados->EOF ) { ?>
+                                while ( !$dados->EOF ) {
+                                    
+                                    $alert = $dados->fields['dpto_ativo_desc'] == "Ativo" ? "" : "alert-danger";
+
+                                    ?>
                             <tr>
                                 <td class="text-left"><?= $dados->fields['dpto_id']                       ?></td>
+                                <td class="text-left <?= $alert ?>"><?= $dados->fields['dpto_ativo_desc']                       ?></td>
                                 <td class="text-left"><?= $dados->fields['dpto_nome']                       ?></td>
                                 <td class="text-left"><?= $dados->fields['dpto_descricao']                           ?></td>
                                 <td class="text-center">
@@ -124,7 +134,7 @@
 
       if ( $_SESSION['id'] != "" ){
         #Monta SQL para busca
-        $sql = "SELECT  dpto_id     , dpto_nome             , dpto_descricao
+        $sql = "SELECT  dpto_id     , dpto_nome             , dpto_descricao, dpto_ativo
                    FROM t_departamentos 
                   WHERE dpto_id = '{$_SESSION['id']}';";
 
@@ -144,7 +154,7 @@
        else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
 
        #Resgatando os Menus
-       $dataMenu = $bd->Execute($sql = "SELECT menu_descricao ,	menu_id  FROM t_menu ORDER BY 1;");
+       $dataMenu = $bd->Execute($sql = "SELECT menu_descricao ,	menu_id FROM t_menu ORDER BY 1;");
       ?>
   <div class="card body-view">
     <div class="card-header">
@@ -169,9 +179,16 @@
                                 <label or="dpto_nome">Nome Departamento:</label>
                                 <input type="text" class="form-control requeri unique" id="dpto_nome" name="dpto_nome" value="<?php print $dados->fields['dpto_nome']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-8  mb-2">
+                            <div  class="col-sm-6  mb-2">
                                 <label for="dpto_descricao">Descrição:</label>
                                 <input type="text" class="form-control requeri unique" id="dpto_descricao" name="dpto_descricao" value="<?php print $dados->fields['dpto_descricao']?>" <?=$disabled?>/>
+                            </div>                            
+                            <div  class="col-sm-2  mb-2">
+                                <label or="dpto_ativo">Situação:</label>
+                                <select class="form-control" id="dpto_ativo" name="dpto_ativo">
+                                    <option value="S" <?php print $dados->fields['dpto_ativo'] == "S" ? "selected": ""?>>Sim</option>
+                                    <option value="N" <?php print $dados->fields['dpto_ativo'] == "N" ? "selected": ""?>>Não</option>
+                                </select>
                             </div>
                         </div>                        
                     </div>                
