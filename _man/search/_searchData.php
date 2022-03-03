@@ -76,6 +76,10 @@ else if ( $_POST['table'] == "t_item" ){
     }       
 }
 
+else if( $_POST['table'] == "t_user" ){
+    $sql = "SELECT user_id , user_nome FROM t_user tu WHERE user_nome ILIKE '%{$_POST['descricao']}%' ORDER BY user_nome ";
+}
+
 //Variável para retorno dos dados
 $retorno["dados"] = array();     
 

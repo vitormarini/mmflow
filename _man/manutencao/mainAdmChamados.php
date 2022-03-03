@@ -9,11 +9,6 @@ include_once '../../_man/_aux.php';
 
 session_start();
 
-//print "<pre>"; print_r($_POST);
-//print "<pre>"; print_r($_SESSION);
-//exit;
-
-
 $op         = $_SESSION['op'];          //Ação
 $p          = $_SESSION['p'];           //Página da Busca
 $r          = $_SESSION['tela_atual'];  //Tela Atual
@@ -21,8 +16,13 @@ $b          = $_SESSION['buscas'];      //Filtros de buscas
 $id         = $_SESSION['id'];          //Filtros de buscas
 $user_id    = $_SESSION['user_id'];     //usuário
 $dados      = $_POST;
-$retorno = "ERRO";
+$retorno    = "ERRO";
+$files_arq  = "";
 
+if( !empty($_FILES) ){
+    $_SESSION['files'] = $_FILES ;
+    $retorno    = "OK";
+}
 
 #Validando os dados Cadastrais
 $c_tipo         = $dados['chamado_tipo'];
@@ -34,7 +34,7 @@ $m_descricao    = trim($dados['chamado_descricao']);
 $data_atual     = date("Y-m-d H:s:i");
 
 #INSERT
-if ( $op == "insert" ){
+if ( $op == "insert" && empty($_FILES) ){
     $sql = "
     INSERT INTO t_chamados (
           c_user_id             , c_data_abertura       , c_status          , c_tipo
@@ -59,13 +59,14 @@ if ( $op == "insert" ){
         $l_query .= $sqlMov;      
         $bd->Execute(replaceEmptyFields($sqlMov));
     }
+    anexo($_SESSION['files']['fileUpload'],$id,$user_id);
     functionLog($id, $data_atual, "INSERT", $l_query, $user_id);
     
     $retorno = "OK";
 }
 
-if( $op == "edit"){
-    if( $_POST['op'] == "mov" ){
+if( $op == "edit" && empty($_FILES)){
+    if( $_POST['op'] == "mov"){
         $sql = "
         INSERT INTO t_chamados_mov (
               m_chamados_id     , m_user_id         , m_data_hora           , m_descricao
@@ -85,10 +86,15 @@ if( $op == "edit"){
     }        
 }
 
+if( $_POST['fileUpload'] == "op=upload_arquivo" && $op == "edit" ){
+    $files_arq = $_FILES['fileUpload'];
+    anexo($files_arq,$id,$user_id);
+}
+
 print $retorno;
 
 function functionLog($id, $l_data_hora, $l_operacao, $l_query, $l_user_id){
-    global $bd;
+    global $bd;    
     
     $l_query = str_replace("'",'"', $l_query);
     
@@ -98,4 +104,26 @@ function functionLog($id, $l_data_hora, $l_operacao, $l_query, $l_user_id){
     )VALUES(
         {$id}           , '{$l_data_hora}'    , '{$l_operacao}'  , '{$l_query}'     , {$l_user_id}
     );");
+}
+
+function anexo($files_arq,$id,$user_id){
+    global $bd;    
+    global $data_atual;
+
+    if(isset($files_arq)){
+        
+        $name = $files_arq['name'];
+        $dir  = "{$_SERVER["DOCUMENT_ROOT"]}/mmflow/dist/arq_chamados/{$name}";  
+        copy($files_arq['tmp_name'], $dir);
+        
+        if( !empty($name) ){
+            $sql = "INSERT INTO t_chamados_anexos(chamados_id, a_nome, a_caminho)VALUES('{$id}', '{$name}', '{$dir}');";        
+            
+            if($bd->Execute(replaceEmptyFields($sql))){                
+                $retorno = "OK";
+                $id_anexo = $bd->Insert_ID();
+                functionLog($id, $data_atual, "ANEXO_ARQUIVO-{$id_anexo}", $sql, $user_id);
+            }
+        }
+    }
 }

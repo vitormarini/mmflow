@@ -8,7 +8,7 @@ function salvar(ret) {
             $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
             $("#modal_erro").modal("show");
         },
-        success: function (retorno) {
+        success: function (retorno) {                        
             if (retorno == "OK") {
                 $("#modal_success").modal("show");
                 setTimeout(function () {
@@ -39,17 +39,18 @@ function validateSave(page) {
             validate: "liberaBtnSalvar"
         },
         success: function (retorno) {
-
+            console.log( retorno );
             if (retorno == "OK") {
+                
+                console.log( "retorno " + retorno );
+                
                 salvar(page);
             } else {
                 $("#titulo_modal_erro").html("Ainda faltam itens a serem preenchidos!");
                 $("#modal_erro").modal("show");
             }
-
         }
     });
-
 }
 
 function retornaEmpresas(cnpj){    
@@ -153,7 +154,7 @@ function validaData(v1, v2, v3, v4, v) {
 
 function selecionaEmpresa(retorno) {
     
-    retornaEmpresas('08100057000174');
+    retornaEmpresas(retorno);
     
     $.ajax({
         url: "./_man/validaLogin.php",

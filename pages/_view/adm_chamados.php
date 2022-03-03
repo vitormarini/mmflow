@@ -101,7 +101,7 @@
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
                 {$where}
                 ORDER BY chamados_id;";
-// print"<pre>".$sql;exit;
+
             $dados = $bd->Execute($sql);
 
             #Setamos a quantidade de itens na busca
@@ -208,11 +208,10 @@
         $sqlMov = "
             SELECT  movimentacao_id
                 , m_chamados_id
-                , m_user_id
-                , m_data_hora
+                , m_user_id               
                 , m_descricao
                 , user_nome
-                , EXTRACT(HOUR FROM (current_timestamp-m_data_hora)) as horas
+                , datahorabrasil(m_data_hora) AS m_data_hora
             FROM    t_chamados_mov m 
             INNER JOIN t_user u ON ( u.user_id = m.m_user_id )
             WHERE m_chamados_id = {$_SESSION['id']}
@@ -245,7 +244,7 @@
           </div>
         </div>
         <div class="card-body">
-            <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmChamados.php" method="post" id="frmDados">
+            <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmChamados.php" method="post" id="frmDados">                
                 <div class="tab-content">
                     <div class="tab-pane active margin-top-15" id="empresa_geral" role="tabpanel">
                         <div class="row">
@@ -262,8 +261,13 @@
                                 <div  class="col-sm-6 form-group">
                                     <label for="chamado_departamento" >Para o Departamento de :</label>
                                     <select class="form-control requeri" id="chamado_departamento" name="chamado_departamento">
-                                        <option value="TI">1 - T.I.</option>
-                                        <option value="RH">2 - RH</option>
+                                    <?php
+                                        $dep = $bd->Execute("SELECT dpto_id , dpto_nome , dpto_descricao FROM t_departamentos td ORDER BY 1;");
+                                        while(!$dep->EOF){
+                                            print '<option value="'.$dep->fields['dpto_id'].'">'.$dep->fields['dpto_id'].' - '.$dep->fields['dpto_nome'].'</option>';
+                                            $dep->MoveNext();
+                                        }
+                                    ?>    
                                     </select>
                                 </div>                           
                                 <div  class="col-sm-12  mb-2">
@@ -281,17 +285,16 @@
                                 <div  class="col-sm-12 form-group">
                                     <label for="chamado_servico" >Serviço :</label>
                                     <select class="form-control requeri" id="chamado_servico" name="chamado_servico">
-                                        <option value="AJUSTE"      >1 - Ajuste      </option>
-                                        <option value="SOLICITACAO" >2 - Solicitação </option>
+                                    <?php
+                                        $serv = $bd->Execute("SELECT t_chamados_servicos_id,t_servico,t_descricao FROM t_chamados_servicos tcs ORDER BY 1;");
+                                        while(!$serv->EOF){
+                                            print '<option value="'.$serv->fields['t_chamados_servicos_id'].'">'.$serv->fields['t_chamados_servicos_id'].' - '.$serv->fields['t_servico'].'</option>';
+                                            $serv->MoveNext();
+                                        }
+                                    ?>
                                     </select>
                                 </div>    
-                                <div  class="col-sm-12 form-group">                        
-                                    <input type="file" id="arquivo_pfx" name="arquivo_pfx" class="inputfile inputfile-1" style="width:100%;">                                                            
-                                    <label for="arquivo_pfx" class="fix-center btn btn-warning text-center" style="width:400px;">                                
-                                        <span class="glyphicon glyphicon-arrow-up margin-right-10"></span>                        
-                                        <span class="nome-arquivo" id="nome-arquivo" name="nome-arquivo">Adicione um anexo</span>
-                                    </label>
-                                </div>       
+                                    
                             </div>     
                             <?php } else { ?>
                             <div class="col-sm-8"> 
@@ -299,7 +302,7 @@
                                 <div class="col-sm-12">                         
                                     <div  class="col-sm-12 form-group">
                                         <img src="dist/img/user_<?= $mov->fields['m_user_id']?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 60px; height: 60px;">
-                                        <?= $mov->fields['user_nome']?> - <b>há <?= $mov->fields['horas'] ?> horas</b>
+                                        <?= $mov->fields['user_nome']?> - <b><?= $mov->fields['m_data_hora'] ?></b>
                                      </div>
                                 </div>  
                                 <div class="col-sm-12 form-group">                         
@@ -363,7 +366,18 @@
                                 </div>                         
                                 <div class="col-sm-12 form-group"> <hr> </div>
                                 <div class="col-sm-4"> 
-                                    <div  class="col-sm-12 form-group mb-2"> <label>Anexos                </label> </div>                                
+                                    <div class="col-sm-12 form-group mb-2"> 
+                                        <label> Anexos </label> 
+                                        <?php
+                                            $anexos = $bd->Execute("SELECT anexos_id , a_nome , a_caminho FROM t_chamados_anexos tca WHERE chamados_id = {$_SESSION['id']} ORDER BY 1;");
+                                            while(!$anexos->EOF){
+                                                print '<a href="'. $_SERVER["localhost"].'/mmflow/dist/arq_chamados/'.$anexos->fields['a_nome'].'" target="_blank" title="'.$anexos->fields['a_nome'].'">
+                                                        <span class="icone-pdf"></span> <b>'.$anexos->fields['a_nome'].'</b>
+                                                       </a>';
+                                                $anexos->MoveNext();
+                                            }
+                                        ?>
+                                    </div>                                
                                 </div>
                             </div>  
                             <?php } ?>                                       
@@ -371,6 +385,17 @@
                     </div>                
                 </div>
             </form>
+            <div class="col-sm-8 form-group">  
+                <form method="POST" action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmChamados.php" id="fileUpload" name="fileUpload" enctype="multipart/form-data">
+                    <input type="hidden" id="op" name="op" value="upload_arquivo" >                                                            
+                    <input type="file" id="arquivo" name="arquivo" class="inputfile inputfile-1" style="width:100%;" >                                                            
+                    <label for="arquivo" class="fix-center btn btn-warning text-center" style="width:400px;">                                
+                        <span class="glyphicon glyphicon-arrow-up margin-right-10"></span>                        
+                        <span class="nome-arquivo" id="nome-arquivo" name="nome-arquivo">Adicione um anexo</span>
+                    </label>
+                    <button type="button" id="btnSubmit" name="btnSubmit" class="escondido"> BTN </button>
+                </form>
+            </div>   
         </div>
         <!-- /.card-body -->
         <div class="card-footer  align-content-center">
@@ -408,13 +433,11 @@
 <script type="text/javascript">
 $(document).ready(function($){
     
-
     /* aplica DataTable na tabela. */
     new DataTable( '#table_lista_notas', {
         paging: false,
         scrollY: 500
     } );
-
 
     $("#btnGravaConversa").on("click",function(){
         $.ajax({
@@ -440,7 +463,135 @@ $(document).ready(function($){
         });
         return false;
     });
+    
+//    $(function(){
+//        var form;
+//        $('#fileUpload').change(function (event) {
+//            form = new FormData();
+//            form.append('fileUpload', event.target.files[0]); // para apenas 1 arquivo
+//            form.append('fileUpload',$("#fileUpload").serialize());
+//            clickButton(form);
+//        });
+//    });
+    
+    
+    $("#chamado_responsavel").autocomplete({                        
+        source: function( request, response){
+            $.ajax({
+                url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/search/_searchData.php",
+                type: "post",
+                dataType: "json",
+                data: { 
+                    descricao: request.term,
+                    table: "t_user",
+                },
+                success: function(data){
+                    response($.map(data.dados, function(item){
+                        return {
+                            id    : item.ret_1,
+                            value : item.ret_2
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2,
+        select: function(event, ui){
+            $('#c_reponsavel_id').val(ui.item.id);
+        },
+        open: function() {$(this).removeClass("ui-corner-all").addClass("ui-corner-top");},
+        close: function() {$(this).removeClass("ui-corner-top").addClass("ui-corner-all");}
+    });
+    
+    var form;
+    //Mostra o nome do arquivo escolhido para o usuário
+    $("#arquivo").on("change", function(e){           
+        //Obtem nome do arquivo
+        var nomeArquivo = "";
+        if(e.target.value) nomeArquivo = e.target.value.split("\\").pop();
+
+        //Mostra o nome do arquivo se algo for selecionado
+        if(nomeArquivo){
+            $("label[for='arquivo']").find(".nome-arquivo").html(nomeArquivo);
+            $("#btnProsseguir").removeClass("disabled");
+        }
+        else{
+            $("label[for='arquivo']").find(".nome-arquivo").html("Escolha um arquivo...");
+            $("#btnProsseguir").addClass("disabled");
+        }        
+        
+        console.log( "sessionStorage" );
+        console.log( sessionStorage );
+        
+        /* Monta o formulario e manda pra manutenção */        
+//        if("<?= $_SESSION['op'] != 'insert' ?>"){
+            form = new FormData();
+            form.append('fileUpload', event.target.files[0]); // para apenas 1 arquivo
+            form.append('fileUpload',$("#fileUpload").serialize());
+            clickButton(form);
+            console.log("if");            
+//        }else{
+//            console.log("else");
+//            console.log(event.target.files[0]);
+//            console.log($("input[type='file']")[0].files[0]);            
+//            console.log($("input[type='file']")[0].files[0].name );            
+//            console.log($("input[type='file']")[0].files[0].type );            
+//            console.log($("input[type='file']")[0].files[0].tmp_name );            
+////            $("#teste").val( JSON.(event.target.files[0]) );
+//        }
+    });
+    
+//    $("#btnSalvar").on("click", function(){
+//        $(this).prop("disabled",true);
+//        form = new FormData();
+//        
+//        console.log( "form" );
+//        console.log( form );
+//        
+//        $.ajax({
+//            url: $("#frmDados").prop("action"),
+//            method: "post",
+//            dataType: "text",
+//            data: $("#frmDados").serialize(),
+//            error: function () {
+//                $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
+//                $("#modal_erro").modal("show");
+//            },
+//            success: function (retorno) {                        
+//                if (retorno == "OK") {
+//                    $("#modal_success").modal("show");
+//                    setTimeout(function () {
+//                        $("#modal_success").modal("hide");
+//                        location.href = "" + ret;
+//                    }, 500);
+//                } else {
+//                    $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno.mensagem);
+//                    $("#modal_erro").modal("show");
+//                }
+//            }
+//        });
+//        return false;
+//    });
    
 });
+function clickButton(form){
+    $.ajax({
+        url: $("#frmDados").prop("action"), // Url do lado server que vai receber o arquivo
+        data: form,
+        processData: false,
+        contentType: false,
+        type: 'POST',
+        success: function (retorno) {
+            if( "<?= $_SESSION['op'] != 'insert' ?>" ){
+            if (retorno == "OK") {
+                location.reload();
+            } else {
+                $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno.mensagem);
+                $("#modal_erro").modal("show");
+            }
+        }
+        }
+    });
+}
 </script>
 <!-- /.content-wrapper -->
