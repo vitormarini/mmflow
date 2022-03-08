@@ -274,6 +274,7 @@
                                 <div  class="col-sm-12  mb-2">
                                     <label for="chamado_responsavel">Responsável:</label>
                                     <input type="text" class="form-control requeri " id="chamado_responsavel" name="chamado_responsavel"/>
+                                    <input type="hidden" class="form-control requeri " id="c_reponsavel_id" name="c_reponsavel_id"/>
                                 </div>
                                 <div  class="col-sm-12  mb-2">
                                     <label for="chamado_assunto">Assunto:</label>

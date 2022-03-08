@@ -27,7 +27,7 @@ if( !empty($_FILES) ){
 #Validando os dados Cadastrais
 $c_tipo         = $dados['chamado_tipo'];
 $c_departamento = $dados['chamado_departamento'];
-$c_responsavel  = trim($dados['chamado_responsavel']);
+$c_responsavel  = trim($dados['c_reponsavel_id']);
 $c_assunto      = trim($dados['chamado_assunto']);
 $c_servico      = trim($dados['chamado_servico']);
 $m_descricao    = trim($dados['chamado_descricao']);
@@ -38,7 +38,7 @@ if ( $op == "insert" && empty($_FILES) ){
     $sql = "
     INSERT INTO t_chamados (
           c_user_id             , c_data_abertura       , c_status          , c_tipo
-        , c_departamento        , c_responsavel         , c_assunto         , c_servico   
+        , c_departamento        , c_responsavel_id      , c_assunto         , c_servico   
         , c_ciente
     )VALUES(
           {$user_id}            , '{$data_atual}'       , 'ABERTO'          , '{$c_tipo}'
