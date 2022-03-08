@@ -212,8 +212,9 @@
                         </p>
                     </a>
                   <!-- Inserir os menus -->
-                    <ul class="nav nav-treeview">
-                        <?php while ( !$dadosMenu->EOF ){
+                  <?php $exibeNav = 'nav nav-treeview'; while ( !$dadosMenu->EOF ){  $exibeNav = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "" : $exibeNav;  $dadosMenu->MoveNext(); } ?>
+                    <ul class="<?= $exibeNav ?>">
+                        <?php $dadosMenu->MoveFirst();while ( !$dadosMenu->EOF ){
                             $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
                         ?>
                         <li class="nav-item">
@@ -238,8 +239,10 @@
                     </p>
                   </a>
                   <!-- Inserir os menus -->
-                  <ul class="nav nav-treeview text-left">
-                      <?php while ( !$sm_cadastro->EOF ){
+                <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_cadastro->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_cadastro->MoveNext(); } ?>                
+                <ul class="nav-tree<?= $exibeNav ?> text-left">
+                      <?php  $sm_cadastro->MoveFirst();
+                       while ( !$sm_cadastro->EOF ){
                           $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
 
 
@@ -268,8 +271,10 @@
                     </p>
                   </a>
                   <!-- Inserir os menus -->
-                  <ul class="nav nav-treeview text-left">
-                      <?php while ( !$sm_movimento->EOF ){
+                    <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_movimento->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_movimento->MoveNext(); } ?>
+                    <ul class="<?= $exibeNav ?>  text-right">
+                      <?php  $sm_movimento->MoveFirst();
+                      while ( !$sm_movimento->EOF ){
                           $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
 
 
@@ -318,108 +323,7 @@
                 }
               ?>
             </ul>
-<<<<<<< HEAD
-          </li>
-          <?php
-          if ( $sm_cadastro->RecordCount() > 0 ){ ?>
-            <li class="nav-item active">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-edit"></i>
-                <p>
-                  CADASTROS
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_cadastro->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_cadastro->MoveNext(); } ?>
-              
-              <ul class="nav-tree<?= $exibeNav ?> text-left">
-                  <?php $sm_cadastro->MoveFirst();
-                    while ( !$sm_cadastro->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="nav <?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_cadastro->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_cadastro->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-          <?php
-          if ( $sm_movimento->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-bars"></i>
-                <p>
-                  MOVIMENTAÇÃO
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_movimento->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_movimento->MoveNext(); } ?>
-              <ul class="<?= $exibeNav ?>  text-right">
-                  <?php $sm_movimento->MoveFirst();
-                    while ( !$sm_movimento->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_movimento->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_movimento->fields['menu_id'] ?>', '<?= $sm_movimento->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_movimento->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_movimento->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_movimento->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-          <?php
-          if ( $sm_report->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-bars"></i>
-                <p>
-                  RELATÓRIOS
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_report->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_report->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_report->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_report->fields['menu_id'] ?>', '<?= $sm_report->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_report->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_report->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_report->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-        </ul>
-      </nav>
-=======
         </nav>
->>>>>>> 94c418c39263a81d7fa3d4a49f0a700e768e355b
       <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
