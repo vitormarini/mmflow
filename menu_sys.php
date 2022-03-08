@@ -27,6 +27,37 @@
     $sm_movimento = $bd->Execute($sql = "
         SELECT menu_sub_id, menu_id, menu_submenu_categoria, menu_submenu_descricao, menu_submenu_url, menu_submenu_icon
         FROM t_menu_sub LIMIT 0;");
+    
+    $chamado = $bd->Execute("
+        SELECT  chamados_id                                             
+            , c_prioridade
+            , c_status
+            , c_tipo
+            , c_departamento
+            , c_responsavel_id
+            , c_assunto
+            , c_servico
+            , c_anexo
+            , u.user_nome            
+            , databrasil(c_data_abertura::date)   AS c_data_abertura                        
+        FROM t_chamados c
+        INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
+        WHERE c_responsavel_id = 3 
+            AND c_ciente != 'S';");    
+     
+                
+    while(!$chamado->EOF){
+        $tr_chamados .= '\n\
+            <tr>\n\
+                <td class="text-center">#'. $chamado->fields["chamados_id"]     .'</td>\n\
+                <td class="text-left  ">'. $chamado->fields["user_nome"]        .'</td>\n\
+                <td class="text-left"  >'. $chamado->fields["c_assunto"]        .'</td>\n\
+                <td class="text-center">'. $chamado->fields["c_tipo"]           .'</td>\n\
+                <td class="text-center">'. $chamado->fields["c_data_abertura"]  .'</td>\n\
+                <td class="text-center"><button class="btn-info btnCiencia" title="Dar ciência."><span class="far fa-paper-plane"></span></button></td>\n\
+            </tr>';
+        $chamado->MoveNext();
+    }
 
   if ( $_SESSION['menu_atual'] != "" ){
 
@@ -81,6 +112,7 @@
 </style>
 <!-- CSS -->
 <link rel="stylesheet" href="build/scss/jquery-ui-1.11.4.min.css">
+<!--<link rel="stylesheet" href="./DataTables/datatables.min.css"/>-->
 
 <script src="./plugins/jquery/jquery-1.12.1.min.js"></script>
 <script src="./plugins/jquery/jquery-ui-1.11.4.min.js"></script>
@@ -108,14 +140,8 @@
         }
     </style>
 <div class="wrapper">
-
-  <!-- Preloader -->
-<!--  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/linofavic.png" alt="ERP-Gestao" height="60" width="60">
-  </div>-->
-
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -141,40 +167,17 @@
                 <?= $_SESSION['empresa_desc'] ?>
             </a>        
         </li>
-      <!-- Navbar Search -->
-      <!--<li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </li> -->
-
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li>
+        <!-- Messages Dropdown Menu -->
+        <li class="nav-item">
+          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </a>
+        </li>
         <div class="info">
             <button type="button" class="btn btn-danger" title="Clique para sair do Programa" onclick="exit()">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
-
     </ul>
   </nav>  
   <!-- /.navbar -->
@@ -182,195 +185,140 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="menu_sys.php" class="brand-link">
-      <!--<img src="dist/img/linofavic.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">-->
+    <a href="menu_sys.php" class="brand-link">      
       <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
     </a>
-
-
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user_<?=$_SESSION['user_id']?>.jpg" class="img-circle elevation-2" alt="User Image">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="dist/img/user_<?=$_SESSION['user_id']?>.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a href="#" class="d-block"><?= $_SESSION['user_nickname'] ?></a>
+            </div>
         </div>
-        <div class="info">
-          <a href="#" class="d-block"><?= $_SESSION['user_nickname'] ?></a>
-        </div>
-      </div>
-
-      <!-- SidebarSearch Form -->
-<!--      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>-->
-
       <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-<!--          <li class="nav-item menu-open">
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="./menu_sys.php" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-            </ul>
-          </li>-->
-          <li class="nav-header">Navegação</li>
-<!--          <li class="nav-item">
-            <a href="pages/calendar.html" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Calendar
-                <span class="badge badge-info right">2</span>
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="pages/gallery.html" class="nav-link">
-              <i class="nav-icon far fa-image"></i>
-              <p>
-                Agenda
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="pages/kanban.html" class="nav-link">
-              <i class="nav-icon fas fa-columns"></i>
-              <p>
-                Kanban Board
-              </p>
-            </a>
-          </li>          -->
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-bars"></i>
-              <p>
-                Menus
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <!-- Inserir os menus -->
-            <ul class="nav nav-treeview">
-                <?php while ( !$dadosMenu->EOF ){
-                    $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
-                    ?>
-
-
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">Navegação</li>
                 <li class="nav-item">
-                    <button class="<?= $selectMenu ?> text-left " onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                        <label class="text-center">
-                          <span class="fas <?php print $dadosMenu->fields['menu_icon'] ?> nav-icon"></span>
-                                  <?= $dadosMenu->fields['menu_descricao'] ?>
-                      </label>
-                    </button>
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-bars"></i>
+                        <p>
+                            Menus
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                  <!-- Inserir os menus -->
+                    <ul class="nav nav-treeview">
+                        <?php while ( !$dadosMenu->EOF ){
+                            $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
+                        ?>
+                        <li class="nav-item">
+                            <button class="<?= $selectMenu ?> text-left " onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                                <label class="text-center">
+                                  <span class="fas <?php print $dadosMenu->fields['menu_icon'] ?> nav-icon"></span>
+                                          <?= $dadosMenu->fields['menu_descricao'] ?>
+                              </label>
+                            </button>
+                        </li>
+                      <?php  $dadosMenu->MoveNext(); } ?>
+                    </ul>
                 </li>
-              <?php  $dadosMenu->MoveNext(); } ?>
+              <?php
+              if ( $sm_cadastro->RecordCount() > 0 ){ ?>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-edit"></i>
+                    <p>
+                      CADASTROS
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <!-- Inserir os menus -->
+                  <ul class="nav nav-treeview text-left">
+                      <?php while ( !$sm_cadastro->EOF ){
+                          $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+
+
+                      <li class="nav-item text-left">
+                          <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                              <label class="text-left">
+                                <span class="fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon"></span>
+                                        <?= $sm_cadastro->fields['menu_submenu_descricao'] ?>
+                            </label>
+                          </button>
+                      </li>
+                    <?php  $sm_cadastro->MoveNext(); } ?>
+                  </ul>
+                </li>
+                <?php
+                }
+              ?>
+              <?php
+              if ( $sm_movimento->RecordCount() > 0 ){ ?>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-bars"></i>
+                    <p>
+                      MOVIMENTAÇÃO
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <!-- Inserir os menus -->
+                  <ul class="nav nav-treeview text-left">
+                      <?php while ( !$sm_movimento->EOF ){
+                          $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+
+
+                      <li class="nav-item text-left">
+                          <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_movimento->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_movimento->fields['menu_id'] ?>', '<?= $sm_movimento->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                              <label class="text-left">
+                                <span class="fas <?php print $sm_movimento->fields['menu_submenu_icon'] ?> nav-icon"></span>
+                                        <?= $sm_movimento->fields['menu_submenu_descricao'] ?>
+                            </label>
+                          </button>
+                      </li>
+                    <?php  $sm_movimento->MoveNext(); } ?>
+                  </ul>
+                </li>
+                <?php
+                }
+              ?>
+              <?php
+              if ( $sm_report->RecordCount() > 0 ){ ?>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-bars"></i>
+                    <p>
+                      RELATÓRIOS
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <!-- Inserir os menus -->
+                  <ul class="nav nav-treeview text-left">
+                      <?php while ( !$sm_report->EOF ){
+                          $selectSubMenu = $_SESSION['tela_atual'] == $sm_report->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+
+
+                      <li class="nav-item text-left">
+                          <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_report->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_report->fields['menu_id'] ?>', '<?= $sm_report->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                              <label class="text-left">
+                                <span class="fas <?php print $sm_report->fields['menu_submenu_icon'] ?> nav-icon"></span>
+                                        <?= $sm_report->fields['menu_submenu_descricao'] ?>
+                            </label>
+                          </button>
+                      </li>
+                    <?php  $sm_report->MoveNext(); } ?>
+                  </ul>
+                </li>
+                <?php
+                }
+              ?>
             </ul>
-          </li>
-          <?php
-          if ( $sm_cadastro->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-edit"></i>
-                <p>
-                  CADASTROS
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_cadastro->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_cadastro->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_cadastro->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-          <?php
-          if ( $sm_movimento->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-bars"></i>
-                <p>
-                  MOVIMENTAÇÃO
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_movimento->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_movimento->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_movimento->fields['menu_id'] ?>', '<?= $sm_movimento->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_movimento->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_movimento->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_movimento->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-          <?php
-          if ( $sm_report->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-bars"></i>
-                <p>
-                  RELATÓRIOS
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_report->EOF ){
-                      $selectSubMenu = $_SESSION['tela_atual'] == $sm_report->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-
-
-                  <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_report->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_report->fields['menu_id'] ?>', '<?= $sm_report->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                          <label class="text-left">
-                            <span class="fas <?php print $sm_report->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                                    <?= $sm_report->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                  </li>
-                <?php  $sm_report->MoveNext(); } ?>
-              </ul>
-            </li>
-            <?php
-            }
-          ?>
-        </ul>
-      </nav>
+        </nav>
       <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
@@ -378,6 +326,8 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
+        <!-- INPUTS DE VERIFICAÇÃO NO JS -->
+        <input type="text" id="qtde_chamados" name="qtde_chamados" value="<?= $chamado->RecordCount(); ?>" >
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -427,6 +377,7 @@
 <?php include_once './_import/modals.php'; ?>
 
 <script src="<?=$_SERVER['localhost']?>/mmflow/_man/functions.js"></script>
+<script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js"></script>
 <script type="text/javascript">
     function movPage(destino, op, id, tipo, menu, submenu){
       $.ajax({
@@ -479,8 +430,37 @@
         $("#btnContinuar").on("click",function() {
             selecionaEmpresa("troca_empresa");
         });
-
+        
+        if( parseInt($("#qtde_chamados").val()) > 0 ){
+            var tr = '<?= $tr_chamados ?>';
+            $(".modal-title").html("CHAMADOS");
+            $(".modal-body").append('\
+            <div class="col-lg-12">\n\
+                <table class="table table-bordered">\n\
+                    <thead>\n\
+                        <tr>\n\
+                            <th class="text-center" width="05%"> ID             </th>\n\
+                            <th class="text-center" width="20%"> Usuário        </th>\n\
+                            <th class="text-center" width="40%"> Detalhe        </th>\n\
+                            <th class="text-center" width="10%"> Tipo           </th>\n\
+                            <th class="text-center" width="10%"> Dt Abertura    </th>\n\
+                            <th class="text-center" width="10%"> Opção          </th>\n\
+                        <tr>\n\
+                    </thead>\n\
+                    <tbody>'+ tr +'</tbody>\n\
+                </table>\n\
+            </div>');
+            $("#modal_geral").modal("show");
+        }
+        
+        $(".btnCiencia").on("click",function(){
+            var id = $(this).closest("tr").find("td:eq(0)").text().replace("#","").trim();            
+            var parametros = {op: "ciencia",id: id};
+            
+            btnSalvar("mainAdmChamados.php",parametros,"chamados");
+        });
     });
+
 
 </script>
 </body>

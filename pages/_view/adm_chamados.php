@@ -1,7 +1,6 @@
+<!--<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.min.css"/>-->
 <style>
-    .inputfile { width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute;  z-index: -1; }
-    
-  
+    .inputfile { width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute;  z-index: -1; }      
 
     .inputfile:focus + label,
     .inputfile.has-focus + label {
@@ -9,11 +8,8 @@
         outline: -webkit-focus-ring-color auto 5px;
     }
     
-    #arquivo_pfx:focus + label,
-    #arquivo_pfx.has-focus + label,
-    label[for='arquivo_fci']:hover {
-        background-color: #449d44;
-    } 
+    #arquivo:focus + label,
+    #arquivo.has-focus + label,
     .backgroundDescricao{
         background-color: #F2F2F2;
         border-radius: 10px;
@@ -32,9 +28,9 @@
         if ( !empty($_POST['filtro_busca']) ){
             $filtro_busca = retira_caracteres($_POST['filtro_busca']);
             $where = 
-            "WHERE chamados_id            ILIKE '%{$filtro_busca}%' 
+            "AND (chamados_id            ILIKE '%{$filtro_busca}%' 
                 OR empresa_cnpj           ILIKE '%{$filtro_busca}%' 
-                OR empresa_razao_social   ILIKE '%{$filtro_busca}%'";
+                OR empresa_razao_social   ILIKE '%{$filtro_busca}%')";
         } 
         if (  strlen($_POST['filtro_busca_select']) > 2 ){
             $filtro_busca = $_POST['filtro_busca_select'];
@@ -90,15 +86,18 @@
                     , c_status
                     , c_tipo
                     , c_departamento
-                    , c_responsavel
+                    , c_responsavel_id
                     , c_assunto
                     , c_servico
                     , c_anexo
-                    , user_nome
+                    , u.user_nome
+                    , r.user_nome AS user_nome_r
                     , databrasil(c_data_abertura::date)   AS c_data_abertura
                     , databrasil(c_data_fechamento::date) AS c_data_fechamento
                 FROM    t_chamados c 
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
+                INNER JOIN t_user r ON ( r.user_id = c.c_responsavel_id )
+                WHERE ( u.user_id = {$_SESSION['user_id']} OR r.user_id = {$_SESSION['user_id']})
                 {$where}
                 ORDER BY chamados_id;";
 
@@ -116,7 +115,7 @@
         </div>
         <div class="card-body">
             <div class="col-sm-12">
-                <table class="table table-bordered table-hover table-striped" id="table_lista_notas">
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>                            
                             <th class="text-center" width="5%" >Status          </th>                            
@@ -148,18 +147,18 @@
                                     <?php print $status; ?>
                                     <td class="text-center">#<?= $dados->fields['chamados_id']      ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['user_nome']         ?></td>                                    
-                                    <td class="text-center"><?= $dados->fields['c_responsavel']     ?></td>                                    
+                                    <td class="text-center"><?= $dados->fields['user_nome_r']       ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_assunto']         ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_tipo']            ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_data_abertura']   ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_data_fechamento'] ?></td>
                                     <td class="text-center">
-                                        <button class="btn btn-success" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
+                                        <button class="btn-success" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
                                             <span class="fas fa-plus openDetalhes"></span>
                                         </button>
                                     </td>
                                     <td class="text-center">
-                                        <button class="btn btn-info" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Encerrar o chamado.">
+                                        <button class=" btn-info" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Encerrar o chamado.">
                                             <span class="far fa-paper-plane"></span>
                                         </button>
                                     </td>
@@ -193,15 +192,17 @@
                     , c_status
                     , c_tipo
                     , c_departamento
-                    , c_responsavel
+                    , c_responsavel_id
                     , c_assunto
                     , c_servico
                     , c_anexo
-                    , user_nome
+                    , u.user_nome
+                    , u.user_nome AS user_nome_r
                     , datahorabrasil(c_data_abertura)   AS c_data_abertura
                     , datahorabrasil(c_data_fechamento) AS c_data_fechamento                    
                 FROM    t_chamados c 
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
+                INNER JOIN t_user r ON ( r.user_id = c.c_responsavel_id )
                 WHERE    chamados_id = '{$_SESSION['id']}'
                 ORDER BY chamados_id;";
         
@@ -315,7 +316,7 @@
                                 <?php $mov->MoveNext();} ?>                                 
                                 <div class="col-sm-12">                         
                                     <div  class="col-sm-6 form-group">
-                                         <img src="dist/img/user_<?= $dados->fields['c_user_id']?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 40px; height: 40px;">
+                                         <img src="dist/img/user_<?= $_SESSION['user_id'] ?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 40px; height: 40px;">
                                          <button type="button" class="btn btn-success " id="btnGravaConversa" ><!-- onclick="movPage('adm_chamados','','', 'gravaConversa','','')">-->
                                             <span class="fas fa-retweet"></span>
                                             Enviar
@@ -346,7 +347,7 @@
                                     <div  class="col-sm-12 form-group mb-2"> <label>Serviços              </label> </div>
                                 </div>
                                 <div class="col-sm-8"> 
-                                    <div  class="col-sm-12 form-group"> <?= $dados->fields['c_responsavel']     ?> </div>
+                                    <div  class="col-sm-12 form-group"> <?= $dados->fields['user_nome_r']       ?> </div>
                                     <div  class="col-sm-12 form-group"> #<?= $dados->fields['chamados_id']      ?> </div>                                    
                                     <div  class="col-sm-12 form-group">
                                         <select class=" requeri" id="chamado_status" name="chamado_status">
@@ -429,15 +430,16 @@
   <?php } ?>
 </section>
 <?php include_once './_import/modals.php'; ?>
-<script type="text/javascript" charset="utf8" src="./DataTables/datatables.min.js"></script>
+<!--<script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js"></script>-->
+<!--<script type="text/javascript" charset="utf8" src="../../DataTables/datatables.min.js"></script>-->
 <script type="text/javascript">
 $(document).ready(function($){
     
     /* aplica DataTable na tabela. */
-    new DataTable( '#table_lista_notas', {
-        paging: false,
-        scrollY: 500
-    } );
+//    new DataTable('.table',{
+//        paging: false,
+//        scrollY: 500
+//    });
 
     $("#btnGravaConversa").on("click",function(){
         $.ajax({
@@ -463,17 +465,6 @@ $(document).ready(function($){
         });
         return false;
     });
-    
-//    $(function(){
-//        var form;
-//        $('#fileUpload').change(function (event) {
-//            form = new FormData();
-//            form.append('fileUpload', event.target.files[0]); // para apenas 1 arquivo
-//            form.append('fileUpload',$("#fileUpload").serialize());
-//            clickButton(form);
-//        });
-//    });
-    
     
     $("#chamado_responsavel").autocomplete({                        
         source: function( request, response){
@@ -524,55 +515,11 @@ $(document).ready(function($){
         console.log( sessionStorage );
         
         /* Monta o formulario e manda pra manutenção */        
-//        if("<?= $_SESSION['op'] != 'insert' ?>"){
-            form = new FormData();
-            form.append('fileUpload', event.target.files[0]); // para apenas 1 arquivo
-            form.append('fileUpload',$("#fileUpload").serialize());
-            clickButton(form);
-            console.log("if");            
-//        }else{
-//            console.log("else");
-//            console.log(event.target.files[0]);
-//            console.log($("input[type='file']")[0].files[0]);            
-//            console.log($("input[type='file']")[0].files[0].name );            
-//            console.log($("input[type='file']")[0].files[0].type );            
-//            console.log($("input[type='file']")[0].files[0].tmp_name );            
-////            $("#teste").val( JSON.(event.target.files[0]) );
-//        }
+        form = new FormData();
+        form.append('fileUpload', event.target.files[0]); // para apenas 1 arquivo
+        form.append('fileUpload',$("#fileUpload").serialize());
+        clickButton(form);    
     });
-    
-//    $("#btnSalvar").on("click", function(){
-//        $(this).prop("disabled",true);
-//        form = new FormData();
-//        
-//        console.log( "form" );
-//        console.log( form );
-//        
-//        $.ajax({
-//            url: $("#frmDados").prop("action"),
-//            method: "post",
-//            dataType: "text",
-//            data: $("#frmDados").serialize(),
-//            error: function () {
-//                $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
-//                $("#modal_erro").modal("show");
-//            },
-//            success: function (retorno) {                        
-//                if (retorno == "OK") {
-//                    $("#modal_success").modal("show");
-//                    setTimeout(function () {
-//                        $("#modal_success").modal("hide");
-//                        location.href = "" + ret;
-//                    }, 500);
-//                } else {
-//                    $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno.mensagem);
-//                    $("#modal_erro").modal("show");
-//                }
-//            }
-//        });
-//        return false;
-//    });
-   
 });
 function clickButton(form){
     $.ajax({

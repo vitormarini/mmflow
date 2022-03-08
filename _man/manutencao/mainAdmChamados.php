@@ -9,14 +9,6 @@ include_once '../../_man/_aux.php';
 
 session_start();
 
-<<<<<<< HEAD
-=======
-// print "<pre>"; print_r($_POST);
-// print "<pre>"; print_r($_SESSION);
-// exit;
-
-
->>>>>>> e3450ec659a9fac9a7d6c3a574ce12674015cb28
 $op         = $_SESSION['op'];          //Ação
 $p          = $_SESSION['p'];           //Página da Busca
 $r          = $_SESSION['tela_atual'];  //Tela Atual
@@ -46,10 +38,12 @@ if ( $op == "insert" && empty($_FILES) ){
     $sql = "
     INSERT INTO t_chamados (
           c_user_id             , c_data_abertura       , c_status          , c_tipo
-        , c_departamento        , c_responsavel         , c_assunto         , c_servico            
+        , c_departamento        , c_responsavel         , c_assunto         , c_servico   
+        , c_ciente
     )VALUES(
           {$user_id}            , '{$data_atual}'       , 'ABERTO'          , '{$c_tipo}'
         , '{$c_departamento}'   , '{$c_responsavel}'    , '{$c_assunto}'    , '{$c_servico}'
+        , 'N'
     );";                
         
     if ( $bd->Execute(replaceEmptyFields($sql)) ){
@@ -97,6 +91,12 @@ if( $op == "edit" && empty($_FILES)){
 if( $_POST['fileUpload'] == "op=upload_arquivo" && $op == "edit" ){
     $files_arq = $_FILES['fileUpload'];
     anexo($files_arq,$id,$user_id);
+}
+
+if( $_POST['op'] == "ciencia" ){
+    if($bd->Execute("UPDATE t_chamados SET c_ciente = 'S' WHERE chamados_id = {$_POST['id']};")){
+        $retorno = "OK";
+    }
 }
 
 print $retorno;
