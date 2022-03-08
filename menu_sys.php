@@ -261,12 +261,15 @@
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
+
+            <?php $exibeNav = 'nav nav-treeview'; while ( !$dadosMenu->EOF ){  $exibeNav = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "" : $exibeNav;  $dadosMenu->MoveNext(); } ?>
+
             <!-- Inserir os menus -->
-            <ul class="nav nav-treeview">
-                <?php while ( !$dadosMenu->EOF ){
+            <ul class="<?= $exibeNav ?>">
+                <?php $dadosMenu->MoveFirst();
+                  while ( !$dadosMenu->EOF ){
                     $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
                     ?>
-
 
                 <li class="nav-item">
                     <button class="<?= $selectMenu ?> text-left " onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="width: 100%; height: 30px; padding-bottom: 20px;">
@@ -281,7 +284,7 @@
           </li>
           <?php
           if ( $sm_cadastro->RecordCount() > 0 ){ ?>
-            <li class="nav-item">
+            <li class="nav-item active">
               <a href="#" class="nav-link">
                 <i class="nav-icon fas fa-edit"></i>
                 <p>
@@ -290,13 +293,16 @@
                 </p>
               </a>
               <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_cadastro->EOF ){
+              <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_cadastro->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_cadastro->MoveNext(); } ?>
+              
+              <ul class="nav-tree<?= $exibeNav ?> text-left">
+                  <?php $sm_cadastro->MoveFirst();
+                    while ( !$sm_cadastro->EOF ){
                       $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
 
 
                   <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                      <button class="nav <?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
                           <label class="text-left">
                             <span class="fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon"></span>
                                     <?= $sm_cadastro->fields['menu_submenu_descricao'] ?>
@@ -320,8 +326,10 @@
                 </p>
               </a>
               <!-- Inserir os menus -->
-              <ul class="nav nav-treeview text-left">
-                  <?php while ( !$sm_movimento->EOF ){
+              <?php $exibeNav = 'nav nav-treeview';  while ( !$sm_movimento->EOF ){  $exibeNav = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "" : $exibeNav ;  $sm_movimento->MoveNext(); } ?>
+              <ul class="<?= $exibeNav ?>  text-right">
+                  <?php $sm_movimento->MoveFirst();
+                    while ( !$sm_movimento->EOF ){
                       $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
 
 
