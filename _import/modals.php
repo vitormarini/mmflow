@@ -47,13 +47,33 @@
                 </div>                
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                 <button type="button" class="btn btn-primary" id="btnContinuar" name="btnContinuar">Continuar</button>
             </div>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+
+<!-- MODAL PARA AVISOS OU CONFIRMAÇÃO -->
+<div class="modal fade" id="modal_geral" name="modal_geral" aria-hidden="true" role="dialog" aria-labelledby="titulo_modal_geral">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center" id="titulo_modal_geral"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">                
+                                
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>        
+    </div>
 </div>
 
 <!-- modal visualiza nota -->

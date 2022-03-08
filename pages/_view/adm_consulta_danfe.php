@@ -18,7 +18,7 @@
     }
 
 </style>
-<link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>
+<!--<link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>-->
 <section class="content">
     <div class="card body-view">
         <div class="card-header">          
@@ -235,12 +235,12 @@
 
 <!-- /.modal -->
 <?php include_once './_import/modals.php'; ?>
-<script type="text/javascript" charset="utf8" src="./DataTables/datatables.min.js"></script>
+<!--<script type="text/javascript" charset="utf8" src="./DataTables/datatables.min.js"></script>-->
 <script type="text/javascript">
 $(document).ready(function(){    
     /* valida método de pesquisa */
     $("[name='tipo_pesq']").on("change", function(){         
-        if( $(this).val() == "pesq_simples" ){
+        if( $(this).val() == "pesq_simples" ){  
             $(".div_pesq_avancada").hide();             
             $(".div_pesq_simples").show();                               
         }

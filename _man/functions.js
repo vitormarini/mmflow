@@ -229,3 +229,21 @@ function maskcpfcnpj(o, f) {
     }, 1);
 }
 /* Fim */
+
+function btnSalvar(manutencao,parametros,pagina){
+    $.ajax({
+        url: './_man/manutencao/'+manutencao,
+        method: "post",
+        dataType: "text",
+        data: parametros,
+        success: function (data) {
+            retorno(pagina);
+        }
+    });
+}
+
+function retorno(pagina){
+    if( pagina == "chamados" ){
+        location.reload();
+    }
+}
