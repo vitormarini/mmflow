@@ -42,10 +42,9 @@
             , databrasil(c_data_abertura::date)   AS c_data_abertura                        
         FROM t_chamados c
         INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
-        WHERE c_responsavel_id = 3 
-            AND c_ciente != 'S';");    
-     
-                
+        WHERE c_responsavel_id = {$_SESSION['user_id']}
+            AND c_ciente != 'S';");
+        
     while(!$chamado->EOF){
         $tr_chamados .= '\n\
             <tr>\n\
@@ -332,7 +331,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <!-- INPUTS DE VERIFICAÇÃO NO JS -->
-        <input type="text" id="qtde_chamados" name="qtde_chamados" value="<?= $chamado->RecordCount(); ?>" >
+        <input type="hidden" id="qtde_chamados" name="qtde_chamados" value="<?= $chamado->RecordCount(); ?>" >
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
