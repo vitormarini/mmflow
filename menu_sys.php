@@ -49,7 +49,7 @@
     while(!$chamado->EOF){
         $tr_chamados .= '\n\
             <tr>\n\
-                <td class="text-center"><a onclick="'. movPage('adm_chamados','view', $dados->fields['chamados_id'], 'movimentacao','','') .'">#'. $chamado->fields["chamados_id"]     .'</a></td>\n\
+                <td class="text-center">#'. $chamado->fields["chamados_id"]     .'</td>\n\
                 <td class="text-left  ">'. $chamado->fields["user_nome"]        .'</td>\n\
                 <td class="text-left"  >'. $chamado->fields["c_assunto"]        .'</td>\n\
                 <td class="text-center">'. $chamado->fields["c_tipo"]           .'</td>\n\
