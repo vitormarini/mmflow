@@ -78,9 +78,9 @@ if( $op == "edit" && empty($_FILES)){
               
         $l_operacao = "MOVIMENTACAO";
     }else{
-        $sql = "UPDATE t_chamados SET c_status = '{$dados['chamado_status']}', c_prioridade = '{$dados['chamado_prioridade']}' WHERE chamados_id = {$id}";
+        $sql = "UPDATE t_chamados SET c_status = '{$dados['chamado_status']}', c_prioridade = '{$dados['chamado_prioridade']}' WHERE chamados_id = {$id};";
     }
-    
+            
     $l_query .= $sql;      
     if($bd->Execute(replaceEmptyFields($sql))){
         $retorno = "OK";
@@ -100,6 +100,14 @@ if( $_POST['op'] == "ciencia" ){
 }
 
 print $retorno;
+
+if ( $retorno == "OK" ){        
+    //Trantando essa excessão para não modificar a página
+    if ( !isset($_POST["exception"]) && $_POST['exception'] !== "update_permissoes" ){    
+        #Modificando o Session
+        $_SESSION['op'] = $_SESSION['id'] = "";        
+    }
+}
 
 function functionLog($id, $l_data_hora, $l_operacao, $l_query, $l_user_id){
     global $bd;    

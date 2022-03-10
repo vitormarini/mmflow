@@ -66,7 +66,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">                
+            <div class="modal-body" id="div_body" name="div_body">                
                                 
             </div>
             <div class="modal-footer justify-content-between">

@@ -43,12 +43,13 @@
         FROM t_chamados c
         INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
         WHERE c_responsavel_id = {$_SESSION['user_id']}
-            AND c_ciente != 'S';");
+            AND c_ciente != 'S'
+        ORDER BY chamados_id;");
         
     while(!$chamado->EOF){
         $tr_chamados .= '\n\
             <tr>\n\
-                <td class="text-center">#'. $chamado->fields["chamados_id"]     .'</td>\n\
+                <td class="text-center"><a onclick="'. movPage('adm_chamados','view', $dados->fields['chamados_id'], 'movimentacao','','') .'">#'. $chamado->fields["chamados_id"]     .'</a></td>\n\
                 <td class="text-left  ">'. $chamado->fields["user_nome"]        .'</td>\n\
                 <td class="text-left"  >'. $chamado->fields["c_assunto"]        .'</td>\n\
                 <td class="text-center">'. $chamado->fields["c_tipo"]           .'</td>\n\
@@ -217,7 +218,7 @@
                             $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
                         ?>
                         <li class="nav-item">
-                            <button class="<?= $selectMenu ?> text-left " onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                            <button class="<?= $selectMenu ?> text-left" onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="width: 100%; height: 30px; padding-bottom: 20px;">
                                 <label class="text-center">
                                   <span class="fas <?php print $dadosMenu->fields['menu_icon'] ?> nav-icon"></span>
                                           <?= $dadosMenu->fields['menu_descricao'] ?>
@@ -437,8 +438,8 @@
         
         if( parseInt($("#qtde_chamados").val()) > 0 ){
             var tr = '<?= $tr_chamados ?>';
-            $(".modal-title").html("CHAMADOS");
-            $(".modal-body").append('\
+            $("#titulo_modal_geral").html("CHAMADOS");
+            $("#div_body").append('\
             <div class="col-lg-12">\n\
                 <table class="table table-bordered">\n\
                     <thead>\n\

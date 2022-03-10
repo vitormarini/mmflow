@@ -15,6 +15,8 @@ function salvar(ret) {
                     $("#modal_success").modal("hide");
                     location.href = "" + ret;
                 }, 500);
+                console.log( "tamara dalvar" );
+                console.log( ret );
             } else {
                 $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno.mensagem);
                 $("#modal_erro").modal("show");
@@ -39,11 +41,9 @@ function validateSave(page) {
             validate: "liberaBtnSalvar"
         },
         success: function (retorno) {
-            console.log( retorno );
+            console.log( "retorno" );
+            console.log( page );
             if (retorno == "OK") {
-                
-                console.log( "retorno " + retorno );
-                
                 salvar(page);
             } else {
                 $("#titulo_modal_erro").html("Ainda faltam itens a serem preenchidos!");
@@ -144,7 +144,7 @@ function validaData(v1, v2, v3, v4, v) {
             } else {
                 $("input, button").prop("disabled", true);
                 $("#" + v2).prop("disabled", false);
-                $("#titulo_modal_erro").text("Registro em duplicidade!")
+                $("#titulo_modal_erro").text("Registro em duplicidade!");
                 $("#modal_erro").modal("show");
                 confirm("Registro em Duplicidade, corrija!");
             }

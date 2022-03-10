@@ -414,7 +414,7 @@ $(document).ready(function($){
             }
        });
 
-       refeshPermissao();
+       refreshPermissao();
     });
 
     function buscaSelect(){
@@ -466,7 +466,7 @@ $(document).ready(function($){
         });  
     }
 
-    function refeshPermissao(){                
+    function refreshPermissao(){                
         $.ajax({
             url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/mainAdmUser.php",
             type: "post",
@@ -476,7 +476,7 @@ $(document).ready(function($){
                 arrId: tableTd,
                 id_menu: $("#user_menu").val(),
                 categoria: $("#user_menu_categoria").val(),
-                id_usuario: <?= $_SESSION['user_id'] ?>
+                id_usuario: "<?= $_SESSION['user_id'] ?>"
             },
             success: function(retorno){
                 $("#modal_success").modal("show");

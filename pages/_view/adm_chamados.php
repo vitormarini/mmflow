@@ -118,15 +118,15 @@
                 <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>                            
-                            <th class="text-center" width="5%" >Status          </th>                            
-                            <th class="text-center" width="5%" >ID             </th>                            
+                            <th class="text-center" width="05%">Status          </th>                            
+                            <th class="text-center" width="05%">ID              </th>                            
                             <th class="text-center" width="15%">Usuário         </th>                            
                             <th class="text-center" width="15%">Responsável     </th>
                             <th class="text-center" width="20%">Detalhe         </th>
                             <th class="text-center" width="10%">Tipo            </th>
                             <th class="text-center" width="10%">Dt Abertura     </th>
                             <th class="text-center" width="10%">Dt Conclusão    </th>
-                            <th class="text-center" width="10%" colspan="2" >Opções          </th>
+                            <th class="text-center" width="10%">Opções          </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,14 +134,20 @@
                             while(!$dados->EOF){
                                 if ( $dados->fields['c_status'] == "EM_ANDAMENTO" ){
                                     $status = '<td class="text-center alert-warning" title="EM ANDAMENTO"><span class="fas fa-tags" ></span></td>';
+                                    $escondido_view = "";
+                                    $escondido_edit = "escondido";
                                 }
                                 else if ( $dados->fields['c_status'] == "ABERTO" ){
                                     $status = '<td class="text-center alert-info" title="ABERTO"><span class="fas fa-lock-open" ></span></td>';
+                                    $escondido_view = "";
+                                    $escondido_edit = "escondido";
                                 }
                                 else if ( $dados->fields['c_status'] == "ENCERRADO" ){
                                     $status = '<td class="text-center alert-success" title="ENCERRADO"><span class="fas fa-lock" ></span></td>';
+                                    $escondido_view = "escondido";
+                                    $escondido_edit = "";
                                 }
-
+                                
                                 ?>
                                 <tr>                                    
                                     <?php print $status; ?>
@@ -153,12 +159,10 @@
                                     <td class="text-center"><?= $dados->fields['c_data_abertura']   ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_data_fechamento'] ?></td>
                                     <td class="text-center">
-                                        <button class="btn-success" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
+                                        <button class="btn-success <?= $escondido_edit ?>" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
                                             <span class="fas fa-plus openDetalhes"></span>
                                         </button>
-                                    </td>
-                                    <td class="text-center">
-                                        <button class=" btn-info" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Encerrar o chamado.">
+                                        <button class=" btn-info <?= $escondido_view ?>" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Encerrar o chamado.">
                                             <span class="far fa-paper-plane"></span>
                                         </button>
                                     </td>
@@ -205,7 +209,7 @@
                 INNER JOIN t_user r ON ( r.user_id = c.c_responsavel_id )
                 WHERE    chamados_id = '{$_SESSION['id']}'
                 ORDER BY chamados_id;";
-        
+       
         $sqlMov = "
             SELECT  movimentacao_id
                 , m_chamados_id
@@ -225,8 +229,11 @@
         $mov   = $bd->Execute($sqlMov);
         $log   = $bd->Execute($sqlLog);
         
-        $disabled = "";
-        $escondido = $_SESSION['op'] == "view" ? "escondido" : ""; 
+        $disabled  = in_array($_SESSION['op'],array("view")) ? "disabled" : "";
+        $escondido = in_array($_SESSION['op'],array("view")) ? "escondido" : ""; 
+        
+//        print "<pre>"; print_r($_SESSION);
+//        exit;
     }
             
         #Validamos as funcionalidades          
@@ -295,8 +302,7 @@
                                         }
                                     ?>
                                     </select>
-                                </div>    
-                                    
+                                </div>
                             </div>     
                             <?php } else { ?>
                             <div class="col-sm-8"> 
@@ -315,7 +321,7 @@
                                 <div class="col-sm-12 form-group"> <hr> </div>      
                                 
                                 <?php $mov->MoveNext();} ?>                                 
-                                <div class="col-sm-12">                         
+                                <div class="col-sm-12 <?= $escondido ?>">                         
                                     <div  class="col-sm-6 form-group">
                                          <img src="dist/img/user_<?= $_SESSION['user_id'] ?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 40px; height: 40px;">
                                          <button type="button" class="btn btn-success " id="btnGravaConversa" ><!-- onclick="movPage('adm_chamados','','', 'gravaConversa','','')">-->
@@ -351,14 +357,14 @@
                                     <div  class="col-sm-12 form-group"> <?= $dados->fields['user_nome_r']       ?> </div>
                                     <div  class="col-sm-12 form-group"> #<?= $dados->fields['chamados_id']      ?> </div>                                    
                                     <div  class="col-sm-12 form-group">
-                                        <select class=" requeri" id="chamado_status" name="chamado_status">
+                                        <select class="requeri" id="chamado_status" name="chamado_status" <?= $disabled ?>>
                                             <option value="ABERTO"       <?=($dados->fields['c_status'] == "ABERTO"       ? "selected" : "")?>> 1 - Aberto         </option>
                                             <option value="EM_ANDAMENTO" <?=($dados->fields['c_status'] == "EM_ANDAMENTO" ? "selected" : "")?>> 2 - Em Andamento   </option>
                                             <option value="ENCERRADO"    <?=($dados->fields['c_status'] == "ENCERRADO"    ? "selected" : "")?>> 3 - Encerrado      </option>
                                         </select>
                                     </div>
                                     <div  class="col-sm-12 form-group"> 
-                                        <select class=" requeri" id="chamado_prioridade" name="chamado_prioridade">
+                                        <select class="requeri" id="chamado_prioridade" name="chamado_prioridade" <?= $disabled ?>>
                                             <option value="BAIXA"    <?=($dados->fields['c_prioridade'] == "BAIXA"    ? "selected" : "")?>> 1 - Baixa     </option>
                                             <option value="MODERADA" <?=($dados->fields['c_prioridade'] == "MODERADA" ? "selected" : "")?>> 2 - Moderada  </option>
                                             <option value="ALTA"     <?=($dados->fields['c_prioridade'] == "ALTA"     ? "selected" : "")?>> 3 - Alta      </option>
@@ -387,7 +393,7 @@
                     </div>                
                 </div>
             </form>
-            <div class="col-sm-8 form-group">  
+            <div class="col-sm-8 form-group <?= $escondido ?>">  
                 <form method="POST" action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmChamados.php" id="fileUpload" name="fileUpload" enctype="multipart/form-data">
                     <input type="hidden" id="op" name="op" value="upload_arquivo" >                                                            
                     <input type="file" id="arquivo" name="arquivo" class="inputfile inputfile-1" style="width:100%;" >                                                            
@@ -404,10 +410,10 @@
             <div class="row">          
                 <?php if ( $_SESSION['op'] == "insert" || $_SESSION['op'] == "edit" ){ ?>
                 <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-primary form-control" id="btnSalvar">
-                      <span class="fas fa-save"></span>
-                      Salvar
-                  </button>                  
+                    <button type="button" class="btn btn-primary form-control" id="btnSalvar">
+                  <span class="fas fa-save"></span>
+                  Salvar
+              </button>                  
                </div>
                 <?php } ?>
                 <?php if ( $_SESSION['op'] == "delete" ){ ?>
@@ -419,7 +425,7 @@
                    </div>
                 <?php } ?>
                 <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-warning " id="btnVoltar" onclick="movPage('adm_chamados','','', 'movimentacao','','')">
+                  <button type="button" class="btn btn-warning" id="btnVoltar" onclick="movPage('adm_chamados','','', 'movimentacao','','')">
                       <span class="fas fa-retweet"></span>
                       Voltar
                   </button>                  
