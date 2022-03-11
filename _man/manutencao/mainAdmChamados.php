@@ -64,6 +64,7 @@ if ( $op == "insert" && empty($_FILES) ){
     anexo($_SESSION['files']['fileUpload'],$id,$user_id);
     functionLog($id, $data_atual, "INSERT", $l_query, $user_id);
     
+    $session_op = $session_id = "";
     $retorno = "OK";
 }
 
@@ -77,35 +78,40 @@ if( $op == "edit" && empty($_FILES)){
         );";
               
         $l_operacao = "MOVIMENTACAO";
+        $session_op = $op; $session_id = $id;
     }else{
         $sql = "UPDATE t_chamados SET c_status = '{$dados['chamado_status']}', c_prioridade = '{$dados['chamado_prioridade']}' WHERE chamados_id = {$id};";
+        $session_op = $session_id = "";
     }
             
     $l_query .= $sql;      
-    if($bd->Execute(replaceEmptyFields($sql))){
-        $retorno = "OK";
+    if($bd->Execute(replaceEmptyFields($sql))){        
+        $retorno = "OK";        
         functionLog($id, $data_atual, $l_operacao, $l_query, $user_id);
     }        
 }
 
 if( $_POST['fileUpload'] == "op=upload_arquivo" && $op == "edit" ){
+    $session_op = $op; $session_id = $id;
     $files_arq = $_FILES['fileUpload'];
     anexo($files_arq,$id,$user_id);
 }
 
 if( $_POST['op'] == "ciencia" ){
     if($bd->Execute("UPDATE t_chamados SET c_ciente = 'S' WHERE chamados_id = {$_POST['id']};")){
-        $retorno = "OK";
+        $session_op = $op; $session_id = $id;
+        $retorno = "OK";                
     }
 }
 
 print $retorno;
 
-if ( $retorno == "OK" ){        
+if ( $retorno == "OK" ){
     //Trantando essa excessão para não modificar a página
     if ( !isset($_POST["exception"]) && $_POST['exception'] !== "update_permissoes" ){    
         #Modificando o Session
-        $_SESSION['op'] = $_SESSION['id'] = "";        
+        $_SESSION['op'] = $session_op;
+        $_SESSION['id'] = $session_id;        
     }
 }
 
@@ -135,7 +141,7 @@ function anexo($files_arq,$id,$user_id){
         if( !empty($name) ){
             $sql = "INSERT INTO t_chamados_anexos(chamados_id, a_nome, a_caminho)VALUES('{$id}', '{$name}', '{$dir}');";        
             
-            if($bd->Execute(replaceEmptyFields($sql))){                
+            if($bd->Execute(replaceEmptyFields($sql))){                                
                 $retorno = "OK";
                 $id_anexo = $bd->Insert_ID();
                 functionLog($id, $data_atual, "ANEXO_ARQUIVO-{$id_anexo}", $sql, $user_id);

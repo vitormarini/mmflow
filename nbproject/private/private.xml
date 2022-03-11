@@ -15,6 +15,7 @@
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/pages/_view/adm_users.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/search/_searchData.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_import/modals.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/manutencao/mainAdmDepartamento.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_conection/_conect.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/menu_sys.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/pages/_view/adm_chamados.php</file>
@@ -24,6 +25,7 @@
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/manutencao/mainAdmChamados.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_conection/_bd.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/pages/_view/adm_consulta_danfe.php</file>
+            <file>file:/C:/WebServer/Apache24/htdocs/mmflow/pages/_view/adm_departamentos.php</file>
             <file>file:/C:/WebServer/Apache24/htdocs/mmflow/_man/movePages.php</file>
         </group>
     </open-files>
