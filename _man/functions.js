@@ -247,3 +247,27 @@ function retorno(pagina){
         location.reload();
     }
 }
+
+function btnImprimir(url,parametros){
+    /* monta o formulário */
+    var mapForm = document.createElement("form");
+    mapForm.target = "Map";
+    mapForm.method = "POST"; // or "post" if appropriate
+    mapForm.action = "pages/_report/_mpdf/"+url;
+    /* monta input */
+    var mapInput = document.createElement("input");
+    mapInput.type = "text";
+    mapInput.name = "parametros";
+    mapInput.value = parametros;   
+    /* adiciona input em formulário */
+    mapForm.appendChild(mapInput); 
+    
+    
+    document.body.appendChild(mapForm);   
+    mapForm.submit(); 
+    
+    console.log( url );
+    console.log( parametros );
+    
+//    window.open("pages/_report/_mpdf/"+url, "_blank");
+}

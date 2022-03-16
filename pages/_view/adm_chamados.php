@@ -126,7 +126,7 @@
                             <th class="text-center" width="10%">Tipo            </th>
                             <th class="text-center" width="10%">Dt Abertura     </th>
                             <th class="text-center" width="10%">Dt Conclusão    </th>
-                            <th class="text-center" width="10%">Opções          </th>
+                            <th class="text-center" width="10%" colspan="2">Opções          </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,8 +162,13 @@
                                         <button class="btn-success <?= $escondido_edit ?>" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
                                             <span class="fas fa-plus openDetalhes"></span>
                                         </button>
-                                        <button class=" btn-info <?= $escondido_view ?>" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Encerrar o chamado.">
+                                        <button class=" btn-info <?= $escondido_view ?>" onclick="movPage('adm_chamados','edit','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')">
                                             <span class="far fa-paper-plane"></span>
+                                        </button>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn-default btnImprimir" title="Clique para visualizar mais." data-id="<?= $dados->fields['chamados_id'] ?>">
+                                            <span class="fas fa-print openDetalhes"></span>
                                         </button>
                                     </td>
                                 </tr>
@@ -428,7 +433,7 @@
                   <button type="button" class="btn btn-warning" id="btnVoltar" onclick="movPage('adm_chamados','','', 'movimentacao','','')">
                       <span class="fas fa-retweet"></span>
                       Voltar
-                  </button>                  
+                  </button>
                </div>                              
           </div>
         </div>
@@ -471,6 +476,11 @@ $(document).ready(function($){
             }
         });
         return false;
+    });
+    
+    $(".btnImprimir").on("click",function(){        
+        var parametros = {tipo: "pdf",id: $(this).data("id")};
+        btnImprimir("report_chamados.php", JSON.stringify(parametros));
     });
     
     $("#chamado_responsavel").autocomplete({                        

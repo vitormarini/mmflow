@@ -111,6 +111,10 @@
     .escondido{display:none;}
 </style>
 <!-- CSS -->
+<!--<link rel="stylesheet" href="css/bootstrap.css">--> 
+
+ <link rel="stylesheet" href="../../"> 
+ <link rel="stylesheet" href="docs/assets/css/adminlte.css"> 
 <link rel="stylesheet" href="build/scss/jquery-ui-1.11.4.min.css">
 <!--<link rel="stylesheet" href="./DataTables/datatables.min.css"/>-->
 

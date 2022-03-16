@@ -45,7 +45,7 @@ if ( $op == "insert" && empty($_FILES) ){
         , '{$c_departamento}'   , '{$c_responsavel}'    , '{$c_assunto}'    , '{$c_servico}'
         , 'N'
     );";                
-        
+
     if ( $bd->Execute(replaceEmptyFields($sql)) ){
         $id = $bd->Insert_ID();
         
