@@ -90,20 +90,20 @@ $cham = $bd->Execute("
             <table>
                 <tbody>
                     <tr>
-                        <td width="50%"><b>Solicitante:</b></td>
-                        <td width="50%">'. $cham->fields['user_nome'] .'</td>                        
+                        <td width="30%"><b>Solicitante:</b></td>
+                        <td width="70%">'. $cham->fields['user_nome'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b>Criado:</b></td>
-                        <td width="50%">'. $cham->fields['c_data_abertura'] .'</td>                        
+                        <td width="30%"><b>Criado:</b></td>
+                        <td width="70%">'. $cham->fields['c_data_abertura'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b>Fechado:</b></td>
-                        <td width="50%">'. $cham->fields['c_data_fechamento'] .'</td>                        
+                        <td width="30%"><b>Fechado:</b></td>
+                        <td width="70%">'. $cham->fields['c_data_fechamento'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b> &nbsp;</b></td>
-                        <td width="50%"> </td>                        
+                        <td width="30%"><b> &nbsp;</b></td>
+                        <td width="70%"> </td>                        
                     </tr>
                 </tbody>
             </table>
@@ -112,20 +112,20 @@ $cham = $bd->Execute("
             <table>
                 <tbody>
                     <tr>
-                        <td width="50%"><b>Atribuído a:</b></td>
-                        <td width="50%">'. $cham->fields['user_nome_r'] .'</td>                        
+                        <td width="30%"><b>Atribuído a:</b></td>
+                        <td width="70%">'. $cham->fields['user_nome_r'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b>Status:</b></td>
-                        <td width="50%">'. $cham->fields['c_status'] .'</td>                        
+                        <td width="30%"><b>Status:</b></td>
+                        <td width="70%">'. $cham->fields['c_status'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b>Prioridade:</b></td>
-                        <td width="50%">'. $cham->fields['c_prioridade'] .'</td>                        
+                        <td width="30%"><b>Prioridade:</b></td>
+                        <td width="70%">'. $cham->fields['c_prioridade'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="50%"><b>Serviço:</b></td>
-                        <td width="50%">'. $cham->fields['c_servico'] .'</td>                        
+                        <td width="30%"><b>Serviço:</b></td>
+                        <td width="70%">'. $cham->fields['c_servico'] .'</td>                        
                     </tr>
                 </tbody>
             </table>
