@@ -7,8 +7,7 @@ ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 400);
 date_default_timezone_set('America/Sao_Paulo');
 
-//include_once "../../../../mpdf/Relatorio.class.php";
-include_once "../../../build/mpdf/Relatorio.class.php";
+include_once "../../../../mpdf/Relatorio.class.php";
 
 ## Inicializando variáveis
 $p = json_decode($_POST['parametros']);
@@ -90,20 +89,20 @@ $cham = $bd->Execute("
             <table>
                 <tbody>
                     <tr>
-                        <td width="30%"><b>Solicitante:</b></td>
-                        <td width="70%">'. $cham->fields['user_nome'] .'</td>                        
+                        <td width="50%"><b>Solicitante:</b></td>
+                        <td width="50%">'. $cham->fields['user_nome'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b>Criado:</b></td>
-                        <td width="70%">'. $cham->fields['c_data_abertura'] .'</td>                        
+                        <td width="50%"><b>Criado:</b></td>
+                        <td width="50%">'. $cham->fields['c_data_abertura'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b>Fechado:</b></td>
-                        <td width="70%">'. $cham->fields['c_data_fechamento'] .'</td>                        
+                        <td width="50%"><b>Fechado:</b></td>
+                        <td width="50%">'. $cham->fields['c_data_fechamento'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b> &nbsp;</b></td>
-                        <td width="70%"> </td>                        
+                        <td width="50%"><b> &nbsp;</b></td>
+                        <td width="50%"> </td>                        
                     </tr>
                 </tbody>
             </table>
@@ -112,20 +111,20 @@ $cham = $bd->Execute("
             <table>
                 <tbody>
                     <tr>
-                        <td width="30%"><b>Atribuído a:</b></td>
-                        <td width="70%">'. $cham->fields['user_nome_r'] .'</td>                        
+                        <td width="50%"><b>Atribuído a:</b></td>
+                        <td width="50%">'. $cham->fields['user_nome_r'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b>Status:</b></td>
-                        <td width="70%">'. $cham->fields['c_status'] .'</td>                        
+                        <td width="50%"><b>Status:</b></td>
+                        <td width="50%">'. $cham->fields['c_status'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b>Prioridade:</b></td>
-                        <td width="70%">'. $cham->fields['c_prioridade'] .'</td>                        
+                        <td width="50%"><b>Prioridade:</b></td>
+                        <td width="50%">'. $cham->fields['c_prioridade'] .'</td>                        
                     </tr>
                     <tr>
-                        <td width="30%"><b>Serviço:</b></td>
-                        <td width="70%">'. $cham->fields['c_servico'] .'</td>                        
+                        <td width="50%"><b>Serviço:</b></td>
+                        <td width="50%">'. $cham->fields['c_servico'] .'</td>                        
                     </tr>
                 </tbody>
             </table>
