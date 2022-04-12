@@ -34,7 +34,7 @@ $m_descricao    = trim($dados['chamado_descricao']);
 $data_atual     = date("Y-m-d H:s:i");
 
 #INSERT
-if ( $op == "insert" && empty($_FILES) ){
+if ( $op == "insert" ){
     $sql = "
     INSERT INTO t_chamados (
           c_user_id             , c_data_abertura       , c_status          , c_tipo

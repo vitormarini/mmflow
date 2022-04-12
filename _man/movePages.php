@@ -25,6 +25,7 @@ if ( $_POST['tipo'] == "movimentacao" ){
     $_SESSION['op']             = $_POST['xOp'];    
     $_SESSION['id']             = $_POST['xId'];      
     $_SESSION['buscas']         = $busca;  
+    $_SESSION['p']              = 1;  
     
 }
 else if ( $_POST['tipo'] == "movim_menu" ){       

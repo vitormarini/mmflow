@@ -637,12 +637,12 @@ function colocaMaiusculo(){
 //                }
 //            }
             else {
-                $strPaginacao .= "    <li><a href='?$strTela&p=1'>1</a></li>";
-                $strPaginacao .= "    <li><a href='?$strTela&p=2'>2</a></li>";
+                $strPaginacao .= "    <li><a href='?$strTela&p=1'>  1  </a></li>";
+                $strPaginacao .= "    <li><a href='?$strTela&p=2'>  2  </a></li>";
                 $strPaginacao .= "    <li><a>...</a></li>";
                 for ( $intCont = ( $intUltima - ( 1 + ( 2 * $intAdjacentes ) ) ); $intCont <= $intUltima; $intCont++ ) {
                     $strAtiva      = ( $intCont == $intPagina ? "class='active'" : '' );
-                    $strPaginacao .= "    <li $strAtiva><a href='?$strTela&p={$intCont}'>{$intCont}</a></li>";
+                    $strPaginacao .= "    <li $strAtiva><a href='?$strTela&p={$intCont}'>  {$intCont}  </a></li>";
                 }
             }
         }

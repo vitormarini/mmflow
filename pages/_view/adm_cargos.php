@@ -1,3 +1,6 @@
+<?php 
+//    require_once('../../_man/_aux.php');
+?>
 <section class="content">
 
    <!-- INICIAMOS O MODO TELA -->
@@ -41,25 +44,30 @@
                 </div>
             </form>
             <?php      
+            $_SESSION['p'] = $_GET['p'];
             #Preparamos o filtro da pesquisa
-            $intPaginaAtual = ( $_SESSION['p'] );
+            $intPaginaAtual = ($_SESSION['p']);
             $intPaginaAtual = filter_var( $intPaginaAtual, FILTER_VALIDATE_INT );
+            $intPaginaAtual = (!empty($intPaginaAtual )) ? $intPaginaAtual : 1;
             $intLimite      = 10;
-            $intInicio      = ( $intPaginaAtual != '' ? ( ( $intPaginaAtual - 1 ) * $intLimite ) : 0 );                                   
+            $intInicio      = ($intPaginaAtual - 1) * $intLimite;
 
             #buscamos os dados
-            $sql = "SELECT  cargo_id         , cargo_nome             
-                            , CASE 
-                                    WHEN cargo_ativo = 'S' THEN 'Ativo'
-                                    ELSE 'INATIVO'
-                              END AS cargo_ativo_desc
-                    FROM t_cargos  {$where} 
-                    ORDER BY 2;";
-
+            $sql = "
+                SELECT  cargo_id
+                    , cargo_nome             
+                    , CASE 
+                        WHEN cargo_ativo = 'S' THEN 'ATIVO'
+                        ELSE 'INATIVO'
+                      END AS cargo_ativo_desc
+                FROM t_cargos  {$where} 
+                ORDER BY 2
+                LIMIT  {$intLimite} OFFSET {$intInicio}";
+                
             $dados = $bd->Execute($sql);
 
             #Setamos a quantidade de itens na busca
-            $qtdRows        = $dados->RecordCount();
+            $qtdRows = $bd->Execute("SELECT * FROM t_cargos  {$where}");
            ?>
 
           <div class="card-tools">
@@ -74,20 +82,18 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th width="09%"> #           </th>
-                                <th width="10%">Situação     </th>
-                                <th width="20%">Nome         </th>
-                                <th width="15%" class="text-center">Ações           </th>
+                                <th width="05%" class="text-center"> #          </th>
+                                <th width="10%" class="text-center">Situação    </th>
+                                <th width="70%" class="text-center">Descrição   </th>
+                                <th width="15%" class="text-center">Ações       </th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
                             if ( $dados->RecordCount() > 0 ){ 
                                 while ( !$dados->EOF ) {
-                                    
-                                    $alert = $dados->fields['cargo_ativo_desc'] == "Ativo" ? "" : "alert-danger";
-
-                                    ?>
+                                    $alert = $dados->fields['cargo_ativo_desc'] == "ATIVO" ? "" : "alert-danger";
+                                ?>
                             <tr>
                                 <td class="text-left"><?= $dados->fields['cargo_id']                       ?></td>
                                 <td class="text-left <?= $alert ?>"><?= $dados->fields['cargo_ativo_desc']                       ?></td>
@@ -121,7 +127,7 @@
         <div class="card-footer  align-content-center">
             <div class="row text-center fix-center">
                 <div class="col-sm-12 text-center align-items-center">   
-                    <label><?php paginacao( 'menu_sys.php', $intPaginaAtual, $intLimite, $qtdRows ); ?></label>                    
+                    <label><?php paginacao('', $intPaginaAtual, $intLimite, $qtdRows->RecordCount() ); ?></label>                    
                 </div>
             </div>
         </div>
@@ -132,17 +138,19 @@
 
       if ( $_SESSION['id'] != "" ){
         #Monta SQL para busca
-        $sql = "SELECT  dpto_id     , dpto_nome             , dpto_descricao, dpto_ativo
-                   FROM t_departamentos 
-                  WHERE dpto_id = '{$_SESSION['id']}';";
-
-
+        $sql = "
+            SELECT cargo_id
+            , cargo_nome
+            , cargo_cbo
+            , cargo_ref
+            , cargo_ativo
+            , cargo_dt_inicio
+            FROM t_cargos tc 
+            WHERE cargo_id = {$_SESSION['id']}
+            ORDER BY 1;";
 
         #Resgata os valores do Banco
         $dados = $bd->Execute($sql);
-
-        //Verificando se a empresa matriz está vinculada
-        $descricaoEmpresaMatriz = $dados->fields['empresa_matriz_id'] !== "" ? formataCpfCnpj($dados->fields['empresa_cnpj_matriz'],$dados->fields['empresa_tipo_pessoa_matriz'])." - ".$dados->fields['empresa_razao_social_matriz'] : "";
       }
 
        #Validamos as funcionalidades          
@@ -150,10 +158,7 @@
        else if ( $_SESSION["op"] == "insert" ){ $description = "Insira os "; }
        else if ( $_SESSION["op"] == "delete" ){ $description = "Deletar esses ";  $disabled = "disabled"; }
        else if ( $_SESSION["op"] == "edit"   ){ $description = "Editar os "; }
-
-       #Resgatando os Menus
-       $dataMenu = $bd->Execute($sql = "SELECT cargo_nome, cargo_cbo ,	cargo_id, cargo_ativo FROM t_cargos ORDER BY 1;");
-      ?>
+    ?>
   <div class="card body-view">
     <div class="card-header">
       <div class="row">
@@ -185,8 +190,8 @@
                             <div  class="col-sm-2  mb-2">
                                 <label or="cargo_ativo">Situação:</label>
                                 <select class="form-control" id="cargo_ativo" name="cargo_ativo">
-                                    <option value="S" <?php print $dados->fields['cargo_ativo'] == "S" ? "selected": ""?>>Sim</option>
-                                    <option value="N" <?php print $dados->fields['cargo_ativo'] == "N" ? "selected": ""?>>Não</option>
+                                    <option value="S" <?= $dados->fields['cargo_ativo'] == "S" ? "selected": ""?>>ATIVO   </option>
+                                    <option value="N" <?= $dados->fields['cargo_ativo'] == "N" ? "selected": ""?>>INATIVO </option>
                                 </select>
                             </div>
                         </div>                        
@@ -326,7 +331,7 @@ $(document).ready(function($){
                 arrId: tableTd,
                 id_menu: $("#user_menu").val(),
                 categoria: $("#user_menu_categoria").val(),
-                id_usuario: <?= $_SESSION['id'] ?>
+                id_usuario: <?= $_SESSION['user_id'] ?>
             },
             success: function(retorno){
                 $("#modal_success").modal("show");

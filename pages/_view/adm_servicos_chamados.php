@@ -130,9 +130,6 @@
 
         #Resgata os valores do Banco
         $dados = $bd->Execute($sql);
-
-        //Verificando se a empresa matriz está vinculada
-        $descricaoEmpresaMatriz = $dados->fields['empresa_matriz_id'] !== "" ? formataCpfCnpj($dados->fields['empresa_cnpj_matriz'],$dados->fields['empresa_tipo_pessoa_matriz'])." - ".$dados->fields['empresa_razao_social_matriz'] : "";
       }
 
        #Validamos as funcionalidades          
@@ -273,31 +270,6 @@ $(document).ready(function($){
                     $("#tableItens > tbody").append(retorno.dados[0].html); 
                     $("#tableItens").show();
                 }
-            }
-        });  
-    }
-
-    function refeshPermissao(){                
-        $.ajax({
-            url: "<?= $_SERVER["localhost"] ?>/mmflow/_man/manutencao/mainAdmUser.php",
-            type: "post",
-            dataType: "text",
-            data: { 
-                exception: "update_permissoes",
-                arrId: tableTd,
-                id_menu: $("#user_menu").val(),
-                categoria: $("#user_menu_categoria").val(),
-                id_usuario: <?= $_SESSION['id'] ?>
-            },
-            success: function(retorno){
-                $("#modal_success").modal("show");
-                setTimeout(function(){
-                    $("#modal_success").modal("hide");
-                    $("#user_menu, #user_menu_categoria").val("");
-                    $("#tableItens > tbody, #user_menu_categoria").empty();
-                    $("#tableItens, .busca_categoria").hide();
-                    $(".lista_sub").addClass("escondido");
-                }, 500);                   
             }
         });  
     }
