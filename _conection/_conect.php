@@ -27,7 +27,7 @@ $varBd["pass"] = "mttpocos";
 
 //$bd = novaConexao($varBd["sgbd"], $varBd["host"] , $varBd["base"], $varBd["user"], $varBd["pass"]);    
 // $bd = $objBDNovo = novaConexao("postgres", "179.188.16.134:5432", "base_mmflow", "base_mmflow", "mttpocos"); // Locaweb
-$bd = $objBDNovo = novaConexao("postgres", "localhost", "gestao", "gestao", "mttpocos"); // Locaweb
+$bd = $objBDNovo = novaConexao("postgres", "localhost", "gestao_work", "gestao", "mttpocos"); // Locaweb
 //$bd = $objBDNovo = novaConexao("postgres", "localhost:5432", "mmflow", "mmflow", "mttpocos");       
     
 /**
