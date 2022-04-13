@@ -65,6 +65,12 @@ else if ( $op == "edit" ){
     }                          
 }
 
+else if ( $op == "delete" ){
+    $sql = "
+        DELETE FROM user_permission WHERE id_user = {$id};
+        DELETE FROM t_user WHERE user_id = {$id};";    
+}
+
 if ( $bd->Execute(replaceEmptyFields($sql)) ){
     $retorno = "OK";
     

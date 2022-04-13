@@ -17,6 +17,9 @@ if ( $_SESSION['tela_atual'] !=  $_POST["xDestino"] ){
 }
 
 if ( $_POST['tipo'] == "movimentacao" ){       
+    
+    
+    
     #Validando as buscas
     $buscas = explode("&",$_POST["xBuscas"]);
     

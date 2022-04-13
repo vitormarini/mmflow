@@ -135,7 +135,7 @@
                                     <button class="btn btn-info" onclick="movPage('adm_users','edit','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para Editar.">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-danger" onclick="movPage('adm_users','delete','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." hidden>
+                                    <button class="btn btn-danger" onclick="movPage('adm_users','delete','<?= $dados->fields['user_id'] ?>', 'movimentacao','','')" title="Clique para Eliminar." >
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -343,7 +343,7 @@
             <?php } ?>
             <?php if ( $_SESSION['op'] == "delete" ){ ?>
                 <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-danger form-control" id="btnExcluir">
+                  <button type="button" class="btn btn-danger form-control" id="btnSalvar">
                       <span class="fas fa-trash"></span>
                       Excluir
                   </button>                  
@@ -391,7 +391,7 @@ $(document).ready(function($){
     var tableTd = "";    
     
     //Máscaras e validações        
-    $("#tableItens, .busca_categoria, #btnNovo").hide();
+    $("#tableItens, .busca_categoria").hide();
 
     $("#user_menu").on("change", function(){ buscaSelect(); });
     $("#btnBuscar").on("click", function(){ buscaTableLinha(); });
@@ -401,10 +401,9 @@ $(document).ready(function($){
 
     $("#btnAtualizaPermissoes").on("click",function(){
         tableTd = "";
-       $("#tableItens > tbody > tr").each(function (el){
-           var retorno = $(this).find('input[name^=id_]:checkbox:checked').prop("name");
-
-           //Verificamos se está setado somente o item desejado
+        $("#tableItens > tbody > tr").each(function (el){
+            var retorno = $(this).find('input[name^=id_]:checkbox:checked').prop("name");
+            //Verificamos se está setado somente o item desejado
             if ( retorno !== undefined ){
                 if ( tableTd == "" ){
                     tableTd = retorno.split("_")[1];                    
@@ -412,9 +411,8 @@ $(document).ready(function($){
                     tableTd = tableTd + "," + retorno.split("_")[1];
                 }
             }
-       });
-
-       refreshPermissao();
+        });
+        refreshPermissao();
     });
 
     function buscaSelect(){
