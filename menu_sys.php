@@ -46,18 +46,6 @@
             AND c_ciente != 'S'
         ORDER BY chamados_id;");
         
-    while(!$chamado->EOF){
-        $tr_chamados .= '\n\
-            <tr>\n\
-                <td class="text-center">#'. $chamado->fields["chamados_id"]     .'</td>\n\
-                <td class="text-left  ">'. $chamado->fields["user_nome"]        .'</td>\n\
-                <td class="text-left"  >'. $chamado->fields["c_assunto"]        .'</td>\n\
-                <td class="text-center">'. $chamado->fields["c_tipo"]           .'</td>\n\
-                <td class="text-center">'. $chamado->fields["c_data_abertura"]  .'</td>\n\
-                <td class="text-center"><button class="btn-info btnCiencia" title="Dar ciência."><span class="far fa-paper-plane"></span></button></td>\n\
-            </tr>';
-        $chamado->MoveNext();
-    }
 
   if ( $_SESSION['menu_atual'] != "" ){
 

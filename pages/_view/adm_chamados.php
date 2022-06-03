@@ -1,4 +1,5 @@
 <!--<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.min.css"/>-->
+<!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">-->
 <style>
     .inputfile { width: 0.1px; height: 0.1px; opacity: 0; overflow: hidden; position: absolute;  z-index: -1; }      
 
@@ -444,6 +445,7 @@
 <?php include_once './_import/modals.php'; ?>
 <!--<script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js"></script>-->
 <!--<script type="text/javascript" charset="utf8" src="../../DataTables/datatables.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function($){
     
