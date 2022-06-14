@@ -10,6 +10,9 @@
     include_once './_conection/_bd.php';
     include_once './_conection/_verifyLogin.php';
 
+// print_r($_SESSION);
+// exit;
+
     $dadosMenu = $bd->Execute($sql= "
         SELECT  menu_id, menu_descricao, menu_icon, menu_url
         FROM    t_menu
@@ -140,15 +143,15 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-          <button class="btn" onclick="movPage('VAZIO','','', 'movimentacao')">
+          <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
               <i class="fas fa-home"></i>
                Home
           </button>
         <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
+      <!--<li class="nav-item d-none d-sm-inline-block ">
         <a href="#" class="nav-link">Contact</a>
-      </li>
+      </li>-->
         
     </ul>    
 
@@ -177,7 +180,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="menu_sys.php" class="brand-link">      
+    <a onclick="movPage('VAZIO','','', 'movim_menu', '0', '')" class="brand-link">      
       <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
     </a>
     <!-- Sidebar -->
@@ -333,7 +336,7 @@
                 <?php if(!empty($local->fields['sub'])){ ?>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="menu_sys.php">Home</a></li>
+                        <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home/li>
                         <li class="breadcrumb-item active"> <b><?= $local->fields['menu']?></b> > <i><?=$local->fields['categoria']?></i> > <u><?= $local->fields['sub'] ?></u></li>
                     </ol>
                 </div>
