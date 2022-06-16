@@ -85,9 +85,13 @@ else if ( $op == "edit" ){
                                 ,   empresa_tipo_pessoa         =  '$empresa_tipo_pessoa'
                               WHERE empresa_id                  =   {$id};"; 
 }
+else if ( $op == "delete" ){
+    $sql = "DELETE FROM t_empresas WHERE empresa_id = {$id};";
+}
 
 // print"<pre>";
 // print($sql);
+// print_r($_SESSION);
 // exit;
 
 if ( $bd->Execute(replaceEmptyFields($sql)) ){

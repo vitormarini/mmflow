@@ -21,26 +21,28 @@ $retorno = "ERRO";
 #Validando os dados Cadastrais
 $cfop_codigo    = trim($_POST['cfop_codigo']);
 $cfop_descricao = trim($_POST['cfop_descricao']);
+$cfop_tipo      = trim($_POST['cfop_tipo']);
 
 #INSERT
 if ( $op == "insert" ){
     $sql = "
         INSERT INTO t_cfop 
-            ( cfop_codigo        ,	cfop_descricao    ) 
-        VALUES(  '$cfop_codigo'  ,	'$cfop_descricao' );";
+            ( cfop_codigo        ,	cfop_descricao    , cfop_tipo) 
+        VALUES(  '$cfop_codigo'  ,	'$cfop_descricao' , '$cfop_tipo');";
 }
 
 else if ( $op == "edit" ){   
         $sql  = "   UPDATE  t_cfop 
                     SET cfop_codigo       =   '$cfop_codigo'
                         , cfop_descricao  =   '$cfop_descricao'
+                        , cfop_tipo       =   '$cfop_tipo'
                     WHERE cfop_id         =   {$id};"; 
                    
 }
 
 else if ( $op == "delete" ){
     $sql = "
-        DELETE FROM t_cfop WHERE t_cfop = {$id};";    
+        DELETE FROM t_cfop WHERE cfop_id = {$id};";    
 }
 
 if ( $bd->Execute(replaceEmptyFields($sql)) ){
