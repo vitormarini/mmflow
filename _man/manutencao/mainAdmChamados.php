@@ -97,8 +97,23 @@ if( $_POST['fileUpload'] == "op=upload_arquivo" && $op == "edit" ){
     anexo($files_arq,$id,$user_id);
 }
 
-if( $_POST['op'] == "ciencia" ){
-    if($bd->Execute("UPDATE t_chamados SET c_ciente = 'S' WHERE chamados_id = {$_POST['id']};")){
+if( $dados['xOp'] == "ciencia" ){
+    $verif = $bd->Execute("
+        SELECT c.chamados_id 
+            , c.c_status 
+            , COUNT(m.*) AS qtde
+        FROM t_chamados c
+        INNER JOIN t_chamados_mov m ON (m.m_chamados_id = c.chamados_id AND m.m_visualizado = 'N' AND m.m_user_id != {$user_id} )
+        WHERE c.chamados_id = {$dados['xId']}
+            AND c.c_ciente = 'N'
+            AND c.c_responsavel_id = {$user_id}
+        GROUP BY 1,2;");
+
+    if( $verif->fields['qtde'] >= 1 ){
+        $sql = "UPDATE t_chamados SET c_ciente = 'S' WHERE chamados_id = {$dados['id']};";
+    }
+
+    if($bd->Execute("UPDATE t_chamados_mov SET m_visualizado = 'S' WHERE movimentacao_id IN ({$dados['xId_mov']});")){
         $session_op = $op; $session_id = $id;
         $retorno = "OK";                
     }

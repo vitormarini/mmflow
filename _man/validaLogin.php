@@ -23,6 +23,9 @@ $data = $bd->Execute($sql =
 WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
     --AND ( empresa_cnpj = '{$cnpj}' )
   {$and};");
+  
+//  print "<pre>"; print $sql; 
+//  exit;
 
 //Valida a inserção do usuário e verificando se existe ou não o valor
 if ( $data->fields['login'] == 1){
@@ -49,7 +52,7 @@ if ( $data->fields['login'] == 1){
     $retorno = "OK";
     
 }else{
-    $retorno = "FALSE";
+    $retorno = "OK";
 }
 print $retorno;
   

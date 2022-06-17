@@ -25,7 +25,7 @@ $varBd["pass"] = "mttpocos";
 //$varBd["user"] = "postgres";
 //$varBd["pass"] = "mttpocos";
 //    $conexao = pg_connect("localhost", "'", "mttpocos")
-//pg_connect("host=ap5.cnd.hostlp.cloud port=5432 dbname=gestao user=postgres password=mttpocos")   or
+//pg_connect("host=localhost port=5432 dbname=gestao_work user=postgres password=mttpocos")   or
 //die ("Não foi possível conectar ao servidor PostGreSQL");
 //exit;
 //$bd = novaConexao($varBd["sgbd"], $varBd["host"] , $varBd["base"], $varBd["user"], $varBd["pass"]);    
@@ -34,7 +34,21 @@ $bd = $objBDNovo = novaConexao("postgres", "ap5.cnd.hostlp.cloud:5432", "gestao_
 //$bd = $objBDNovo = novaConexao("postgres", "localhost", "gestao_work", "postgres", "mttpocos"); // GHA
 // $bd = $objBDNovo = novaConexao("postgres", "localhost", "gestao", "gestao", "mttpocos"); // Locaweb
 //$bd = $objBDNovo = novaConexao("postgres", "localhost", "gestao_teste", "postgres", "mttpocos");       
-    
+
+
+
+//$appName = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+//$connStr = "host=localhost port=5432 dbname=gestao_work user=postgres password=mttpocos options='--application_name=$appName'";
+//
+////simple check
+//$conn = pg_connect($connStr);
+//$result = pg_query($conn, "select * from pg_stat_activity");
+//
+//var_dump(pg_fetch_all($result));
+
+//print "<pre> 1 -- ";print $result;
+//die ("Não foi possível conectar ao servidor PostGreSQL");
+//exit();
 /**
  * Realiza conexão persistente com o banco de dados
  * @param String $banco Sistema gerenciador utilizado. Ex: postgres

@@ -244,7 +244,7 @@ function btnSalvar(manutencao,parametros,pagina){
 
 function retorno(pagina){
     if( pagina == "chamados" ){
-        location.reload();
+        window.open('./pages/_view/adm_chamados.php', '_blank');
     }
 }
 
