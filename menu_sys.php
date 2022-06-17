@@ -187,12 +187,9 @@
       </li>
       <!--<li class="nav-item d-none d-sm-inline-block ">
         <a href="#" class="nav-link">Contact</a>
-<<<<<<< HEAD
       </li>-->
-        
-=======
+  
       </li>
->>>>>>> 680c4984b3e72022b3fef972e4c5ff7b68ff58c8
     </ul>    
 
     <!-- Right navbar links -->
