@@ -27,7 +27,7 @@
     $sm_movimento = $bd->Execute($sql = "
         SELECT menu_sub_id, menu_id, menu_submenu_categoria, menu_submenu_descricao, menu_submenu_url, menu_submenu_icon
         FROM t_menu_sub LIMIT 0;");
-    
+
     $chamado = $bd->Execute("
         SELECT  chamados_id                                             
             , c_prioridade
@@ -45,7 +45,32 @@
         WHERE c_responsavel_id = {$_SESSION['user_id']}
             AND c_ciente != 'S'
         ORDER BY chamados_id;");
-        
+        while(!$chamado->EOF){
+          $tr_chamados .= '\n\
+              <tr>\n\
+                  <td class="text-center">#'. $chamado->fields["chamados_id"]     .'</td>\n\
+                  <td class="text-left  ">'. $chamado->fields["user_nome"]        .'</td>\n\
+                  <td class="text-left"  >'. $chamado->fields["c_assunto"]        .'</td>\n\
+                  <td class="text-center">'. $chamado->fields["c_tipo"]           .'</td>\n\
+                  <td class="text-center">'. $chamado->fields["c_data_abertura"]  .'</td>\n\
+                  <td class="text-center"><button class="btn-info btnCiencia" title="Dar ciência."><span class="far fa-paper-plane"></span></button></td>\n\
+              </tr>';
+
+          $div_toast .='\n\
+          <div class="toast"  data-autohide="false">\n\
+              <div class="toast-header">\n\
+                  <strong class="me-auto"><i class="bi-globe"></i> CHAMADO TAL </strong>\n\
+              </div>\n\
+              <div class="toast-body">\n\
+              QTDE Nova Mensagem!\n\
+              <div class="mt-2 pt-2 border-top">\n\
+                  <button type="button" class="btn btn-primary btn-sm">Take action</button>\n\
+              </div>\n\
+              </div>\n\
+          </div>\n\
+          ';
+          $chamado->MoveNext();
+      }  
 
   if ( $_SESSION['menu_atual'] != "" ){
 
@@ -125,12 +150,23 @@
 <script src="./plugins/ajax/jquery-ui.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="./plugins/bootstrap/js/bootstrap.js"></script>
 
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script> -->
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <style>
         .requi {
             color: #bf2718;
         }
     </style>
+    
 <div class="wrapper">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -149,7 +185,6 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="#" class="nav-link">Contact</a>
       </li>
-        
     </ul>    
 
     <!-- Right navbar links -->
@@ -171,6 +206,11 @@
             </button>
         </div>
     </ul>
+    
+    <div class="toast-container" id="div_toast" name="div_toast" style="position: absolute; top: 10px; right: 10px;">
+      
+    </div>
+    
   </nav>  
   <!-- /.navbar -->
 
@@ -353,6 +393,7 @@
   }
   ?>
   </div>
+  
   <!-- /.content-wrapper -->
   <footer class="main-footer fixed-bottom escondido">
     <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini"><b>Flow</b> - ERP</a>.</strong>
@@ -395,7 +436,74 @@
           }
       });
     }
+
+    function retornaNotificacoes(id_user){
+      $.ajax({
+          url     : './_man/manutencao/returnChamados.php',
+          method  : "post",
+          dataType: "text",
+          data    : {
+              xOp :"return_mov"
+          },
+          success: function(retorno){
+            // $("#div_toast").append("");
+            $("#div_toast").append(retorno);
+            $(".toast").toast("show");
+            // $('toast').toast({delay:1000, animation:false,autohide: false});
+
+              // $(".toast").toast({ autohide: true });
+          },
+          beforeSend: function(){
+            $("#div_toast").append("");                
+          },
+      });
+    }
+
     $(document).ready( function(){
+
+      $('.toast').on('shown.bs.toast', function () {
+        console.log("tamara");
+      })
+
+      // var b = {'nome': 'Gabriel', 'sobrenome': 'Rodrigues'};
+//  b = JSON.stringify(b);
+//  sessionStorage.setItem('chave', b);
+//  var c = JSON.parse(sessionStorage.getItem('chave'));
+//  console.info(c);
+
+//  console.log(request.getSession())
+      
+      
+      // setInterval(function() {
+        retornaNotificacoes();
+      // }, 300);
+
+      $(document).on("click", ".bntOk", function(){
+          console.log($(this).data("ids_mov"));
+          console.log("tamara");
+          $.ajax({
+            url     : './_man/manutencao/mainAdmChamados.php',
+            method  : "post",
+            dataType: "text",
+            data    : {
+                xOp :"ciencia",
+                xId     : $(this).data("id"),
+                xId_mov : $(this).data("ids_mov").replace('{','').replace('}',''),
+            },
+            success: function(retorno){
+              // $("#div_toast").append("");
+              $("#div_toast").append(retorno);
+              $(".toast").toast("show");
+              // $('toast').toast({delay:1000, animation:false,autohide: false});
+
+                // $(".toast").toast({ autohide: true });
+            },
+            beforeSend: function(){
+              $("#div_toast").append("");                
+            },
+        });
+      });
+      
 
         function atualizaContador() {
             $.ajax({
@@ -447,7 +555,7 @@
                     <tbody>'+ tr +'</tbody>\n\
                 </table>\n\
             </div>');
-            $("#modal_geral").modal("show");
+            // $("#modal_geral").modal("show");
         }
         
         $(".btnCiencia").on("click",function(){
