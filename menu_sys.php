@@ -336,7 +336,7 @@
                 <?php if(!empty($local->fields['sub'])){ ?>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home/li>
+                        <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home</li>
                         <li class="breadcrumb-item active"> <b><?= $local->fields['menu']?></b> > <i><?=$local->fields['categoria']?></i> > <u><?= $local->fields['sub'] ?></u></li>
                     </ol>
                 </div>
