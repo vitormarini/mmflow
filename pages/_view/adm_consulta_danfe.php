@@ -17,6 +17,47 @@
         background-color: #C0C0C0;        
     }
 
+    .loader {
+        opacity: 0;
+        display: flex;
+        position: fixed;
+        bottom: 50px;
+        transition: opacity 0.3s ease-in;
+    }
+    
+    .loader.show {
+        opacity: 1;
+    }
+    
+    
+    .circle {
+        background-color: #fff;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 5px;
+        animation: bounce 0.5s ease-in infinite;
+    }
+    
+    .circle:nth-of-type(2) {
+        animation-delay: 0.1s;
+    }
+    
+    .circle:nth-of-type(3) {
+        animation-delay: 0.2s;
+    }
+    
+    @keyframes bounce {
+        0%,
+        100% {
+        transform: translateY(0);
+        }
+    
+        50% {
+        transform: translateY(-10px)
+        }
+    }
+
 </style>
 <!--<link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>-->
 <section class="content">
@@ -35,10 +76,10 @@
                     <div class="form-group pull-left col-lg-6 col-md-6 col-sm-6">                    
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-default btn-sm">
-                                <input type="radio" name="tipo_pesq" value="pesq_simples" autocomplete="off" checked> Pesquisa
+                                <input type="radio" id="pesq_simples" name="tipo_pesq" value="pesq_simples" autocomplete="off" checked> Pesquisa
                             </label>
                             <label class="btn btn-default btn-sm">
-                                <input type="radio" name="tipo_pesq" value="pesq_avancada" autocomplete="off"> Pesquisa Avançada
+                                <input type="radio" id="pesq_avancada" name="tipo_pesq" value="pesq_avancada" autocomplete="off"> Pesquisa Avançada
                             </label>
                         </div>
                     </div>
@@ -172,7 +213,7 @@
                     </thead>
                     <tbody>
                         <?php 
-                            for ( $x=0; $x <= 50; $x++ ){
+                            for ( $x=0; $x <= 1; $x++ ){
                                 print '
                                 <tr>
                                     <td class="text-center"><input type="checkbox" name="checkbox" class="check_nota"></td>
@@ -196,11 +237,12 @@
                                     </td>
                                 </tr>';
                             }
-                        ?>
-                        
+                        ?>                                                
                     </tbody>
                 </table>
+                
             </div>
+            
         </div>
       <!-- /.card-body -->
       <div class="card-footer  align-content-center">
@@ -239,17 +281,24 @@
 <script type="text/javascript">
 $(document).ready(function(){    
     /* valida método de pesquisa */
-    $("[name='tipo_pesq']").on("change", function(){         
-        if( $(this).val() == "pesq_simples" ){  
-            $(".div_pesq_avancada").hide();             
-            $(".div_pesq_simples").show();                               
-        }
-        else{
-            $(".div_pesq_simples").hide();             
-            $(".div_pesq_avancada").show();            
-        }
+    $("[name='tipo_pesq']").on("change", function(){        
+        chancePesquisa();
     });
 
+    function chancePesquisa(){
+        var optSimples = $("#pesq_simples").prop("checked");
+        var optAvancada = $("#pesq_avancada").prop("checked");
+
+        $(".div_pesq_simples, .div_pesq_avancada").hide();             
+
+        if ( optSimples ){
+            $(".div_pesq_simples").show();
+        } else if ( optAvancada ){
+            $(".div_pesq_avancada").show();  
+        }
+
+    }
+        
     /* aplica DataTable na tabela. */
     new DataTable( '#table_lista_notas', {
         paging: false,
@@ -271,6 +320,7 @@ $(document).ready(function(){
 
     /** validação btnPesquisas */
     $("#btnPesquisas").on("click",function(){
+        chancePesquisa();
         if($("#div_pesquisas").hasClass('escondido')){
             $("#div_pesquisas").removeClass("escondido");
         }else{         
