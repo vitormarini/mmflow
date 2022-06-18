@@ -48,6 +48,7 @@
             $sql = "SELECT cfop_id 
                         , cfop_codigo 
                         , cfop_descricao 
+                        , cfop_tipo
                     FROM t_cfop c
                     WHERE cfop_id IS NOT NULL 
                     {$where}
@@ -71,10 +72,10 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th width="05%" class="text-center">#                   </th>
-                                <th width="10%" class="text-left"  >Código              </th>
+                                <th width="5%" class="text-left"  >Código              </th>
+                                <th width="5%" class="text-left"  >Tipo              </th>
                                 <th width="65%" class="text-left"  >Descrição           </th>
-                                <th width="20%" class="text-center">Ações               </th>
+                                <th width="10%" class="text-center">Ações               </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,8 +83,8 @@
                         if ( $dados->RecordCount() > 0 ){ 
                             while ( !$dados->EOF ) { ?>
                             <tr>
-                                <td class="text-center"><?= $dados->fields['cfop_id']           ?></td>
                                 <td class="text-left"  ><?= $dados->fields['cfop_codigo']         ?></td>
+                                <td class="text-left"  ><?= $dados->fields['cfop_tipo']         ?></td>
                                 <td class="text-left"  ><?= $dados->fields['cfop_descricao']    ?></td>
                                 <td class="text-center">
                                     <button class="btn btn-success" onclick="movPage('adm_cfop','view','<?= $dados->fields['cfop_id'] ?>', 'movimentacao','','')" title="Clique para visualizar a informação.">
@@ -129,6 +130,7 @@
                 SELECT cfop_id 
                     , cfop_codigo 
                     , cfop_descricao 
+                    , cfop_tipo
                 FROM t_cfop tc 
                 WHERE cfop_id = '{$_SESSION['id']}';";
 
@@ -154,11 +156,18 @@
         <div class="card-body">
             <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainCFOP.php" method="post" id="frmDados">
                 <div class="form-group row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                       <label for="cfop_codigo" >Código:</label>
                       <input type="text" class="form-control requeri" id="cfop_codigo" name="cfop_codigo" value="<?= $dados->fields['cfop_codigo']?>" <?=$disabled?>/>
                     </div>
-                    <div class="col-sm-10">
+                    <div class="col-sm-2">
+                        <label for="cfop_codigo" >Tipo:</label>
+                        <select class="form-control" id="cfop_tipo" name="cfop_tipo" <?=$disabled?> >
+                            <option value="FISCAL"    <?= $dados->fields['cfop_tipo'] == "FISCAL"? "selected" : "" ?>>FISCAL</option>
+                            <option value="GERENCIAL" <?= $dados->fields['cfop_tipo'] == "GERENCIAL"? "selected" : "" ?>>GERENCIAL</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-9">
                       <label for="cfop_descricao">Descrição:</label>
                       <input type="text" class="form-control requeri" id="cfop_descricao" name="cfop_descricao" value="<?= $dados->fields['cfop_descricao']?>" <?=$disabled?>/>
                     </div>
@@ -178,7 +187,7 @@
               <?php } ?>
               <?php if ( $_SESSION['op'] == "delete" ){ ?>
                   <div class="col-sm-2 ">                  
-                    <button type="button" class="btn btn-danger form-control" id="btnExcluir">
+                    <button type="button" class="btn btn-danger form-control" id="btnSalvar">
                         <span class="fas fa-trash"></span>
                         Excluir
                     </button>                  

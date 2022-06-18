@@ -221,6 +221,7 @@
                 , m_chamados_id
                 , m_user_id               
                 , m_descricao
+                , m_visualizado
                 , user_nome
                 , datahorabrasil(m_data_hora) AS m_data_hora
             FROM    t_chamados_mov m 
@@ -312,20 +313,21 @@
                             </div>     
                             <?php } else { ?>
                             <div class="col-sm-8"> 
-                                <?php while(!$mov->EOF){ ?>
-                                <div class="col-sm-12">                         
-                                    <div  class="col-sm-12 form-group">
+                                <?php while(!$mov->EOF){ 
+                                    $visu = $mov->fields['m_visualizado'] == "S" ? "alert-success" : "";    
+                                ?>
+                                <div class="col-sm-12">     
+                                    <div class="form-group <?= $visu ?>">                    
+                                    <div  class="col-sm-12 form-group <?= $visu ?>">
                                         <img src="dist/img/user_<?= $mov->fields['m_user_id']?>.jpg" class="img-circle elevation-2" alt="No Image" style="width: 60px; height: 60px;">
                                         <?= $mov->fields['user_nome']?> - <b><?= $mov->fields['m_data_hora'] ?></b>
-                                     </div>
-                                </div>  
-                                <div class="col-sm-12 form-group">                         
-                                    <div  class="col-sm-12 form-group">
-                                        <?= $mov->fields['m_descricao'] ?>
                                     </div>
-                                </div>  
-                                <div class="col-sm-12 form-group"> <hr> </div>      
-                                
+                                    <div  class="col-sm-12 <?= $visu ?>">
+                                        <?= $mov->fields['m_descricao'] ?>
+                                    </div>  
+                                    </div>  
+                                </div>
+                                <div class="col-sm-12"> <hr> </div>
                                 <?php $mov->MoveNext();} ?>                                 
                                 <div class="col-sm-12 <?= $escondido ?>">                         
                                     <div  class="col-sm-6 form-group">

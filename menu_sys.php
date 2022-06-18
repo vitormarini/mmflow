@@ -45,6 +45,7 @@
         WHERE c_responsavel_id = {$_SESSION['user_id']}
             AND c_ciente != 'S'
         ORDER BY chamados_id;");
+        
         while(!$chamado->EOF){
           $tr_chamados .= '\n\
               <tr>\n\
@@ -176,15 +177,16 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
-          <button class="btn" onclick="movPage('VAZIO','','', 'movimentacao')">
+          <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
               <i class="fas fa-home"></i>
                Home
           </button>
         <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
+      <!--<li class="nav-item d-none d-sm-inline-block ">
         <a href="#" class="nav-link">Contact</a>
       </li>
+      </li>-->
     </ul>    
 
     <!-- Right navbar links -->
@@ -217,7 +219,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="menu_sys.php" class="brand-link">      
+    <a onclick="movPage('VAZIO','','', 'movim_menu', '0', '')" class="brand-link">      
       <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
     </a>
     <!-- Sidebar -->
@@ -373,7 +375,7 @@
                 <?php if(!empty($local->fields['sub'])){ ?>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="menu_sys.php">Home</a></li>
+                        <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home</li>
                         <li class="breadcrumb-item active"> <b><?= $local->fields['menu']?></b> > <i><?=$local->fields['categoria']?></i> > <u><?= $local->fields['sub'] ?></u></li>
                     </ol>
                 </div>
@@ -479,8 +481,7 @@
       // }, 300);
 
       $(document).on("click", ".bntOk", function(){
-          console.log($(this).data("ids_mov"));
-          console.log("tamara");
+          $(".toast").toast("hide");
           $.ajax({
             url     : './_man/manutencao/mainAdmChamados.php',
             method  : "post",
@@ -493,7 +494,7 @@
             success: function(retorno){
               // $("#div_toast").append("");
               $("#div_toast").append(retorno);
-              $(".toast").toast("show");
+              $(".toast").toast("hide");
               // $('toast').toast({delay:1000, animation:false,autohide: false});
 
                 // $(".toast").toast({ autohide: true });

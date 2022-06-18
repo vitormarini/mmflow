@@ -117,7 +117,7 @@
                         if ( $dados->RecordCount() > 0 ){
                             while ( !$dados->EOF ) { ?>
                         <tr>
-                            <td class="text-center"><?= "MATRIZ"                                                          ?></td>
+                            <td class="text-center"><?= $dados->fields['empresa_tipo']    ?></td>
                             <td class="text-center"><?= formataCpfCnpj($dados->fields['empresa_cnpj'],$dados->fields['empresa_tipo_pessoa'])    ?></td>
                             <td class="text-left"  ><?= $dados->fields['empresa_razao_social']    ?></td>
                             <td class="text-left"  ><?= $dados->fields['empresa_nome_fantasia']   ?></td>
@@ -171,8 +171,10 @@
                 , cpf_cnpj(t_empresas.empresa_cnpj,'')         AS empresa_cnpj_matriz
                 , matriz.empresa_tipo_pessoa  AS empresa_tipo_pessoa_matriz
                 , matriz.empresa_razao_social AS empresa_razao_social_matriz
+                , municipio.municipio_nome AS empresa_codigo_municipio_descricao
             FROM t_empresas 
             LEFT JOIN t_empresas AS  matriz ON ( matriz.empresa_id = t_empresas.empresa_matriz::int AND t_empresas.empresa_tipo = 'FILIAL' )
+            LEFT JOIN t_municipios_br AS municipio ON ( municipio.municipio_codigo = t_empresas.empresa_codigo_municipio )
             WHERE t_empresas.empresa_id = '{$_SESSION['id']}';";
 
 
@@ -294,7 +296,7 @@
 
                             <div  class="col-sm-2 form-group">
                                 <label for="empresa_cep">CEP:</label>
-                                <input type="text" class="form-control requeri " id="empresa_cep" name="empresa_cep" value="<?php print $dados->fields['empresa_numero']?>" <?=$disabled?>/>
+                                <input type="text" class="form-control requeri " id="empresa_cep" name="empresa_cep" value="<?php print $dados->fields['empresa_cep']?>" <?=$disabled?>/>
                             </div>
 
                             <div  class="col-sm-4 form-group" >
@@ -310,7 +312,7 @@
 
                             <div  class="col-sm-4 form-group">
                                 <label for="empresa_bairro">Bairro:</label>
-                                <input type="text" class="form-control requeri cep" id="empresa_bairro" name="empresa_bairro" value="<?php print $dados->fields['empresa_numero']?>" <?=$disabled?>/>
+                                <input type="text" class="form-control requeri cep" id="empresa_bairro" name="empresa_bairro" value="<?php print $dados->fields['empresa_bairro']?>" <?=$disabled?>/>
                             </div>
 
                         </div>
@@ -388,7 +390,7 @@
             <?php } ?>
             <?php if ( $_SESSION['op'] == "delete" ){ ?>
                 <div class="col-sm-2 ">                  
-                  <button type="button" class="btn btn-danger form-control" id="btnExcluir">
+                  <button type="button" class="btn btn-danger form-control" id="btnSalvar">
                       <span class="fas fa-trash"></span>
                       Excluir
                   </button>                  
