@@ -35,7 +35,7 @@
         } 
         if (  strlen($_POST['filtro_busca_select']) > 2 ){
             $filtro_busca = $_POST['filtro_busca_select'];
-            $where = ($where != "" ? "AND " : "WHERE ").
+            $where = ($where != "" ? "AND " : "AND ").
             "c_status = '{$filtro_busca}'";
         } 
     ?>
@@ -102,6 +102,7 @@
                 {$where}
                 ORDER BY chamados_id;";
 
+               
             $dados = $bd->Execute($sql);
 
             #Setamos a quantidade de itens na busca
