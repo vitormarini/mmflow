@@ -5,6 +5,8 @@
 
     //Se já tiver logado, redireciona para página inicial
     if(isset($_SESSION["autoriza"])) header("Location: menu_sys.php");
+
+    #Teste da XIOVANNANANANAN
      
 ?>
 
