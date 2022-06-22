@@ -55,7 +55,10 @@ if ( $_POST['busca'] == "submenu_categoria_cb" ){
 }
 
 else if ( $_POST['busca'] == "t_empresas"){
+    $html = "";
+    $cnpj = retira_caracteres($_POST['cnpj']);
     $_POST['cnpj'] = substr(retira_caracteres($_POST['cnpj']),0,8);
+    
     $sql = "
         SELECT empresa_id            
             , empresa_razao_social
@@ -69,9 +72,11 @@ else if ( $_POST['busca'] == "t_empresas"){
     #Executa a linha de busca no banco
     $objDados = $bd->Execute($sql);
     while(!$objDados->EOF){
-//        $selected = $
+        if ( $_POST['cnpj'] !=  "" ){
+            $selected = $objDados->fields[3] == $cnpj ? "selected" : "";
+        }
         
-        $html .= '<option value="'.$objDados->fields[0].'">'.$objDados->fields[4].'</option>';
+        $html .= '<option value="'.$objDados->fields[0].'" '.$selected.' >'.$objDados->fields[4].'</option>';
 
         $valida = true;
 
