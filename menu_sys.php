@@ -151,18 +151,6 @@
 <script src="./plugins/ajax/jquery-ui.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="./plugins/bootstrap/js/bootstrap.js"></script>
 
-<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"></script> -->
-
 <body class="hold-transition sidebar-mini layout-fixed">
     <style>
         .requi {
@@ -442,6 +430,7 @@
     }
 
     function retornaNotificacoes(id_user){
+      $("#div_toast").html(""); 
       $.ajax({
           url     : './_man/manutencao/returnChamados.php',
           method  : "post",
@@ -452,10 +441,9 @@
           success: function(retorno){
             // $("#div_toast").append("");
             $("#div_toast").append(retorno);
+            $(document).find('.toast').toast({autohide: false});
+            
             $(".toast").toast("show");
-            // $('toast').toast({delay:1000, animation:false,autohide: false});
-
-              // $(".toast").toast({ autohide: true });
           },
           beforeSend: function(){
             $("#div_toast").append("");                
@@ -464,49 +452,37 @@
     }
 
     $(document).ready( function(){
-
-      $('.toast').on('shown.bs.toast', function () {
-        console.log("tamara");
-      })
-
-      // var b = {'nome': 'Gabriel', 'sobrenome': 'Rodrigues'};
-//  b = JSON.stringify(b);
-//  sessionStorage.setItem('chave', b);
-//  var c = JSON.parse(sessionStorage.getItem('chave'));
-//  console.info(c);
-
-//  console.log(request.getSession())
-      
-      
-      // setInterval(function() {
-        retornaNotificacoes();
-      // }, 300);
+      retornaNotificacoes();
 
       $(document).on("click", ".bntOk", function(){
-          $(".toast").toast("hide");
+          $(this).find(".toast").toast("hide");
+          console.log( $(this).text().toUpperCase() );
+          console.log( $(this).find(".toast").data("value") );
+          
+          var btn = $(this).text().toUpperCase();
+          var id_ = $(this).data("id");
           $.ajax({
             url     : './_man/manutencao/mainAdmChamados.php',
             method  : "post",
             dataType: "text",
             data    : {
                 xOp :"ciencia",
-                xId     : $(this).data("id"),
+                xId     : id_,
                 xId_mov : $(this).data("ids_mov").replace('{','').replace('}',''),
             },
             success: function(retorno){
               // $("#div_toast").append("");
               $("#div_toast").append(retorno);
               $(".toast").toast("hide");
-              // $('toast').toast({delay:1000, animation:false,autohide: false});
-
-                // $(".toast").toast({ autohide: true });
+              if( btn !== "CIENTE" ){
+                movPage('adm_chamados','edit',id_, 'movimentacao','','');
+              }
             },
             beforeSend: function(){
               $("#div_toast").append("");                
             },
         });
       });
-      
 
         function atualizaContador() {
             $.ajax({
