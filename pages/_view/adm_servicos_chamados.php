@@ -38,6 +38,7 @@
                             Pesquisar
                         </button>                  
                     </div>
+                    
                 </div>
             </form>
             <?php      
@@ -217,7 +218,7 @@ $(document).ready(function($){
     var tableTd = "";    
     
     //Máscaras e validações        
-    $("#tableItens, .busca_categoria, #btnNovo").hide();
+    $("#tableItens, .busca_categoria").hide();
 
     $("#user_menu").on("change", function(){ buscaSelect(); });
     $("#btnBuscar").on("click", function(){ buscaTableLinha(); });
@@ -277,7 +278,7 @@ $(document).ready(function($){
 
    //Função que valida os dados inseridos no banco de dados.
    $(".unique").on("change", function(){
-       var v1   = "t_empresas";
+       var v1   = "t_chamados_servicos";
        var v2   = $(this).prop("name");
        var v3   = "=";
        var v4   = $(this).val();
