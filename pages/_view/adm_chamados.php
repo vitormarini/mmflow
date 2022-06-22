@@ -271,25 +271,34 @@
                                     <label for="chamado_tipo" >Tipo:</label>
                                     <select class="form-control requeri" id="chamado_tipo" name="chamado_tipo">
                                         <option value="CHAMADO"   >1 - Chamado</option>
-                                        <option value="REQUISICAO">2 - Requisição</option>
+                                        <!-- <option value="REQUISICAO">2 - Requisição</option> -->
                                     </select>
                                 </div>                           
                                 <div  class="col-sm-6 form-group">
                                     <label for="chamado_departamento" >Para o Departamento de :</label>
                                     <select class="form-control requeri" id="chamado_departamento" name="chamado_departamento">
                                     <?php
-                                        $dep = $bd->Execute("SELECT dpto_id , dpto_nome , dpto_descricao FROM t_departamentos td ORDER BY 1;");
+                                        $dep = $bd->Execute("SELECT dpto_id , dpto_nome , dpto_descricao FROM t_departamentos td  WHERE dpto_id = 2 ORDER BY 1;");
                                         while(!$dep->EOF){
                                             print '<option value="'.$dep->fields['dpto_id'].'">'.$dep->fields['dpto_id'].' - '.$dep->fields['dpto_nome'].'</option>';
                                             $dep->MoveNext();
                                         }
                                     ?>    
                                     </select>
-                                </div>                           
+                                </div>                        
+                                
+                                <?php
+                                if ( $_SESSION['op'] != "" ){
+                                    $buscaResponsavel = $bd->Execute($sql = "select user_id , user_nome  from t_user tu where user_nickname ='CCZinsly';");
+                                    $resp    = $buscaResponsavel->fields['user_nome'];
+                                    $resp_id = $buscaResponsavel->fields['user_id'];
+                                }
+                                ?>
+                                
                                 <div  class="col-sm-12  mb-2">
                                     <label for="chamado_responsavel">Responsável:</label>
-                                    <input type="text" class="form-control requeri " id="chamado_responsavel" name="chamado_responsavel"/>
-                                    <input type="hidden" class="form-control requeri " id="c_reponsavel_id" name="c_reponsavel_id"/>
+                                    <input type="text" class="form-control requeri " id="chamado_responsavel" name="chamado_responsavel" value="<?php print $resp ?>"/>
+                                    <input type="hidden" class="form-control requeri " id="c_reponsavel_id" name="c_reponsavel_id" value="<?php print $resp_id ?>"/>
                                 </div>
                                 <div  class="col-sm-12  mb-2">
                                     <label for="chamado_assunto">Assunto:</label>
@@ -303,7 +312,7 @@
                                     <label for="chamado_servico" >Serviço :</label>
                                     <select class="form-control requeri" id="chamado_servico" name="chamado_servico">
                                     <?php
-                                        $serv = $bd->Execute("SELECT t_chamados_servicos_id,t_servico,t_descricao FROM t_chamados_servicos tcs ORDER BY 1;");
+                                        $serv = $bd->Execute("SELECT t_chamados_servicos_id,t_servico,t_descricao FROM t_chamados_servicos tcs WHERE t_chamados_servicos_id = 3 ORDER BY 1;");
                                         while(!$serv->EOF){
                                             print '<option value="'.$serv->fields['t_chamados_servicos_id'].'">'.$serv->fields['t_chamados_servicos_id'].' - '.$serv->fields['t_servico'].'</option>';
                                             $serv->MoveNext();

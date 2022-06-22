@@ -209,7 +209,6 @@
 <script src="./plugins/jquery/jquery.mask.min_2.js" type="text/javascript"></script>
 <script src="./plugins/ajax/jquery-ui.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="./plugins/bootstrap/js/bootstrap.js"></script>
-
 <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -234,6 +233,15 @@
   </style>
 
   <div class="wrapper">
+<body class="hold-transition sidebar-mini layout-fixed">
+    <style>
+        .requi {
+            color: #bf2718;
+        }
+    </style>
+    
+<div class="wrapper">
+>>>>>>> 4d322b8830f2fafb2842d1a8646c92825a140297
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
       <!-- Left navbar links -->
@@ -517,6 +525,7 @@
       });
     }
 
+<<<<<<< HEAD
     function retornaNotificacoes(id_user) {
       $.ajax({
         url: './_man/manutencao/returnChamados.php',
@@ -580,6 +589,60 @@
           beforeSend: function() {
             $("#div_toast").append("");
           },
+=======
+    function retornaNotificacoes(id_user){
+      $("#div_toast").html(""); 
+      $.ajax({
+          url     : './_man/manutencao/returnChamados.php',
+          method  : "post",
+          dataType: "text",
+          data    : {
+              xOp :"return_mov"
+          },
+          success: function(retorno){
+            // $("#div_toast").append("");
+            $("#div_toast").append(retorno);
+            $(document).find('.toast').toast({autohide: false});
+            
+            $(".toast").toast("show");
+          },
+          beforeSend: function(){
+            $("#div_toast").append("");                
+          },
+      });
+    }
+
+    $(document).ready( function(){
+      retornaNotificacoes();
+
+      $(document).on("click", ".bntOk", function(){
+          $(this).find(".toast").toast("hide");
+          console.log( $(this).text().toUpperCase() );
+          console.log( $(this).find(".toast").data("value") );
+          
+          var btn = $(this).text().toUpperCase();
+          var id_ = $(this).data("id");
+          $.ajax({
+            url     : './_man/manutencao/mainAdmChamados.php',
+            method  : "post",
+            dataType: "text",
+            data    : {
+                xOp :"ciencia",
+                xId     : id_,
+                xId_mov : $(this).data("ids_mov").replace('{','').replace('}',''),
+            },
+            success: function(retorno){
+              // $("#div_toast").append("");
+              $("#div_toast").append(retorno);
+              $(".toast").toast("hide");
+              if( btn !== "CIENTE" ){
+                movPage('adm_chamados','edit',id_, 'movimentacao','','');
+              }
+            },
+            beforeSend: function(){
+              $("#div_toast").append("");                
+            },
+>>>>>>> 4d322b8830f2fafb2842d1a8646c92825a140297
         });
       });
 
