@@ -79,8 +79,8 @@
         $sql = "SELECT 	empresa_tipo                            ,	empresa_tipo_pessoa 
                     ,	empresa_cnpj                            ,	empresa_razao_social 
                     ,	empresa_ie                              ,	empresa_cep 
-                    ,	empresa_uf                              ,       empresa_nome_fantasia
-                    ,   empresa_id
+                    ,	empresa_uf                              ,   empresa_nome_fantasia
+                    ,   empresa_id                              ,   empresa_apelido
                 FROM    t_empresas {$where} 
                 ORDER BY empresa_cnpj;";
 
@@ -104,8 +104,8 @@
                         <tr>
                             <th width="07%" class="text-center">Tipo            </th>
                             <th width="15%" class="text-center">CNPJ            </th>
-                            <th width="24%" class="text-center">Razão Social    </th>
-                            <th width="18%" class="text-center">Fantasia        </th>
+                            <th width="34%" class="text-center">Razão Social    </th>
+                            <th width="8%"  class="text-center">Apelido         </th>
                             <th width="08%" class="text-center">IE              </th>
                             <th width="09%" class="text-center">CEP             </th>
                             <th width="04%" class="text-center">UF              </th>
@@ -120,7 +120,7 @@
                             <td class="text-center"><?= $dados->fields['empresa_tipo']    ?></td>
                             <td class="text-center"><?= formataCpfCnpj($dados->fields['empresa_cnpj'],$dados->fields['empresa_tipo_pessoa'])    ?></td>
                             <td class="text-left"  ><?= $dados->fields['empresa_razao_social']    ?></td>
-                            <td class="text-left"  ><?= $dados->fields['empresa_nome_fantasia']   ?></td>
+                            <td class="text-left"  ><?= $dados->fields['empresa_apelido']         ?></td>
                             <td class="text-left"  ><?= $dados->fields['empresa_ie']              ?></td>
                             <td class="text-left"  ><?= formataCep($dados->fields['empresa_cep']) ?></td>
                             <td class="text-left"  ><?= $dados->fields['empresa_uf']              ?></td>
@@ -172,6 +172,7 @@
                 , matriz.empresa_tipo_pessoa  AS empresa_tipo_pessoa_matriz
                 , matriz.empresa_razao_social AS empresa_razao_social_matriz
                 , municipio.municipio_nome AS empresa_codigo_municipio_descricao
+                , t_empresas.empresa_apelido
             FROM t_empresas 
             LEFT JOIN t_empresas AS  matriz ON ( matriz.empresa_id = t_empresas.empresa_matriz::int AND t_empresas.empresa_tipo = 'FILIAL' )
             LEFT JOIN t_municipios_br AS municipio ON ( municipio.municipio_codigo = t_empresas.empresa_codigo_municipio )
@@ -264,16 +265,20 @@
                                 <label or="empresa_nire">Núm. NIRE:</label>
                                 <input type="text" class="form-control unique" id="empresa_nire" name="empresa_nire" value="<?php print $dados->fields['empresa_nire']?>" <?=$disabled?>/>
                             </div>
-                            <div  class="col-sm-2 form-group">
-                                <label for="empresa_tipo" >Tipo da Empresa:</label>
+                            <div class="col-sm-2 mb-2">
+                                <label for="empresa_situacao" >Apelido:</label>
+                                <input type="text" class="form-control" id="empresa_apelido" name="empresa_apelido" value="<?php print $dados->fields['empresa_apelido']?>" <?=$disabled?>/>
+                            </div> 
+                            <div  class="col-sm-1 form-group">
+                                <label for="empresa_tipo" >Tipo:</label>
                                 <select class="form-control requeri" id="empresa_tipo" name="empresa_tipo" <?=$disabled?>>
                                     <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
                                     <option value="MATRIZ" <?php print $dados->fields['empresa_tipo'] == "MATRIZ" ? "selected" : ""  ?>>1 - Matriz</option>
                                     <option value="FILIAL" <?php print $dados->fields['empresa_tipo'] == "FILIAL" ? "selected" : ""  ?>>2 - Filial</option>
                                 </select>
                             </div>
-                            <div class="col-sm-2 mb-2">
-                                <label for="empresa_situacao" >Situação Empresa:</label>
+                            <div class="col-sm-1 mb-2">
+                                <label for="empresa_situacao" >Situação:</label>
                                 <select class="form-control requeri " id="empresa_situacao" name="empresa_situacao" <?=$disabled?>>
                                     <option value=""       <?php print $_SESSION['id'] != "" ? "disabled" : "" ?>>Selecione</option>
                                     <option value="1" <?php print $dados->fields['empresa_situacao'] == "1" ? "selected" : ""  ?>>1 - Ativa</option>

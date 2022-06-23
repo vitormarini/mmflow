@@ -30,6 +30,7 @@ $empreas_matriz_id          = trim($_POST['empreas_matriz_id']);
 $empresa_nome_fantasia      = trim($_POST['empresa_nome_fantasia']);
 $empresa_nire               = trim($_POST['empresa_nire']);
 $empresa_tipo               = trim($_POST['empresa_tipo']);
+$empresa_apelido            = trim($_POST['empresa_apelido']);
 
 #Validando os campos do Endereço
 $empresa_cep                = str_replace(array(".","-"," "),"",$_POST['empresa_cep']);
@@ -55,11 +56,13 @@ if ( $op == "insert" ){
                             empresa_tipo                    , empresa_razao_social          , empresa_nome_fantasia     , empresa_cnpj          , empresa_uf            , 
                             empresa_ie                      , empresa_codigo_municipio      , empresa_im                , empresa_matriz        , empresa_situacao      , 
                             empresa_logradouro              , empresa_numero                , empresa_complemento       , empresa_bairro        , empresa_cep           , 
-                            empresa_telefone_principal      , empresa_telefone_secundario   , empresa_email             , empresa_nire          , empresa_tipo_pessoa       ) 
+                            empresa_telefone_principal      , empresa_telefone_secundario   , empresa_email             , empresa_nire          , empresa_tipo_pessoa   ,
+                            empresa_apelido   ) 
                      VALUES('$empresa_tipo'                 , '$empresa_razao_socail'       , '$empresa_nome_fantasia'  , '$empresa_cnpj'       , '$empresa_uf'         , 
                             '$empresa_ie'                   , '$empresa_codigo_municipio'   , '$empresa_im'             , '$empreas_matriz_id'  , '$empresa_situacao'   , 
                             '$empresa_logradouro'           , '$empresa_numero'             , '$empresa_complemento'    , '$empresa_bairro'     , '$empresa_cep'        , 
-                            '$empresa_telefone_principal'   , '$empresa_telefone_secundario', '$empresa_email'          , '$empresa_nire'       , '$empresa_tipo_pessoa');";
+                            '$empresa_telefone_principal'   , '$empresa_telefone_secundario', '$empresa_email'          , '$empresa_nire'       , '$empresa_tipo_pessoa',
+                            '$empresa_apelido');";
 }
 
 else if ( $op == "edit" ){
@@ -83,6 +86,7 @@ else if ( $op == "edit" ){
                                 ,   empresa_email               =  '$empresa_email'
                                 ,   empresa_nire                =  '$empresa_nire'
                                 ,   empresa_tipo_pessoa         =  '$empresa_tipo_pessoa'
+                                ,   empresa_apelido             =  '$empresa_apelido'
                               WHERE empresa_id                  =   {$id};"; 
 }
 else if ( $op == "delete" ){

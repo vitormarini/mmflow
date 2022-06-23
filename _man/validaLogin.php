@@ -28,7 +28,8 @@ WHERE 	( user_nickname ILIKE '{$user}' OR user_email = '{$user}' )
 //  exit;
 
 //Valida a inserção do usuário e verificando se existe ou não o valor
-if ( $data->fields['login'] == 1){
+// if ( $data->fields['login'] == 1){
+if ( $_POST['op'] != "troca_empresa" ) {
     
     session_start();
     
@@ -52,6 +53,8 @@ if ( $data->fields['login'] == 1){
     $retorno = "OK";
     
 }else{
+    $_SESSION['empresa']        = $_POST['empresas'];
+    $_SESSION['empresa_desc']   = $_POST['empresas_desc'];
     $retorno = "OK";
 }
 print $retorno;

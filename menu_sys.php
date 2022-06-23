@@ -241,7 +241,6 @@
     </style>
     
 <div class="wrapper">
->>>>>>> 4d322b8830f2fafb2842d1a8646c92825a140297
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
       <!-- Left navbar links -->

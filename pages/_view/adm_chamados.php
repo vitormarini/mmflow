@@ -35,8 +35,14 @@
         } 
         if (  strlen($_POST['filtro_busca_select']) > 2 ){
             $filtro_busca = $_POST['filtro_busca_select'];
-            $where = ($where != "" ? "AND " : "AND ").
+            $where .= ($where != "" ? "AND " : "AND ").
             "c_status = '{$filtro_busca}'";
+        } 
+        
+        if (  $_POST['filtro_busca_select2'] > 0 ){
+            $filtro_busca = $_POST['filtro_busca_select2'];
+            $where .= ($where != "" ? "AND " : "AND ").
+            "e.empresa_id = '{$filtro_busca}'";
         } 
     ?>
     <!-- Default box -->
@@ -52,6 +58,23 @@
                     </div>
                     <div class="col-sm-2">
                         <div class="col-sm-12">                        
+                            <select class="form-control buscas" id="filtro_busca_select2" name="filtro_busca_select2">
+                                <option value="0">TODOS</option>
+                                <?php 
+                                    $empresas = $bd->Execute($sql = "select empresa_id, empresa_apelido  from t_empresas te  ORDER BY 2");
+
+                                    while ( !$empresas->EOF ){
+                                        ?>
+                                        <option value="<?= $empresas->fields['empresa_id'] ?>"   <?php print ($_POST['filtro_busca_select2'] == $empresas->fields['empresa_id'] ? "selected" : "" ); ?>><?= $empresas->fields['empresa_apelido'] ?></option>
+                                        <?php
+                                        $empresas->MoveNext();
+                                    }
+                                ?>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="col-sm-12">                        
                             <select class="form-control buscas" id="filtro_busca_select" name="filtro_busca_select">
                                 <option value="">TODOS</option>
                                 <option value="ABERTO"      <?php print ($_POST['filtro_busca_select'] == "ABERTO" ? "selected" : "" ); ?>>ABERTO</option>
@@ -60,7 +83,7 @@
                             </select> 
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="col-sm-12">                        
                             <input type="text" class="form-control buscas" id="filtro_buscca" name="filtro_busca" value="<?= $_POST['filtro_busca'] ?>" placeholder="Busque pela Razão Social o CNPJ..."/>
                         </div>
@@ -95,14 +118,16 @@
                     , r.user_nome AS user_nome_r
                     , databrasil(c_data_abertura::date)   AS c_data_abertura
                     , databrasil(c_data_fechamento::date) AS c_data_fechamento
+                    , e.empresa_apelido
                 FROM    t_chamados c 
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
                 INNER JOIN t_user r ON ( r.user_id = c.c_responsavel_id )
+                INNER JOIN t_empresas e ON ( e.empresa_id = c.empresa_id )
                 WHERE ( u.user_id = {$_SESSION['user_id']} OR r.user_id = {$_SESSION['user_id']})
                 {$where}
-                ORDER BY chamados_id;";
+                ORDER BY chamados_id;"; 
+              
 
-               
             $dados = $bd->Execute($sql);
 
             #Setamos a quantidade de itens na busca
@@ -128,6 +153,7 @@
                             <th class="text-center" width="10%">Tipo            </th>
                             <th class="text-center" width="10%">Dt Abertura     </th>
                             <th class="text-center" width="10%">Dt Conclusão    </th>
+                            <th class="text-center" width="10%">Empresa         </th>
                             <th class="text-center" width="10%" colspan="2">Opções          </th>
                         </tr>
                     </thead>
@@ -160,6 +186,7 @@
                                     <td class="text-center"><?= $dados->fields['c_tipo']            ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_data_abertura']   ?></td>                                    
                                     <td class="text-center"><?= $dados->fields['c_data_fechamento'] ?></td>
+                                    <td class="text-center"><?= $dados->fields['empresa_apelido']   ?></td>
                                     <td class="text-center">
                                         <button class="btn-success <?= $escondido_edit ?>" onclick="movPage('adm_chamados','view','<?= $dados->fields['chamados_id'] ?>', 'movimentacao','','')" title="Clique para visualizar mais.">
                                             <span class="fas fa-plus openDetalhes"></span>
@@ -210,10 +237,12 @@
                     , u.user_nome
                     , u.user_nome AS user_nome_r
                     , datahorabrasil(c_data_abertura)   AS c_data_abertura
-                    , datahorabrasil(c_data_fechamento) AS c_data_fechamento                    
+                    , datahorabrasil(c_data_fechamento) AS c_data_fechamento 
+                    , e.empresa_apelido               
                 FROM    t_chamados c 
                 INNER JOIN t_user u ON ( u.user_id = c.c_user_id )
                 INNER JOIN t_user r ON ( r.user_id = c.c_responsavel_id )
+                INNER JOIN t_empresas e ON ( e.empresa_id = c.empresa_id )
                 WHERE    chamados_id = '{$_SESSION['id']}'
                 ORDER BY chamados_id;";
        
@@ -351,14 +380,16 @@
                                          <textarea rows="2" class="form-control" id="adicao_conversa" name="adicao_conversa" placeholder="Adicionar à conversa"></textarea>
                                      </div>
                                 </div>  
-                            </div>                            
+                            </div>  
                             <div class="row col-sm-4 backgroundDescricao"> 
                                 <div class="col-sm-4"> 
+                                    <div  class="col-sm-12 form-group mb-2"> <label>EMPRESA -             </label> </div>
                                     <div  class="col-sm-12 form-group mb-2"> <label>Solicitante           </label> </div>
                                     <div  class="col-sm-12 form-group mb-2"> <label>Criado                </label> </div>
                                     <div  class="col-sm-12 form-group mb-2"> <label>Última atividade      </label> </div>
                                 </div>                                                                                  
                                 <div class="col-sm-8"> 
+                                    <div  class="col-sm-12 form-group"> <h4><?= $dados->fields['empresa_apelido']     ?></h4> </div>
                                     <div  class="col-sm-12 form-group"> <?= $dados->fields['user_nome']         ?> </div>
                                     <div  class="col-sm-12 form-group"> <?= $dados->fields['c_data_abertura']   ?> </div>
                                     <div  class="col-sm-12 form-group"> <?= $log->fields['data_hora'] ?> </div>
