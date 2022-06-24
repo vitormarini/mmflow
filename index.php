@@ -35,6 +35,18 @@
       <form action="./_man/validaLogin.php" method="post" id="frmDados">
         <input type="hidden" id="empresas" name="empresas">
         <input type="hidden" id="empresas_desc" name="empresas_desc">
+
+        <div class="input-group mb-3">
+            <select class="form-control"id="tipo_login" name="tipo_login">
+              <option value="1">Usuário e Senha</option>
+              <option value="2">E-mail</option>
+            </select>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                Tipo de Login
+              </div>
+            </div>
+        </div>          
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="<?php print date("Y"); ?>" value="<?php print date("Y"); ?>" id="periodo" name="periodo"onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
             <div class="input-group-append">
@@ -44,14 +56,22 @@
             </div>
         </div>          
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" value="02.786.436/0001-83" required>
+            <input type="text" class="form-control" placeholder="CNPJ" id="cnpj" name="cnpj" onkeypress="maskcpfcnpj(this, mcpfcnpj);" onblur="maskcpfcnpj(this, mcpfcnpj);" value="02.786.436/0001-83" required readonly>
             <div class="input-group-append">
               <div class="input-group-text">
                 <span class="far fa-address-card"></span>
               </div>
             </div>
         </div>
-        <div class="input-group mb-3">
+        <div class="input-group mb-3 login_2">
+            <input type="email" class="form-control" placeholder="E-mail" id="email" name="email" required>
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-lock"></span>
+              </div>
+            </div>
+        </div>
+        <div class="input-group mb-3 login_1">
             <input type="text" class="form-control" placeholder="Usuário" id="user" name="user" required>
             <div class="input-group-append">
               <div class="input-group-text">
@@ -97,6 +117,27 @@
 <script type="text/javascript">
     
 $(document).ready( function(){
+
+    //Movimentação do tipo do login
+    $("#tipo_login").on("change",function(){
+      tipoLogin();
+    });
+
+    //Chamada da Função ao iniciar o Objeto
+    tipoLogin();
+
+    //Função para movimentação.
+    function tipoLogin(){
+      var tipo = $("#tipo_login").val();
+
+      $(".login_2, .login_1").show();
+
+      if(tipo == "1"){
+        $(".login_2").hide();
+      }else{
+        $(".login_1").hide();
+      }
+    }
             
     //Função para registrar evendo no banco de dados.
     $("#btnLogin").on("click", function(){  
