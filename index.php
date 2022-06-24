@@ -43,15 +43,28 @@
             </select>
             <div class="input-group-append">
               <div class="input-group-text">
-                Tipo de Login
+                Forma de Acesso
               </div>
             </div>
         </div>          
         <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="<?php print date("Y"); ?>" value="<?php print date("Y"); ?>" id="periodo" name="periodo"onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+        <select class="form-control"id="periodo" name="periodo">
+            <?php
+              $ano       = 2022;
+              $anoFiscal = date("Y");
+
+              while ( $ano <= $anoFiscal ){
+
+                print '<option value="'.$ano.'">'.$ano.'</option>';
+
+                $ano ++;
+
+              }
+            ?>
+            </select>
             <div class="input-group-append">
               <div class="input-group-text">
-                <span class="fas fa-calendar"></span>
+                <span class="fas fa-calendar"> Ano Exercício</span>
               </div>
             </div>
         </div>          
