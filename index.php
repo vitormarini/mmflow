@@ -53,11 +53,11 @@
               $ano       = 2022;
               $anoFiscal = date("Y");
 
-              while ( $ano <= $anoFiscal ){
+              while ( $anoFiscal >= $ano ){
 
-                print '<option value="'.$ano.'">'.$ano.'</option>';
+                print '<option value="'.$anoFiscal.'">'.$anoFiscal.'</option>';
 
-                $ano ++;
+                $anoFiscal --;
 
               }
             ?>
