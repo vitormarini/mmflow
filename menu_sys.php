@@ -240,26 +240,6 @@
               <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
             </li>
             <!--<li class="nav-item d-none d-sm-inline-block ">
-=======
-    </style>
-    
-<div class="wrapper">
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
-      <!-- Left navbar links -->
-      <ul class="navbar-nav" onmouseover="headerClicked(this);">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
-            <i class="fas fa-home"></i>
-            Home
-          </button>
-          <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
-        </li>
-        <!--<li class="nav-item d-none d-sm-inline-block ">
->>>>>>> 72af5b05ac4d81104495ebf48e1f89152274198a
         <a href="#" class="nav-link">Contact</a>
       </li>
       </li>-->
@@ -303,7 +283,7 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
               <div class="image">
-                <img src="dist/img/user_<?= $_SESSION['user_id'] ?>.jpg" class="img-circle elevation-2" alt="User Image">
+                <img src="dist/img/user_.png" class="img-circle elevation-2" alt="User Image">
               </div>
               <div class="info">
                 <a href="#" class="d-block"><?= $_SESSION['user_nickname'] ?></a>
