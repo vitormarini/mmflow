@@ -64,7 +64,7 @@ else if ( $_POST['busca'] == "t_empresas"){
             , empresa_razao_social
             , empresa_nome_fantasia
             , empresa_cnpj 
-            , CONCAT(cpf_cnpj(empresa_cnpj,'J') ||' - '|| empresa_razao_social) AS descricao
+            , CONCAT(cpf_cnpj(empresa_cnpj,'J') ||' - '|| empresa_apelido) AS descricao
         FROM t_empresas te 
         WHERE empresa_cnpj ILIKE '{$_POST['cnpj']}%'
         ORDER BY empresa_cnpj;";

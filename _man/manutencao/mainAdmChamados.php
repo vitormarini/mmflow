@@ -32,18 +32,20 @@ $c_assunto      = trim($dados['chamado_assunto']);
 $c_servico      = trim($dados['chamado_servico']);
 $m_descricao    = trim($dados['chamado_descricao']);
 $data_atual     = date("Y-m-d H:s:i");
+$empresa        = $_SESSION['empresa'];
 
 #INSERT
 if ( $op == "insert" ){
+
     $sql = "
     INSERT INTO t_chamados (
           c_user_id             , c_data_abertura       , c_status          , c_tipo
         , c_departamento        , c_responsavel_id      , c_assunto         , c_servico   
-        , c_ciente
+        , c_ciente              , empresa_id
     )VALUES(
           {$user_id}            , '{$data_atual}'       , 'ABERTO'          , '{$c_tipo}'
         , '{$c_departamento}'   , '{$c_responsavel}'    , '{$c_assunto}'    , '{$c_servico}'
-        , 'N'
+        , 'N'                   , '{$empresa}'
     );";                
 
     if ( $bd->Execute(replaceEmptyFields($sql)) ){

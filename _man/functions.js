@@ -170,7 +170,8 @@ function selecionaEmpresa(retorno) {
             if (retorno == "login") {
                 setTimeout(function () {
                     $("#modal_empresas").modal("hide");
-                    location.href = "menu_sys.php";
+                    // location.href = "menu_sys.php";
+                    location.reload();
                 }, 500);
             } else {
                 location.reload();

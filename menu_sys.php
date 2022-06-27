@@ -240,6 +240,26 @@
               <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
             </li>
             <!--<li class="nav-item d-none d-sm-inline-block ">
+=======
+    </style>
+    
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
+      <!-- Left navbar links -->
+      <ul class="navbar-nav" onmouseover="headerClicked(this);">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+          <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
+            <i class="fas fa-home"></i>
+            Home
+          </button>
+          <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
+        </li>
+        <!--<li class="nav-item d-none d-sm-inline-block ">
+>>>>>>> 72af5b05ac4d81104495ebf48e1f89152274198a
         <a href="#" class="nav-link">Contact</a>
       </li>
       </li>-->
