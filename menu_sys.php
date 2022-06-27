@@ -154,33 +154,12 @@
         movementCollapse.toggle();
       });
     });
-
-    function headerClicked(headerObj) {
-      $(headerObj).parent().find('.contentList').slideDown(300);
-    }
-
-    function headerClickedUp(headerObj) {
-      $(headerObj).parent().find('.contentList').slideUp(300);
-    }
-
-    function headerClicked(headerObj) {
-      $(headerObj).parent().find('.contentList').slideDown(300);
-    }
-
-    function headerClickedUp(headerObj) {
-      $(headerObj).parent().find('.contentList').slideUp(300);
-    }
-
   </script>
 
 </head>
 <style>
   .escondido {
     display: none;
-  }
-
-  .selecting {
-    cursor: pointer;
   }
 </style>
 <!-- CSS -->
@@ -230,404 +209,406 @@
     ul {
       list-style: none;
     }
+
+    .selecting {
+      cursor: pointer;
+    }
   </style>
 
   <div class="wrapper">
-<body class="hold-transition sidebar-mini layout-fixed">
-    <style>
+
+    <body class="hold-transition sidebar-mini layout-fixed">
+      <style>
         .requi {
-            color: #bf2718;
+          color: #bf2718;
         }
-    </style>
-    
-<div class="wrapper">
->>>>>>> 4d322b8830f2fafb2842d1a8646c92825a140297
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
-      <!-- Left navbar links -->
-      <ul class="navbar-nav" onmouseover="headerClicked(this);">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
-            <i class="fas fa-home"></i>
-            Home
-          </button>
-          <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
-        </li>
-        <!--<li class="nav-item d-none d-sm-inline-block ">
+      </style>
+
+      <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+          <!-- Left navbar links -->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block">
+              <button class="btn" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">
+                <i class="fas fa-home"></i>
+                Home
+              </button>
+              <!--<a onclick="movPage('VAZIO','','', 'movimentacao')" class="nav-link">Home</a>-->
+            </li>
+            <!--<li class="nav-item d-none d-sm-inline-block ">
         <a href="#" class="nav-link">Contact</a>
       </li>
       </li>-->
-      </ul>
-
-      <!-- Right navbar links -->
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item alert-danger">
-          <a class="btn btn-danger" data-widget="navbar-search" role="button" id="btnEmpresa" name="btnEmpresa" data-empresa="<?= $_SESSION['empresa'] ?>">
-            <?= $_SESSION['empresa_desc'] ?>
-          </a>
-        </li>
-        <!-- Messages Dropdown Menu -->
-        <li class="nav-item">
-          <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-            <i class="fas fa-expand-arrows-alt"></i>
-          </a>
-        </li>
-        <div class="info">
-          <button type="button" class="btn btn-danger" title="Clique para sair do Programa" onclick="exit()">
-            <i class="fas fa-sign-out-alt"></i>
-          </button>
-        </div>
-      </ul>
-
-      <div class="toast-container" id="div_toast" name="div_toast" style="position: absolute; top: 10px; right: 10px;">
-
-      </div>
-
-    </nav>
-    <!-- /.navbar -->
-
-    <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <!-- Brand Logo -->
-      <a onclick="movPage('VAZIO','','', 'movim_menu', '0', '')" class="brand-link"  onmouseover="headerClicked(this);" onmouseleave="headerClickedUp(this);">
-        <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
-      </a>
-      <!-- Sidebar -->
-      <div class="sidebar" onmouseover="headerClicked(this);" onmouseleave="headerClickedUp(this);" onmouseleave="headerClickedUp(this);">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="image">
-            <img src="dist/img/user_<?= $_SESSION['user_id'] ?>.jpg" class="img-circle elevation-2" alt="User Image">
-          </div>
-          <div class="info">
-            <a href="#" class="d-block"><?= $_SESSION['user_nickname'] ?></a>
-          </div>
-        </div>
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-          <ul class="nav nav-pills nav-sidebar" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-header">Navegação</li>
-            <li class="nav-item" id="menus">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fas fa-bars"></i>
-                <p>
-                  Menus
-                  <i class="fas fa-angle-left right"></i>
-                </p>
-              </a>
-              <!-- Inserir os menus -->
-              <?php $exibeNav = 'nav nav-treeview';
-              while (!$dadosMenu->EOF) {
-                $exibeNav = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "" : $exibeNav;
-                $dadosMenu->MoveNext();
-              } ?>
-              <ul class="<?= $exibeNav ?> collapse" id="CollapseMenu" style="padding-left: 10px">
-                <?php $dadosMenu->MoveFirst();
-                while (!$dadosMenu->EOF) {
-                  $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
-                ?>
-
-
-                  <li class="nav-item ">
-                    <button class="<?= $selectMenu ?> text-left" onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="border: 2px solid black; border-radius: 8px; width: 95%; height: 30px; padding-bottom: 20px; color: black; margin-bottom: 5">
-                      <label class="text-center" id="cursorMenu">
-                        <span class="fas <?php print $dadosMenu->fields['menu_icon'] ?> nav-icon " style="width: min-content"></span>
-                        <span class="contentList" ><?= $dadosMenu->fields['menu_descricao'] ?></span>
-                      </label>
-                    </button>
-                  </li>
-                <?php $dadosMenu->MoveNext();
-                } ?>
-              </ul>
-            </li>
-            <?php
-            if ($sm_cadastro->RecordCount() > 0) { ?>
-              <li class="nav-item" id="cadasters">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-edit"></i>
-                  <p>
-                    CADASTROS
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
-                </a>
-                <!-- Inserir os menus -->
-                <?php $exibeNav = 'nav nav-treeview';
-                while (!$sm_cadastro->EOF) {
-                  $exibeNav = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "" : $exibeNav;
-                  $sm_cadastro->MoveNext();
-                } ?>
-                <ul class="nav-tree<?= $exibeNav ?> text-left collapse" id="cadasterCollapse">
-                  <?php $sm_cadastro->MoveFirst();
-                  while (!$sm_cadastro->EOF) {
-                    $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-                    <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="border: 2px solid black; border-radius: 8px; width: 95%; height: 30px; padding-bottom: 20px; color: black; margin-bottom: 5">
-                        <label class="text-left">
-                          <span class="fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                          <span class="contentList" > <?= $sm_cadastro->fields['menu_submenu_descricao'] ?> </span>
-                        </label>
-                      </button>
-                    </li>
-
-                  <?php $sm_cadastro->MoveNext();
-                  } ?>
-                </ul>
-              </li>
-            <?php
-            }
-            ?>
-            <?php
-            if ($sm_movimento->RecordCount() > 0) { ?>
-              <li class="nav-item" id="movements">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-bars"></i>
-                  <p>
-                    MOVIMENTAÇÃO
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
-                </a>
-                <!-- Inserir os menus -->
-                <?php $exibeNav = 'nav nav-treeview';
-                while (!$sm_movimento->EOF) {
-                  $exibeNav = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "" : $exibeNav;
-                  $sm_movimento->MoveNext();
-                } ?>
-                <ul class="<?= $exibeNav ?>  text-right collapse" id="movementCollapse" style="padding: 0px">
-                  <?php $sm_movimento->MoveFirst();
-                  while (!$sm_movimento->EOF) {
-                    $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-                    <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_movimento->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_movimento->fields['menu_id'] ?>', '<?= $sm_movimento->fields['menu_sub_id'] ?>')" style="border: 2px solid black; border-radius: 8px; width: 95%; height: 30px; padding-bottom: 20px; color: black; margin-bottom: 5">
-                        <label class="text-left">
-                          <span class="fas <?php print $sm_movimento->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                          <span class="contentList" > <?= $sm_movimento->fields['menu_submenu_descricao'] ?></span>
-                        </label>
-                      </button>
-                    </li>
-                  <?php $sm_movimento->MoveNext();
-                  } ?>
-                </ul>
-              </li>
-            <?php
-            }
-            ?>
-            <?php
-            if ($sm_report->RecordCount() > 0) { ?>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-bars"></i>
-                  <p>
-                    RELATÓRIOS
-                    <i class="fas fa-angle-left right"></i>
-                  </p>
-                </a>
-                <!-- Inserir os menus -->
-                <ul class="nav nav-treeview text-left">
-                  <?php while (!$sm_report->EOF) {
-                    $selectSubMenu = $_SESSION['tela_atual'] == $sm_report->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
-                    <li class="nav-item text-left">
-                      <button class="<?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_report->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_report->fields['menu_id'] ?>', '<?= $sm_report->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
-                        <label class="text-left">
-                          <span class="fas <?php print $sm_report->fields['menu_submenu_icon'] ?> nav-icon"></span>
-                          <?= $sm_report->fields['menu_submenu_descricao'] ?>
-                        </label>
-                      </button>
-                    </li>
-                  <?php $sm_report->MoveNext();
-                  } ?>
-                </ul>
-              </li>
-            <?php
-            }
-            ?>
           </ul>
-        </nav>
-        <!-- /.sidebar-menu -->
-      </div>
-      <!-- /.sidebar -->
-    </aside>
-    <div class="content-wrapper">
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <!-- INPUTS DE VERIFICAÇÃO NO JS -->
-        <input type="hidden" id="qtde_chamados" name="qtde_chamados" value="<?= $chamado->RecordCount(); ?>">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h4><?= $local->fields['sub'] ?></h4>
+
+          <!-- Right navbar links -->
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item alert-danger">
+              <a class="btn btn-danger" data-widget="navbar-search" role="button" id="btnEmpresa" name="btnEmpresa" data-empresa="<?= $_SESSION['empresa'] ?>">
+                <?= $_SESSION['empresa_desc'] ?>
+              </a>
+            </li>
+            <!-- Messages Dropdown Menu -->
+            <li class="nav-item">
+              <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                <i class="fas fa-expand-arrows-alt"></i>
+              </a>
+            </li>
+            <div class="info">
+              <button type="button" class="btn btn-danger" title="Clique para sair do Programa" onclick="exit()">
+                <i class="fas fa-sign-out-alt"></i>
+              </button>
             </div>
-            <?php if (!empty($local->fields['sub'])) { ?>
-              <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home</li>
-                  <li class="breadcrumb-item active"> <b><?= $local->fields['menu'] ?></b> > <i><?= $local->fields['categoria'] ?></i> > <u><?= $local->fields['sub'] ?></u></li>
-                </ol>
-              </div>
-            <?php } ?>
+          </ul>
+
+          <div class="toast-container" id="div_toast" name="div_toast" style="position: absolute; top: 10px; right: 10px;">
+
           </div>
-        </div><!-- /.container-fluid -->
-      </section>
-      <?php
 
-      if ($_SESSION['tela_atual'] != "VAZIO") {
-        if (file_exists('./pages/_view/' . $_SESSION['tela_atual'] . '.php')) {
-          include_once './pages/_view/' . $_SESSION['tela_atual'] . '.php';
-        } else if (file_exists('./pages/_report/' . $_SESSION['tela_atual'] . '.php')) {
-          include_once './pages/_report/' . $_SESSION['tela_atual'] . '.php';
-        }
-      }
-      ?>
-    </div>
+        </nav>
+        <!-- /.navbar -->
 
-    <!-- /.content-wrapper -->
-    <footer class="main-footer fixed-bottom escondido">
-      <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini"><b>Flow</b> - ERP</a>.</strong>
-      All rights reserved.
-      <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.<?php print date("m") ?>.01
-      </div>
-    </footer>
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+          <!-- Brand Logo -->
+          <a onclick="movPage('VAZIO','','', 'movim_menu', '0', '')" class="brand-link">
+            <span class="brand-text font-weight-light"><b>Flow</b> Gestão</span>
+          </a>
+          <!-- Sidebar -->
+          <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+              <div class="image">
+                <img src="dist/img/user_<?= $_SESSION['user_id'] ?>.jpg" class="img-circle elevation-2" alt="User Image">
+              </div>
+              <div class="info">
+                <a href="#" class="d-block"><?= $_SESSION['user_nickname'] ?></a>
+              </div>
+            </div>
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+              <ul class="nav nav-pills nav-sidebar" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">Navegação</li>
+                <li class="nav-item" id="menus">
+                  <a href="#" class="nav-link">
+                    <i class="nav-icon fas fa-bars"></i>
+                    <p>
+                      Menus
+                      <i class="fas fa-angle-left right"></i>
+                    </p>
+                  </a>
+                  <!-- Inserir os menus -->
+                  <?php $exibeNav = 'nav nav-treeview';
+                  while (!$dadosMenu->EOF) {
+                    $exibeNav = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "" : $exibeNav;
+                    $dadosMenu->MoveNext();
+                  } ?>
+                  <ul class="<?= $exibeNav ?> collapse" id="CollapseMenu" style="padding-left: 5px;margin-top:10px;margin-bottom:10px">
+                    <?php $dadosMenu->MoveFirst();
+                    while (!$dadosMenu->EOF) {
+                      $selectMenu = $_SESSION['menu_atual'] == $dadosMenu->fields['menu_id'] ? "btn btn-info" : "";
+                    ?>
+                      <li class="nav-item" style="margin-left: 5px, margin-right 4px">
+                        <button class="selecting <?= $selectMenu ?> text-left" onclick="movPage('VAZIO','','', 'movim_menu', '<?= $dadosMenu->fields['menu_id'] ?>', '')" style="border: 2px solid black; border-radius: 5px; width: 95%; height: 30px; color: black; margin-bottom: 0px; padding-top:2px">
+                          <label class="selecting text-center parent" id="cursorMenu">
+                            <span class="selecting fas <?php print $dadosMenu->fields['menu_icon'] ?> nav-icon " style="width: min-content; padding-left: 5px"></span>
+                            <span class="nav-header selecting" style="color: black; position: absolute; padding-top:0"><?= $dadosMenu->fields['menu_descricao'] ?></span>
+                          </label>
+                        </button>
+                      </li>
+                    <?php $dadosMenu->MoveNext();
+                    } ?>
+                  </ul>
+                </li>
+                <?php
+                if ($sm_cadastro->RecordCount() > 0) { ?>
+                  <li class="nav-item" id="cadasters">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-edit"></i>
+                      <p>
+                        CADASTROS
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <!-- Inserir os menus -->
+                    <?php $exibeNav = 'nav nav-treeview';
+                    while (!$sm_cadastro->EOF) {
+                      $exibeNav = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "" : $exibeNav;
+                      $sm_cadastro->MoveNext();
+                    } ?>
+                    <ul class="nav-tree<?= $exibeNav ?> text-left collapse" id="cadasterCollapse" style="padding-left: 5px; margin-top:10px;margin-bottom:10px">
+                      <?php $sm_cadastro->MoveFirst();
+                      while (!$sm_cadastro->EOF) {
+                        $selectSubMenu = $_SESSION['tela_atual'] == $sm_cadastro->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+                        <li class="nav-item text-left">
+                          <button class="selecting <?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_cadastro->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_cadastro->fields['menu_id'] ?>', '<?= $sm_cadastro->fields['menu_sub_id'] ?>')" style="border: 2px solid black; border-radius: 5px; width: 95%; height: 30px; color: black; margin-bottom: 0px; padding-top:2px">
+                            <label class="selecting text-left">
+                              <span class="selecting fas <?php print $sm_cadastro->fields['menu_submenu_icon'] ?> nav-icon" style="padding-left: 4px"></span>
+                              <span class="selecting nav-header" style="color: black; position: absolute; padding-top:0"> <?= $sm_cadastro->fields['menu_submenu_descricao'] ?> </span>
+                            </label>
+                          </button>
+                        </li>
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
-  </div>
-  <!-- ./wrapper -->
+                      <?php $sm_cadastro->MoveNext();
+                      } ?>
+                    </ul>
+                  </li>
+                <?php
+                }
+                ?>
+                <?php
+                if ($sm_movimento->RecordCount() > 0) { ?>
+                  <li class="nav-item" id="movements">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-bars"></i>
+                      <p>
+                        MOVIMENTAÇÃO
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <!-- Inserir os menus -->
+                    <?php $exibeNav = 'nav nav-treeview';
+                    while (!$sm_movimento->EOF) {
+                      $exibeNav = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "" : $exibeNav;
+                      $sm_movimento->MoveNext();
+                    } ?>
+                    <ul class="<?= $exibeNav ?>  text-right collapse" id="movementCollapse" style="padding-left: 5px; margin-top:10px;margin-bottom:10px">
+                      <?php $sm_movimento->MoveFirst();
+                      while (!$sm_movimento->EOF) {
+                        $selectSubMenu = $_SESSION['tela_atual'] == $sm_movimento->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+                        <li class="selecting nav-item text-left">
+                          <button class="selecting <?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_movimento->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_movimento->fields['menu_id'] ?>', '<?= $sm_movimento->fields['menu_sub_id'] ?>')" style="border: 2px solid black; border-radius: 5px; width: 95%; height: 30px; color: black; margin-bottom: 0px; padding-top:2px">
+                            <label class="selecting text-left">
+                              <span class="selecting fas <?php print $sm_movimento->fields['menu_submenu_icon'] ?> nav-icon"></span>
+                              <span class="selecting nav-header" style="color: black; position: absolute; padding-top:0"> <?= $sm_movimento->fields['menu_submenu_descricao'] ?></span>
+                            </label>
+                          </button>
+                        </li>
+                      <?php $sm_movimento->MoveNext();
+                      } ?>
+                    </ul>
+                  </li>
+                <?php
+                }
+                ?>
+                <?php
+                if ($sm_report->RecordCount() > 0) { ?>
+                  <li class="nav-item">
+                    <a href="#" class="nav-link">
+                      <i class="nav-icon fas fa-bars"></i>
+                      <p>
+                        RELATÓRIOS
+                        <i class="fas fa-angle-left right"></i>
+                      </p>
+                    </a>
+                    <!-- Inserir os menus -->
+                    <ul class="nav nav-treeview text-left">
+                      <?php while (!$sm_report->EOF) {
+                        $selectSubMenu = $_SESSION['tela_atual'] == $sm_report->fields['menu_submenu_url'] ? "btn btn-info" : ""; ?>
+                        <li class="nav-item text-left">
+                          <button class="selecting <?= $selectSubMenu ?> text-left" onclick="movPage('<?= $sm_report->fields['menu_submenu_url'] ?>','','', 'movimentacao', '<?= $sm_report->fields['menu_id'] ?>', '<?= $sm_report->fields['menu_sub_id'] ?>')" style="width: 100%; height: 30px; padding-bottom: 20px;">
+                            <label class="selecting text-left">
+                              <span class="selecting fas <?php print $sm_report->fields['menu_submenu_icon'] ?> nav-icon"></span>
+                              <span class="selecting nav-header" style="color: black"><?= $sm_report->fields['menu_submenu_descricao'] ?></span>
+                            </label>
+                          </button>
+                        </li>
+                      <?php $sm_report->MoveNext();
+                      } ?>
+                    </ul>
+                  </li>
+                <?php
+                }
+                ?>
+              </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
+          </div>
+          <!-- /.sidebar -->
+        </aside>
+        <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <section class="content-header">
+            <!-- INPUTS DE VERIFICAÇÃO NO JS -->
+            <input type="hidden" id="qtde_chamados" name="qtde_chamados" value="<?= $chamado->RecordCount(); ?>">
+            <div class="container-fluid">
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <h4><?= $local->fields['sub'] ?></h4>
+                </div>
+                <?php if (!empty($local->fields['sub'])) { ?>
+                  <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                      <li class="breadcrumb-item" onclick="movPage('VAZIO','','', 'movim_menu', '0', '')">Home</li>
+                      <li class="breadcrumb-item active"> <b><?= $local->fields['menu'] ?></b> > <i><?= $local->fields['categoria'] ?></i> > <u><?= $local->fields['sub'] ?></u></li>
+                    </ol>
+                  </div>
+                <?php } ?>
+              </div>
+            </div><!-- /.container-fluid -->
+          </section>
+          <?php
 
-  <?php include_once './_import/scripts.php'; ?>
-  <?php include_once './_import/modals.php'; ?>
-
-  <script src="<?= $_SERVER['localhost'] ?>/mmflow/_man/functions.js"></script>
-  <script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js"></script>
-  <script type="text/javascript">
-    function movPage(destino, op, id, tipo, menu, submenu) {
-      $.ajax({
-        url: './_man/movePages.php',
-        method: "post",
-        dataType: "text",
-        data: {
-          xDestino: destino,
-          xOp: op,
-          xId: id,
-          tipo: tipo,
-          xMenu: menu,
-          xSubmenu: submenu,
-          xBuscas: $(".buscas").serialize()
-        },
-        success: function(retorno) {
-          location.reload();
-        }
-      });
-    }
-
-
-    function retornaNotificacoes(id_user) {
-      $.ajax({
-        url: './_man/manutencao/returnChamados.php',
-        method: "post",
-        dataType: "text",
-        data: {
-          xOp: "return_mov"
-        },
-        success: function(retorno) {
-          // $("#div_toast").append("");
-          $("#div_toast").append(retorno);
-          $(".toast").toast("show");
-          // $('toast').toast({delay:1000, animation:false,autohide: false});
-
-          // $(".toast").toast({ autohide: true });
-        },
-        beforeSend: function() {
-          $("#div_toast").append("");
-        },
-      });
-    }
-
-    $(document).ready(function() {
-
-      $('.toast').on('shown.bs.toast', function() {
-        console.log("tamara");
-      })
-
-      // var b = {'nome': 'Gabriel', 'sobrenome': 'Rodrigues'};
-      //  b = JSON.stringify(b);
-      //  sessionStorage.setItem('chave', b);
-      //  var c = JSON.parse(sessionStorage.getItem('chave'));
-      //  console.info(c);
-
-      //  console.log(request.getSession())
-
-
-      // setInterval(function() {
-      retornaNotificacoes();
-      // }, 300);
-
-      $(document).on("click", ".bntOk", function() {
-        $(".toast").toast("hide");
-        $.ajax({
-          url: './_man/manutencao/mainAdmChamados.php',
-          method: "post",
-          dataType: "text",
-          data: {
-            xOp: "ciencia",
-            xId: $(this).data("id"),
-            xId_mov: $(this).data("ids_mov").replace('{', '').replace('}', ''),
-          },
-          success: function(retorno) {
-            // $("#div_toast").append("");
-            $("#div_toast").append(retorno);
-            $(".toast").toast("hide");
-            // $('toast').toast({delay:1000, animation:false,autohide: false});
-
-            // $(".toast").toast({ autohide: true });
-          },
-          beforeSend: function() {
-            $("#div_toast").append("");
-          },
-         });
-      });
-
-
-      function atualizaContador() {
-        $.ajax({
-          url: "./_conection/_conectado.php",
-          dataType: "json",
-          success: function(retorno) {
-            if (retorno.status == "ERRO") {
-              alert(retorno.mensagem);
+          if ($_SESSION['tela_atual'] != "VAZIO") {
+            if (file_exists('./pages/_view/' . $_SESSION['tela_atual'] . '.php')) {
+              include_once './pages/_view/' . $_SESSION['tela_atual'] . '.php';
+            } else if (file_exists('./pages/_report/' . $_SESSION['tela_atual'] . '.php')) {
+              include_once './pages/_report/' . $_SESSION['tela_atual'] . '.php';
             }
           }
-        });
-      }
-      window.setInterval(atualizaContador, 600000);
+          ?>
+        </div>
 
-      //Função para registrar evendo no banco de dados.
-      $("#btnSalvar").on("click", function() {
-        $(this).prop("disabled", true);
-        validateSave('index.php');
-      });
+        <!-- /.content-wrapper -->
+        <footer class="main-footer fixed-bottom escondido">
+          <strong>Copyright &copy; 2019-2021 <a href="https://github.com/vitormarini"><b>Flow</b> - ERP</a>.</strong>
+          All rights reserved.
+          <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.<?php print date("m") ?>.01
+          </div>
+        </footer>
 
-      $("#btnEmpresa").on("click", function() {
-        var cnpj = $(this).text().trim().split(" - ")[0];
-        retornaEmpresas(cnpj);
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+          <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+      </div>
+      <!-- ./wrapper -->
 
-        $("#empresa_modal").val($(this).data("empresa"));
-        $("#modal_empresas").modal("show");
-      });
+      <?php include_once './_import/scripts.php'; ?>
+      <?php include_once './_import/modals.php'; ?>
 
-      $("#btnContinuar").on("click", function() {
-        selecionaEmpresa("troca_empresa");
-      });
+      <script src="<?= $_SERVER['localhost'] ?>/mmflow/_man/functions.js"></script>
+      <script type="text/javascript" charset="utf8" src="DataTables/datatables.min.js"></script>
+      <script type="text/javascript">
+        function movPage(destino, op, id, tipo, menu, submenu) {
+          $.ajax({
+            url: './_man/movePages.php',
+            method: "post",
+            dataType: "text",
+            data: {
+              xDestino: destino,
+              xOp: op,
+              xId: id,
+              tipo: tipo,
+              xMenu: menu,
+              xSubmenu: submenu,
+              xBuscas: $(".buscas").serialize()
+            },
+            success: function(retorno) {
+              location.reload();
+            }
+          });
+        }
 
-      if (parseInt($("#qtde_chamados").val()) > 0) {
-        var tr = '<?= $tr_chamados ?>';
-        $("#titulo_modal_geral").html("CHAMADOS");
-        $("#div_body").append('\
+
+        function retornaNotificacoes(id_user) {
+          $.ajax({
+            url: './_man/manutencao/returnChamados.php',
+            method: "post",
+            dataType: "text",
+            data: {
+              xOp: "return_mov"
+            },
+            success: function(retorno) {
+              // $("#div_toast").append("");
+              $("#div_toast").append(retorno);
+              $(".toast").toast("show");
+              // $('toast').toast({delay:1000, animation:false,autohide: false});
+
+              // $(".toast").toast({ autohide: true });
+            },
+            beforeSend: function() {
+              $("#div_toast").append("");
+            },
+          });
+        }
+
+        $(document).ready(function() {
+
+          $('.toast').on('shown.bs.toast', function() {
+            console.log("tamara");
+          })
+
+          // var b = {'nome': 'Gabriel', 'sobrenome': 'Rodrigues'};
+          //  b = JSON.stringify(b);
+          //  sessionStorage.setItem('chave', b);
+          //  var c = JSON.parse(sessionStorage.getItem('chave'));
+          //  console.info(c);
+
+          //  console.log(request.getSession())
+
+
+          // setInterval(function() {
+          retornaNotificacoes();
+          // }, 300);
+
+          $(document).on("click", ".bntOk", function() {
+            $(".toast").toast("hide");
+            $.ajax({
+              url: './_man/manutencao/mainAdmChamados.php',
+              method: "post",
+              dataType: "text",
+              data: {
+                xOp: "ciencia",
+                xId: $(this).data("id"),
+                xId_mov: $(this).data("ids_mov").replace('{', '').replace('}', ''),
+              },
+              success: function(retorno) {
+                // $("#div_toast").append("");
+                $("#div_toast").append(retorno);
+                $(".toast").toast("hide");
+                // $('toast').toast({delay:1000, animation:false,autohide: false});
+
+                // $(".toast").toast({ autohide: true });
+              },
+              beforeSend: function() {
+                $("#div_toast").append("");
+              },
+            });
+          });
+
+
+          function atualizaContador() {
+            $.ajax({
+              url: "./_conection/_conectado.php",
+              dataType: "json",
+              success: function(retorno) {
+                if (retorno.status == "ERRO") {
+                  alert(retorno.mensagem);
+                }
+              }
+            });
+          }
+          window.setInterval(atualizaContador, 600000);
+
+          //Função para registrar evendo no banco de dados.
+          $("#btnSalvar").on("click", function() {
+            $(this).prop("disabled", true);
+            validateSave('index.php');
+          });
+
+          $("#btnEmpresa").on("click", function() {
+            var cnpj = $(this).text().trim().split(" - ")[0];
+            retornaEmpresas(cnpj);
+
+            $("#empresa_modal").val($(this).data("empresa"));
+            $("#modal_empresas").modal("show");
+          });
+
+          $("#btnContinuar").on("click", function() {
+            selecionaEmpresa("troca_empresa");
+          });
+
+          if (parseInt($("#qtde_chamados").val()) > 0) {
+            var tr = '<?= $tr_chamados ?>';
+            $("#titulo_modal_geral").html("CHAMADOS");
+            $("#div_body").append('\
             <div class="col-lg-12">\n\
                 <table class="table table-bordered">\n\
                     <thead>\n\
@@ -643,20 +624,20 @@
                     <tbody>' + tr + '</tbody>\n\
                 </table>\n\
             </div>');
-        // $("#modal_geral").modal("show");
-      }
+            // $("#modal_geral").modal("show");
+          }
 
-      $(".btnCiencia").on("click", function() {
-        var id = $(this).closest("tr").find("td:eq(0)").text().replace("#", "").trim();
-        var parametros = {
-          op: "ciencia",
-          id: id
-        };
+          $(".btnCiencia").on("click", function() {
+            var id = $(this).closest("tr").find("td:eq(0)").text().replace("#", "").trim();
+            var parametros = {
+              op: "ciencia",
+              id: id
+            };
 
-        btnSalvar("mainAdmChamados.php", parametros, "chamados");
-      });
-    });
-  </script>
-</body>
+            btnSalvar("mainAdmChamados.php", parametros, "chamados");
+          });
+        });
+      </script>
+    </body>
 
 </html>
