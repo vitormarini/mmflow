@@ -53,6 +53,7 @@ if ( $_POST['op'] != "troca_empresa" ) {
     $retorno = "OK";
     
 }else{
+    session_start();
     $_SESSION['empresa']        = $_POST['empresas'];
     $_SESSION['empresa_desc']   = $_POST['empresas_desc'];
     $retorno = "OK";
