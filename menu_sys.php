@@ -213,6 +213,15 @@
     .selecting {
       cursor: pointer;
     }
+
+    @media only screen and (min-width: 576px) {
+      .buttonSize {
+        height: 40px;
+        width: 42px;
+        padding: 32px 0px 0px 0px;
+        margin-right: 24px;
+      }
+    }
   </style>
 
   <div class="wrapper">
