@@ -204,15 +204,15 @@
   <style>
     .requi {
       color: #bf2718;
-    }
+    };
 
     ul {
       list-style: none;
-    }
+    };
 
     .selecting {
       cursor: pointer;
-    }
+    };
 
     @media only screen and (min-width: 576px) {
       .buttonSize {
@@ -221,7 +221,7 @@
         padding: 32px 0px 0px 0px;
         margin-right: 24px;
       }
-    }
+    };
   </style>
 
   <div class="wrapper">
