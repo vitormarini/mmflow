@@ -7,7 +7,7 @@
   <?php
   session_start();
   include_once './_import/link_title.php';
-  include './_man/_aux.php';
+  include_once './_man/_aux.php';
   include_once './_conection/_bd.php';
   include_once './_conection/_verifyLogin.php';
 
@@ -657,7 +657,7 @@
   <?php
   session_start();
   include_once './_import/link_title.php';
-  include './_man/_aux.php';
+  include_once './_man/_aux.php';
   include_once './_conection/_bd.php';
   include_once './_conection/_verifyLogin.php';
 
@@ -1317,7 +1317,7 @@
   <?php
   session_start();
   include_once './_import/link_title.php';
-  include './_man/_aux.php';
+  include_once './_man/_aux.php';
   include_once './_conection/_bd.php';
   include_once './_conection/_verifyLogin.php';
 
