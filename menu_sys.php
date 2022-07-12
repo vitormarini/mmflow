@@ -241,7 +241,6 @@
     </style>
     
 <div class="wrapper">
->>>>>>> 4d322b8830f2fafb2842d1a8646c92825a140297
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light" >
       <!-- Left navbar links -->
@@ -552,16 +551,7 @@
 
       $('.toast').on('shown.bs.toast', function() {
         console.log("tamara");
-      })
-
-      // var b = {'nome': 'Gabriel', 'sobrenome': 'Rodrigues'};
-      //  b = JSON.stringify(b);
-      //  sessionStorage.setItem('chave', b);
-      //  var c = JSON.parse(sessionStorage.getItem('chave'));
-      //  console.info(c);
-
-      //  console.log(request.getSession())
-
+      });
 
       // setInterval(function() {
       retornaNotificacoes();

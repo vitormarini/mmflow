@@ -1,4 +1,10 @@
+<!--<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">-->
+<!--<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>-->
 
+<link rel="stylesheet" href="build/scss/jquery.dataTables.min.css">
+<script src="./plugins/jquery/jquery-3.5.1.js" type="text/javascript"></script>
+<!--<script src="./plugins/jquery/jquery.dataTables.min.js" type="text/javascript"></script>-->
 <style>
     legend{
         font-size: 13px;                        
@@ -16,70 +22,30 @@
         border: 1px solid #C0C0C0;
         background-color: #C0C0C0;        
     }
-
-    .loader {
-        opacity: 0;
-        display: flex;
-        position: fixed;
-        bottom: 50px;
-        transition: opacity 0.3s ease-in;
+    #example{
+        width: 100% !Important;            
     }
-    
-    .loader.show {
-        opacity: 1;
-    }
-    
-    
-    .circle {
-        background-color: #fff;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin: 5px;
-        animation: bounce 0.5s ease-in infinite;
-    }
-    
-    .circle:nth-of-type(2) {
-        animation-delay: 0.1s;
-    }
-    
-    .circle:nth-of-type(3) {
-        animation-delay: 0.2s;
-    }
-    
-    @keyframes bounce {
-        0%,
-        100% {
-        transform: translateY(0);
-        }
-    
-        50% {
-        transform: translateY(-10px)
-        }
-    }
-
 </style>
-<!--<link rel="stylesheet" type="text/css" href="./DataTables/datatables.min.css"/>-->
 <section class="content">
     <div class="card body-view">
         <div class="card-header">          
             <div class="row">
                 <div class="col-sm-12"> 
-                    <button class="btn btn-info" id="btnConsultar" name="btnConsultar"><span class="fas fa-cloud-upload-alt"></span> Consultar </button>
+                    <button class="btn btn-info" id="btnConsultar" name="btnConsultar"><span class="fas fa-cloud-upload-alt"></span> Consultar API </button>
                     <button class="btn btn-info" id="btnPesquisas" name="btnPesquisas"><span class="fas fa-search	"></span> Pesquisas </button>
-                </div>                
+                </div>                 
             </div>            
         </div> 
         <div class="card-body">
-            <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmSubMenus.php" method="post" id="frmDados">
+            <form action="<?= $_SERVER['localhost']?>/mmflow/_man/manutencao/mainAdmConsultaDANFE.php" method="post" id="frmDados">
                 <div id="div_pesquisas" name="div_pesquisas" class="escondido">
                     <div class="form-group pull-left col-lg-6 col-md-6 col-sm-6">                    
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-default btn-sm">
-                                <input type="radio" id="pesq_simples" name="tipo_pesq" value="pesq_simples" autocomplete="off" checked> Pesquisa
+                                <input type="radio" name="tipo_pesq" value="pesq_simples" autocomplete="off" checked> Pesquisa
                             </label>
                             <label class="btn btn-default btn-sm">
-                                <input type="radio" id="pesq_avancada" name="tipo_pesq" value="pesq_avancada" autocomplete="off"> Pesquisa Avançada
+                                <input type="radio" name="tipo_pesq" value="pesq_avancada" autocomplete="off"> Pesquisa Avançada
                             </label>
                         </div>
                     </div>
@@ -119,8 +85,8 @@
                                     <input type="text" class="form-control" id="numero_nfe" name="numero_nfe" placeholder="" />
                                 </div>
                                 <div class="col-sm-2">
-                                    <label for="numero_nfe">Série:</label>
-                                    <input type="text" class="form-control" id="numero_nfe" name="numero_nfe" placeholder="" />
+                                    <label for="serie_nfe">Série:</label>
+                                    <input type="text" class="form-control" id="serie_nfe" name="serie_nfe" placeholder="" />
                                 </div>                            
                                 <div class="col-sm-2">
                                     <label for="data_receb_nfe">Data Receb.(Inicial):</label>
@@ -213,36 +179,49 @@
                     </thead>
                     <tbody>
                         <?php 
-                            for ( $x=0; $x <= 1; $x++ ){
+                            
+                            $dados = $bd->Execute("
+                                SELECT ef_id 
+                                    , (ef_cnpj_emit ||' - '|| ef_razao_social_emit) AS emit_nfe
+                                    , (ef_num_nf ||'/'||ef_serie) AS nf_serie
+                                    , moedabrasil(ef_v_nf::numeric) AS ef_v_nf
+                                    , databrasil(ef_dt_emissao::date) AS ef_dt_emissao
+                                    , ef_status 
+                                    , databrasil(ef_data_hora::date) AS ef_data_hora  
+                                    , SUBSTR(ef_ident,4,44) AS ef_ident
+                                FROM t_escrita_fiscal tef 
+                                ORDER BY 1 DESC;");
+
+                            while(!$dados->EOF){
                                 print '
-                                <tr>
-                                    <td class="text-center"><input type="checkbox" name="checkbox" class="check_nota"></td>
-                                    <td> 466.88.398-07 Tamara Maria  </td>                                    
-                                    <td> 99192-123 </td>
-                                    <td> R$ 1.000,00</td>
-                                    <td>  </td>
-                                    <td>  </td>
-                                    <td></td>
-                                    <td>  </td>
-                                    <td>  </td>                                    
-                                    <td>
-                                        <div class="row col-sm-12">
-                                            <div class="col-sm-2 openDetalhes"><span class="fas fa-search openDetalhes"></span></div>
-                                            <div class="col-sm-2"><span class="fas fa-tags"></span></div>
-                                            <div class="col-sm-2"><span class="far fa-paper-plane"></span></div>
-                                            <div class="col-sm-2"><span class="far fa-map"></span></div>
-                                            <div class="col-sm-2"><span class="fas fa-cloud-upload-alt"></span></div>
-                                            <div class="col-sm-2"><span class="fas fa-heartbeat"></span></div>
-                                        </div>
-                                    </td>
-                                </tr>';
+                                    <tr>
+                                        <td class="text-center"><input type="checkbox" name="checkbox" class="check_nota"></td>
+                                        <td class="text-center">'. $dados->fields['emit_nfe']       .'</td>                                    
+                                        <td class="text-center">'. $dados->fields['nf_serie']       .'</td>
+                                        <td class="text-center">'. $dados->fields['ef_v_nf']        .'</td>
+                                        <td class="text-center">  </td>
+                                        <td class="text-center">'. $dados->fields['ef_dt_emissao']  .'</td>
+                                        <td class="text-center">'. $dados->fields['ef_status']      .'</td>
+                                        <td class="text-center">  </td>
+                                        <td class="text-center">'. $dados->fields['ef_data_hora']   .'</td>
+                                        <td class="text-center">
+                                            <div class="row col-sm-12">
+                                                <div class="col-sm-2 openDetalhes"><span class="fas fa-search openDetalhes"></span></div>
+                                                <div class="col-sm-2"><span class="fas fa-tags"></span></div>
+                                                <div class="col-sm-2"><span class="far fa-paper-plane"></span></div>
+                                                <div class="col-sm-2"><span class="far fa-map"></span></div>
+                                                <div class="col-sm-2"><span class="fas fa-cloud-upload-alt"></span></div>
+                                                <div class="col-sm-2"><span class="fas fa-heartbeat"></span></div>
+                                            </div>
+                                        </td>
+                                    </tr>';
+                                $dados->MoveNext();
                             }
-                        ?>                                                
+                        ?>
+                        
                     </tbody>
                 </table>
-                
             </div>
-            
         </div>
       <!-- /.card-body -->
       <div class="card-footer  align-content-center">
@@ -277,28 +256,30 @@
 
 <!-- /.modal -->
 <?php include_once './_import/modals.php'; ?>
-<!--<script type="text/javascript" charset="utf8" src="./DataTables/datatables.min.js"></script>-->
 <script type="text/javascript">
 $(document).ready(function(){    
+   
     /* valida método de pesquisa */
-    $("[name='tipo_pesq']").on("change", function(){        
-        chancePesquisa();
+    $("[name='tipo_pesq']").on("change", function(){         
+        if( $(this).val() == "pesq_simples" ){  
+            $(".div_pesq_avancada").hide();             
+            $(".div_pesq_simples").show();                               
+        }
+        else{
+            $(".div_pesq_simples").hide();             
+            $(".div_pesq_avancada").show();            
+        }
     });
 
-    function chancePesquisa(){
-        var optSimples = $("#pesq_simples").prop("checked");
-        var optAvancada = $("#pesq_avancada").prop("checked");
-
-        $(".div_pesq_simples, .div_pesq_avancada").hide();             
-
-        if ( optSimples ){
-            $(".div_pesq_simples").show();
-        } else if ( optAvancada ){
-            $(".div_pesq_avancada").show();  
+    /** validação btnPesquisas */
+    $("#btnPesquisas").on("click",function(){
+        if($("#div_pesquisas").hasClass('escondido')){
+            $("#div_pesquisas").removeClass("escondido");
+        }else{         
+            $("#div_pesquisas").addClass("escondido");
         }
+    });
 
-    }
-        
     /* aplica DataTable na tabela. */
     new DataTable( '#table_lista_notas', {
         paging: false,
@@ -314,19 +295,312 @@ $(document).ready(function(){
         }
     });
 
+    $("#btnConsultar").on("click",function(){
+        console.log("tamara");
+        $.ajax({
+            url     :"<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/ciot/requestCIOT_ListaEmpresas.php",
+            method  : "post",
+            dataType: "json",
+            data    : {
+                op : "retorna_detalhes"
+                , chave_acesso : "35220307705871000826550010000327711195994565"
+            },
+            success: function(retorno){      
+                console.log(  retorno );
+            }
+        });
+    });
+
+    /** ABRE O MODAL DETALHES DA NOTA */
     $(document).on("click", ".openDetalhes", function (){
         $("#modalDetalhesNota").modal("show");
     });
+    
+    /* ABRE O MODAL DAS NOTAS */
+    $('#modalDetalhesNota').on('show.bs.modal', function(event){
+        $.ajax({
+            url     : $("#frmDados").prop("action"),
+            method  : "post",
+            dataType: "json",
+            data    : {
+                op : "retorna_detalhes"
+                , chave_acesso : "35220307705871000826550010000327711195994565"
+            },
+            success: function(retorno){      
+                var dados = Object.keys(retorno); // Array com as chaves do array
 
-    /** validação btnPesquisas */
-    $("#btnPesquisas").on("click",function(){
-        chancePesquisa();
-        if($("#div_pesquisas").hasClass('escondido')){
-            $("#div_pesquisas").removeClass("escondido");
-        }else{         
-            $("#div_pesquisas").addClass("escondido");
-        }
+                // Loop do array
+                $.each(dados, function() {                    
+                    var value = this;
+                    $("#"+value).val( retorno[value] ); // Determina valor para os inputs 
+                });
+
+                // Loop do array item
+                var i = 0;
+                var item;
+                var _tr_td;
+                var _num_item;
+                $.each(retorno.item, function() {
+                    item_key  = Object.keys(retorno.item[i]);// Array com as chaves do array do item
+                    item      = retorno.item[i];
+                    _tr_td = '';
+                    $.each(item_key, function() {
+                        var value_ = this;
+                        _num_item  = item['num_item'];
+                        
+                        _tr_td ='\n\
+                            <td>\n\
+                                <a href="#" id="show_'+ _num_item +'"> Show Extra </a>\n\
+                            </td>\n\
+                            <td>'+ item["cod_prod"]      +'</td>\n\
+                            <td>'+ item["descricao"]     +'</td>\n\
+                            <td>'+ item["unidade"]       +'</td>\n\
+                            <td>'+ item["quantidade"]    +'</td>\n\
+                            <td>'+ item["v_unitario"]    +'</td>\n\
+                            <td>'+ item["v_produto"]     +'</td>\n\
+                            <td>'+ item["cfop"]          +'</td>\n\
+                            <td>'+ _num_item +'</td>';
+                    });
+                    /* chama a função que alimenta a tabela dos itens */
+                    _tr(_tr_td,_num_item,retorno.item[i]);
+                    i++;
+                });
+            }
+        });
     });
-    //$("#modalDetalhesNota").modal("show");
+
+    /** ABRE OS DETALHES DOS ITENS NO MODAL */
+    $(document).on("a[id^=show_]").click(function(event) {
+        event.preventDefault();
+        var target = $(document).find(event.target);
+        var id = target.attr('id').substr(5);
+        $(document).find("#extra_" + id ).slideToggle("slow");
+    });
 });    
+
+function _tr(corpo_div,valor, item){
+    var tr = '\n\
+        <tr>\n\
+            '+ corpo_div +'\n\
+        </tr>\n\
+        <tr>\n\
+            <td colspan="9">\n\
+                <div id="extra_'+ valor +'" style="display: none;" class="row form-group col-lg-12">\n\
+                    <div class="row form-group col-lg-12">\n\
+                        <div class="col-lg-4">\n\
+                            <label for="ncm_'+ valor +'"> NCM </label>\n\
+                            <input type="text" class="form-control" name="ncm_'+ valor +'" id="ncm_'+ valor +'" value="'+ item['ncm'] +'">\n\
+                        </div>\n\
+                        <div class="col-lg-4">\n\
+                            <label for="cod_fci_'+ valor +'"> Número FCI </label>\n\
+                            <input type="text" class="form-control" name="cod_fci_'+ valor +'" id="cod_fci_'+ valor +'" value="">\n\
+                        </div>\n\
+                        <div class="col-sm-4">\n\
+                            <label for="ie_subst_tribu_emit_'+ valor +'">Indicador de Comp. Valor Total NFe:</label>\n\
+                            <input type="text" class="form-control" id="ie_subst_tribu_emit_'+ valor +'" name="ie_subst_tribu_emit_'+ valor +'" value=""/>\n\
+                        </div>\n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">\n\
+                        <div class="col-sm-2">\n\
+                            <label for="v_frete_'+ valor +'"> Vl Frete </label>\n\
+                            <input type="text" class="form-control" name="v_frete_'+ valor +'" id="v_frete_'+ valor +'" value="'+ item['v_frete'] +'">\n\
+                        </div>\n\
+                        <div class="col-sm-2">\n\
+                            <label for="v_seguro_'+ valor +'"> Vl Seguro </label>\n\
+                            <input type="text" class="form-control" name="v_seguro_'+ valor +'" id="v_seguro_'+ valor +'" value="'+ item['v_seguro'] +'">\n\
+                        </div>\n\
+                        <div class="col-sm-2">\n\
+                            <label for="v_desconto_'+ valor +'"> Vl Desconto </label>\n\
+                            <input type="text" class="form-control" name="v_desconto_'+ valor +'" id="v_desconto_'+ valor +'" value="'+ item['v_desconto'] +'">\n\
+                        </div>\n\
+                        <div class="col-sm-2">\n\
+                            <label for="v_outras_'+ valor +'"> Vl Outras Desp. </label>\n\
+                            <input type="text" class="form-control" name="v_outras_'+ valor +'" id="v_outras_'+ valor +'" value="'+ item['v_outras'] +'">\n\
+                        </div>\n\
+                        <div class="col-sm-2">\n\
+                            <label for="v_tot_trib_'+ valor +'"> Vl Aprox. Tributos </label>\n\
+                            <input type="text" class="form-control" name="v_tot_trib_'+ valor +'" id="v_tot_trib_'+ valor +'" value="0,00">\n\
+                        </div>\n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">\n\
+                        <div class="col-sm-3">\n\
+                            <label for="cod_ean">Código EAN Comercial:</label>\n\
+                            <input type="text" class="form-control" id="cod_ean_'+ valor +'" name="cod_ean" value="'+ item['cod_ean'] +'"/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="v_unitario">Unidade Comercial:</label>\n\
+                            <input type="text" class="form-control" id="v_unitario_'+ valor +'" name="v_unitario" value="'+ item['v_unitario'] +'"/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="quantidade">Quantidade Comercial:</label>\n\
+                            <input type="text" class="form-control" id="quantidade_'+ valor +'" name="quantidade" value="'+ item['quantidade'] +'"/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="v_unitario">Valor Unit. Comercial:</label>\n\
+                            <input type="text" class="form-control" id="v_unitario_'+ valor +'" name="v_unitario" value="'+ item['v_unitario'] +'"/>\n\
+                        </div>\n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">\n\
+                        <div class="col-sm-3">\n\
+                            <label for="cod_ean_trib">Código EAN Tributável:</label>\n\
+                            <input type="text" class="form-control" id="cod_ean_trib_'+ valor +'" name="cod_ean_trib" value="'+ item['cod_ean_trib'] +'"/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="unidade_trib">Unidade Tributável:</label>\n\
+                            <input type="text" class="form-control" id="unidade_trib_'+ valor +'" name="unidade_trib" value="'+ item['unidade_trib'] +'"/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="quantidade_trib">Quantidade Tributável:</label>\n\
+                            <input type="text" class="form-control" id="quantidade_trib_'+ valor +'" name="quantidade_trib value="'+ item['quantidade_trib'] +'""/>\n\
+                        </div>\n\
+                        <div class="col-sm-3">\n\
+                            <label for="v_unitario_trib">Valor Unit. Tributável:</label>\n\
+                            <input type="text" class="form-control" id="v_unitario_trib_'+ valor +'" name="v_unitario_trib" value="'+ item['v_unitario_trib'] +'"/>\n\
+                        </div>\n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">\n\
+                        <fieldset>\n\
+                            <legend> ICMS </legend>\n\
+                            <div class="row form-group col-sm-12">\n\
+                                <div class="col-sm-3">\n\
+                                    <label for="cst_origem">CST ICMS Origem:</label>\n\
+                                    <input type="text" class="form-control" id="cst_origem_'+ valor +'" name="cst_origem" value="'+ item['cst_origem'] +'"/>\n\
+                                </div>\n\
+                                <div class="col-sm-3">\n\
+                                    <label for="cst_trib">CST ICMS Trib.:</label>\n\
+                                    <input type="text" class="form-control" id="cst_trib_'+ valor +'" name="cst_trib" value="'+ item['cst_trib'] +'"/>\n\
+                                </div>\n\
+                                <div class="col-sm-3">\n\
+                                    <label for="mod_bc">Modalidade:</label>\n\
+                                    <input type="text" class="form-control" id="mod_bc" name="mod_bc" value="'+ item['mod_bc'] +'"/>\n\
+                                </div>\n\
+                                <div class="col-sm-3">\n\
+                                    <label for="v_unitario_trib">Valor Unit. Tributável:</label>\n\
+                                    <input type="text" class="form-control" id="v_unitario_trib_'+ valor +'" name="v_unitario_trib" value="'+ item['v_unitario_trib'] +'"/>\n\
+                                </div>\n\
+                            </div>\n\
+                            <div class="row form-group col-sm-12">\n\
+                                <div class="col-sm-3">\n\
+                                    <label for="bc_icms">Base de Cálculo</label>\n\
+                                    <input type="text" class="form-control" id="bc_icms_'+ valor +'" name="bc_icms" value="'+ item['bc_icms'] +'"/>\n\
+                                </div>                                                                                   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="aliq_icms">Aliquota:</label>\n\
+                                    <input type="text" class="form-control" id="aliq_icms_'+ valor +'" name="aliq_icms" value="'+ item['aliq_icms'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="v_icms">Valor:</label>\n\
+                                    <input type="text" class="form-control" id="v_icms_'+ valor +'" name="v_icms" value="'+ item['v_icms'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="outras_icms">Outras:</label>\n\
+                                    <input type="text" class="form-control" id="outras_icms_'+ valor +'" name="outras_icms" value="0,00"/>\n\
+                                </div>     \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="isento_icms">Isentas:</label>\n\
+                                    <input type="text" class="form-control" id="isento_icms_'+ valor +'" name="isento_icms" value="0,00"/>\n\
+                                </div>     \n\
+                            </div>   \n\
+                            <div class="row form-group col-sm-12">                                                                                         \n\
+                                <div class="col-sm-6">\n\
+                                    <label for="aliq_fcp">Percentual do Fundo de Combate à Pobreza (FCP)</label>\n\
+                                    <input type="text" class="form-control" id="aliq_fcp_'+ valor +'" name="aliq_fcp" value="0,00"/>\n\
+                                </div>                                                                                   \n\
+                                <div class="col-sm-6">\n\
+                                    <label for="v_fcp">Valor do Fundo de Combate à Pobreza (FCP):</label>\n\
+                                    <input type="text" class="form-control" id="v_fcp_'+ valor +'" name="v_fcp" value="0,00"/>\n\
+                                </div>                                                                                                                                                                    \n\
+                            </div>   \n\
+                        </fieldset>                                                                                            \n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">  \n\
+                        <fieldset> \n\
+                            <legend> IPI </legend>     \n\
+                            <div class="row form-group col-sm-12">                                                                              \n\
+                                <div class="col-sm-6">\n\
+                                    <label for="cod_enquad">Código de Enquadramento:</label>\n\
+                                    <input type="text" class="form-control" id="cod_enquad_'+ valor +'" name="cod_enquad" value="'+ item['cod_enquad'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-6">\n\
+                                    <label for="cst_ipi">CST:</label>\n\
+                                    <input type="text" class="form-control" id="cst_ipi_'+ valor +'" name="cst_ipi" value="'+ item['cst_ipi'] +'"/>\n\
+                                </div>   \n\
+                            </div>   \n\
+                            <div class="row form-group col-sm-12">                                                                                         \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="bc_ipi">Base de Cálculo</label>\n\
+                                    <input type="text" class="form-control" id="bc_ipi_'+ valor +'" name="bc_ipi" value="'+ item['bc_ipi'] +'"/>\n\
+                                </div>                                                                                   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="aliq_ipi">Aliquota:</label>\n\
+                                    <input type="text" class="form-control" id="aliq_ipi_'+ valor +'" name="aliq_ipi" value="'+ item['aliq_ipi'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="v_ipi">Valor:</label>\n\
+                                    <input type="text" class="form-control" id="v_ipi_'+ valor +'" name="v_ipi" value="'+ item['v_ipi'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="outras_ipi">Outras:</label>\n\
+                                    <input type="text" class="form-control" id="outras_ipi_'+ valor +'" name="outras_ipi" value="0,00"/>\n\
+                                </div>     \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="isento_ipi">Isentas:</label>\n\
+                                    <input type="text" class="form-control" id="isento_ipi_'+ valor +'" name="isento_ipi" value="0,00"/>\n\
+                                </div>     \n\
+                            </div>\n\
+                        </fieldset>                                                                                            \n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">  \n\
+                        <fieldset> \n\
+                            <legend> PIS </legend>                                                                           \n\
+                            <div class="row form-group col-sm-12">   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="cst_pis">CST:</label>\n\
+                                    <input type="text" class="form-control" id="cst_pis_'+ valor +'" name="cst_pis" value="'+ item['cst_pis'] +'"/>\n\
+                                </div>                                                                                       \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="bc_pis">Base de Cálculo</label>\n\
+                                    <input type="text" class="form-control" id="bc_pis_'+ valor +'" name="bc_pis" value="'+ item['bc_pis'] +'"/>\n\
+                                </div>                                                                                   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="aliq_pis">Aliquota:</label>\n\
+                                    <input type="text" class="form-control" id="aliq_pis_'+ valor +'" name="aliq_pis" value="'+ item['aliq_pis'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="v_pis">Valor:</label>\n\
+                                    <input type="text" class="form-control" id="v_pis_'+ valor +'" name="v_pis" value="'+ item['v_pis'] +'"/>\n\
+                                </div>\n\
+                            </div>\n\
+                        </fieldset>                                                                                            \n\
+                    </div>\n\
+                    <div class="row form-group col-lg-12">  \n\
+                        <fieldset> \n\
+                            <legend> COFINS </legend>                                                                           \n\
+                            <div class="row form-group col-sm-12">   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="cst_cofins">CST:</label>\n\
+                                    <input type="text" class="form-control" id="cst_cofins_'+ valor +'" name="cst_cofins" value="'+ item['cst_cofins'] +'"/>\n\
+                                </div>                                                                                       \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="bc_cofins">Base de Cálculo</label>\n\
+                                    <input type="text" class="form-control" id="bc_cofins_'+ valor +'" name="bc_cofins" value="'+ item['bc_cofins'] +'"/>\n\
+                                </div>                                                                                   \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="aliq_cofins">Aliquota:</label>\n\
+                                    <input type="text" class="form-control" id="aliq_cofins_'+ valor +'" name="aliq_cofins" value="'+ item['aliq_cofins'] +'"/>\n\
+                                </div>                                                                                                    \n\
+                                <div class="col-sm-3">\n\
+                                    <label for="v_cofins">Valor:</label>\n\
+                                    <input type="text" class="form-control" id="v_cofins_'+ valor +'" name="v_cofins" value="'+ item['v_cofins'] +'"/>\n\
+                                </div>\n\
+                            </div>\n\
+                        </fieldset>                                                                                            \n\
+                    </div>\n\
+                </div>\n\
+            </td>\n\
+        <tr>';
+
+    $("#table_modal tbody").append(tr);
+}
+
 </script>
