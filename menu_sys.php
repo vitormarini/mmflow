@@ -74,7 +74,12 @@
     $chamado->MoveNext();
   }
 
+  $_SESSION['menu_atual'] = ( $_SESSION['menu_atual'] != "" ? $_SESSION['menu_atual'] : "7" );
+  $_SESSION['tela_atual'] = ( $_SESSION['tela_atual'] != "VAZIO" ? $_SESSION['tela_atual'] : "adm_chamados" );
+
   if ($_SESSION['menu_atual'] != "") {
+
+ 
 
     $menuAtual = $bd->Execute("
         SELECT  menu_id, menu_descricao, menu_icon, menu_url
