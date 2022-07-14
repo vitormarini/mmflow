@@ -8,7 +8,9 @@
 
 #Exemplo de chamada
 #$consultaNfe = consultaArquivei("100","50","nfe");  -- Retorno será um Array
-
+print"<pre>";
+print_r(consultaArquivei("100","50","nfe"));
+exit;
 
 /**
  * #FUNÇAO PARA CONSULTA DOS ARQUIVOS CONTIDOS NA API - ARQUIVEI
@@ -53,9 +55,9 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
 
         // Configura os parâmetros para a chamada
         curl_setopt_array($curl, [
-            CURLOPT_URL => $urlRequest.$endPoint.$cursorLimit,    
-            CURLOPT_POST => false,
+            CURLOPT_URL => $urlRequest.$endPoint.$cursorLimit, 
             CURLOPT_RETURNTRANSFER => 1,    
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTPHEADER => $headers
         ]);
 
