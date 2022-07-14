@@ -2202,7 +2202,7 @@
     ;
   </style>
 
-  <div class="wrapper">
+  <div class="wrapper escondido">
 
     <body class="hold-transition sidebar-mini layout-fixed">
       <style>
