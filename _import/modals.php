@@ -1,85 +1,134 @@
 <!-- Modal de Sucesso -->
-<script type="text/javascript">
-    function fMasc(objeto, mascara) {
-        obj = objeto
-        masc = mascara
-        setTimeout("fMascEx()", 1)
-    }
 
-    function fMascEx() {
-        obj.value = masc(obj.value)
-    }
-
-    function mCNPJ(cnpj) {
-        cnpj = cnpj.replace(/\D/g, "")
-        cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2")
-        cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-        cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2")
-        cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2")
-        return cnpj
-    }
-
-    function mCPF(cpf) {
-        cpf = cpf.replace(/\D/g, "")
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
-        return cpf
-    }
-
-    function mNum(num) {
-        num = num.replace(/\D/g, "")
-        return num
-    }
-
-    function mascara(t, mask) {
-        var i = t.value.length;
-        var saida = mask.substring(1, 0);
-        var texto = mask.substring(i)
-        if (texto.substring(0, 1) != saida) {
-            t.value += texto.substring(0, 1);
+<head>
+    <script type="text/javascript">
+        function fMasc(objeto, mascara) {
+            obj = objeto
+            masc = mascara
+            setTimeout("fMascEx()", 1)
         }
-    }
-</script>
-<script language="javascript">
-    function moeda(a, e, r, t) {
-        let n = "",
-            h = j = 0,
-            u = tamanho2 = 0,
-            l = ajd2 = "",
-            o = window.Event ? t.which : t.keyCode;
-        if (13 == o || 8 == o)
-            return !0;
-        if (n = String.fromCharCode(o),
-            -1 == "0123456789".indexOf(n))
-            return !1;
-        for (u = a.value.length,
-            h = 0; h < u && ("0" == a.value.charAt(h) || a.value.charAt(h) == r); h++)
-        ;
-        for (l = ""; h < u; h++)
-            -
-            1 != "0123456789".indexOf(a.value.charAt(h)) && (l += a.value.charAt(h));
-        if (l += n,
-            0 == (u = l.length) && (a.value = ""),
-            1 == u && (a.value = "0" + r + "0" + l),
-            2 == u && (a.value = "0" + r + l),
-            u > 2) {
-            for (ajd2 = "",
-                j = 0,
-                h = u - 3; h >= 0; h--)
-                3 == j && (ajd2 += e,
-                    j = 0),
-                ajd2 += l.charAt(h),
-                j++;
-            for (a.value = "",
-                tamanho2 = ajd2.length,
-                h = tamanho2 - 1; h >= 0; h--)
-                a.value += ajd2.charAt(h);
-            a.value += r + l.substr(u - 2, u)
+
+        function fMascEx() {
+            obj.value = masc(obj.value)
         }
-        return !1
-    }
-</script>
+
+        function mCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, "")
+            cnpj = cnpj.replace(/^(\d{2})(\d)/, "$1.$2")
+            cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+            cnpj = cnpj.replace(/\.(\d{3})(\d)/, ".$1/$2")
+            cnpj = cnpj.replace(/(\d{4})(\d)/, "$1-$2")
+            return cnpj
+        }
+
+        function mCPF(cpf) {
+            cpf = cpf.replace(/\D/g, "")
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2")
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2")
+            return cpf
+        }
+
+        function mNum(num) {
+            num = num.replace(/\D/g, "")
+            return num
+        }
+
+        function mascara(t, mask) {
+            var i = t.value.length;
+            var saida = mask.substring(1, 0);
+            var texto = mask.substring(i)
+            if (texto.substring(0, 1) != saida) {
+                t.value += texto.substring(0, 1);
+            }
+        }
+    </script>
+    <script language="javascript">
+        function moeda(a, e, r, t) {
+            let n = "",
+                h = j = 0,
+                u = tamanho2 = 0,
+                l = ajd2 = "",
+                o = window.Event ? t.which : t.keyCode;
+            if (13 == o || 8 == o)
+                return !0;
+            if (n = String.fromCharCode(o),
+                -1 == "0123456789".indexOf(n))
+                return !1;
+            for (u = a.value.length,
+                h = 0; h < u && ("0" == a.value.charAt(h) || a.value.charAt(h) == r); h++)
+            ;
+            for (l = ""; h < u; h++)
+                -
+                1 != "0123456789".indexOf(a.value.charAt(h)) && (l += a.value.charAt(h));
+            if (l += n,
+                0 == (u = l.length) && (a.value = ""),
+                1 == u && (a.value = "0" + r + "0" + l),
+                2 == u && (a.value = "0" + r + l),
+                u > 2) {
+                for (ajd2 = "",
+                    j = 0,
+                    h = u - 3; h >= 0; h--)
+                    3 == j && (ajd2 += e,
+                        j = 0),
+                    ajd2 += l.charAt(h),
+                    j++;
+                for (a.value = "",
+                    tamanho2 = ajd2.length,
+                    h = tamanho2 - 1; h >= 0; h--)
+                    a.value += ajd2.charAt(h);
+                a.value += r + l.substr(u - 2, u)
+            }
+            return !1
+        }
+    </script>
+    <style>
+        @media only screen and (min-width: 576px) {
+            .labels {
+                width: 200px;
+            }
+
+            .margin {
+                margin: 0px 15px 0px 0px;
+            }
+
+            .labelWidth {
+                width: 500px;
+            }
+
+            .marginLabel {
+                margin: 0px 0px 0px 0px;
+            }
+
+            .container {
+                border: 1px solid #E0E0E0;
+                border-radius: 3px;
+                box-shadow: 5px 5px 5px #424242;
+                background-color: #E0E0E0;
+            }
+
+            .bold {
+                font-weight: bold;
+                width: 100px;
+                margin: 10px 40px 10px 0px;
+            }
+
+            .right {
+                justify-content: flex-end;
+            }
+
+            .left {
+                margin: 10px 0px 0px 15px;
+            }
+
+            .line {
+                width: 90px;
+                margin: 10px 0px 0px 60px;
+            }
+
+        }
+    </style>
+</head>
 <div id="modal_success" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_success" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -226,7 +275,7 @@
                                                     <label for="serie_">Série:</label>
                                                     <input type="text" class="form-control" id="serie_" name="serie_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-2">
                                                     <label for="dt_emissao_">Data de Emissão:</label>
                                                     <input type="text" class="form-control" id="dt_emissao_" name="dt_emissao_" />
                                                 </div>
@@ -234,7 +283,7 @@
                                                     <label for="dt_saida_entr_">Data Saída/Entrada:</label>
                                                     <input type="text" class="form-control" id="dt_saida_entr_" name="dt_saida_entr_" />
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <label for="vl_total_">Valor Total da NFe:</label>
                                                     <input type="text" class="form-control" id="vl_total_" name="vl_total_" />
                                                 </div>
@@ -243,11 +292,11 @@
                                         <fieldset>
                                             <legend> Destinatário </legend>
                                             <div class="row form-group col-lg-12">
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-2">
                                                     <label for="cpf_cnpj_dest_"> CPF/CNPJ: </label>
                                                     <input type="text" class="form-control" id="cpf_cnpj_dest_" name="cpf_cnpj_dest_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-4">
                                                     <label for="razao_social_dest_">Nome/Razão Social:</label>
                                                     <input type="text" class="form-control" id="razao_social_dest_" name="razao_social_dest_" />
                                                 </div>
@@ -255,42 +304,39 @@
                                                     <label for="consumidor_final_dest_"> Consumidor final: </label>
                                                     <input type="text" class="form-control" id="consumidor_final_dest_" name="consumidor_final_dest_" />
                                                 </div>
-                                            </div>
-                                            <div class="row form-group col-lg-12">
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-3">
                                                     <label for="endereco_dest_"> Endereço: </label>
                                                     <input type="text" class="form-control" id="endereco_dest_" name="endereco_dest_" />
                                                 </div>
-                                                <div class="col-sm-5">
-                                                    <label for="bairro_dest_">Bairro/Distrito:</label>
-                                                    <input type="text" class="form-control" id="bairro_dest_" name="bairro_dest_" />
-                                                </div>
+                                            </div>
+                                            <div class="row form-group col-lg-12">
                                                 <div class="col-sm-2">
                                                     <label for="cep_dest_">CEP:</label>
                                                     <input type="text" class="form-control" id="cep_dest_" name="cep_dest_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                            </div>
-                                            <div class="row form-group col-lg-12">
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-4">
+                                                    <label for="bairro_dest_">Bairro/Distrito:</label>
+                                                    <input type="text" class="form-control" id="bairro_dest_" name="bairro_dest_" />
+                                                </div>
+                                                <div class="col-sm-3">
                                                     <label for="municipio_dest_">Município:</label>
                                                     <input type="text" class="form-control" id="municipio_dest_" name="municipio_dest_" />
                                                 </div>
-
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <label for="telefone_dest_"> Telefone: </label>
                                                     <input type="text" class="form-control" id="telefone_dest_" name="telefone_dest_" />
+                                                </div>
+                                            </div>
+                                            <div class="row form-group col-lg-12">
+                                                <div class="col-sm-1">
+                                                    <label for="pais_dest_">País:</label>
+                                                    <input type="text" class="form-control" id="pais_dest_" name="pais_dest_" />
                                                 </div>
                                                 <div class="col-sm-1">
                                                     <label for="uf_dest_">UF:</label>
                                                     <input type="text" class="form-control" id="uf_dest_" name="uf_dest_" />
                                                 </div>
-                                                <div class="col-sm-4">
-                                                    <label for="pais_dest_">País:</label>
-                                                    <input type="text" class="form-control" id="pais_dest_" name="pais_dest_" />
-                                                </div>
-                                            </div>
-                                            <div class="row form-group col-lg-12">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <label for="indicador_ie_dest_">Indicador IE:</label>
                                                     <select type="text" class="form-control" id="indicador_ie_dest_" name="indicador_ie_dest_">
                                                         <option>Selecione</option>
@@ -300,11 +346,11 @@
                                                     <label for="insc_estadual_dest_">Inscrição Estadual:</label>
                                                     <input type="text" class="form-control" id="insc_estadual_dest_" name="insc_estadual_dest_" />
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-3">
                                                     <label for="insc_suframa_dest_">Inscrição SUFRAMA:</label>
                                                     <input type="text" class="form-control" id="insc_suframa_dest_" name="insc_suframa_dest_" />
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-3">
                                                     <label for="email_dest_">E-mail:</label>
                                                     <input type="text" class="form-control" id="email_dest_" name="email_dest_" />
                                                 </div>
@@ -317,15 +363,15 @@
                                                     <label for="tipo_emissao_"> Tipo de Emissão: </label>
                                                     <input type="text" class="form-control" id="tipo_emissao_" name="tipo_emissao_" />
                                                 </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-4">
+                                                    <label for="nat_oper_">Natureza de Operação:</label>
+                                                    <input type="text" class="form-control" id="nat_oper_" name="nat_oper_" />
+                                                </div>
+                                                <div class="col-sm-3">
                                                     <label for="finalidade_"> Finalidade:</label>
                                                     <input type="text" class="form-control" id="finalidade_" name="finalidade_" />
                                                 </div>
                                                 <div class="col-sm-3">
-                                                    <label for="nat_oper_">Natureza de Operação:</label>
-                                                    <input type="text" class="form-control" id="nat_oper_" name="nat_oper_" />
-                                                </div>
-                                                <div class="col-sm-2">
                                                     <label for="tipo_operacao_">Tipo de Operação :</label>
                                                     <input type="text" class="form-control" id="tipo_operacao_" name="tipo_operacao_" />
                                                 </div>
@@ -336,23 +382,17 @@
                                         <fieldset>
                                             <legend> Emitente </legend>
                                             <div class="row form-group col-lg-12">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <label for="cpf_cnpj_emit_"> CPF/CNPJ: </label>
                                                     <input type="text" class="form-control" id="cpf_cnpj_emit_" name="cpf_cnpj_emit_" />
                                                 </div>
-                                                <div class="col-sm-8">
+                                                <div class="col-sm-4">
                                                     <label for="razao_social_emit_">Nome/Razão Social:</label>
                                                     <input type="text" class="form-control" id="razao_social_emit_" name="razao_social_emit_" />
                                                 </div>
-                                            </div>
-                                            <div class="row form-group col-lg-12">
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-4">
                                                     <label for="endereco_emit_"> Endereço: </label>
                                                     <input type="text" class="form-control" id="endereco_emit_" name="endereco_emit_" />
-                                                </div>
-                                                <div class="col-sm-5">
-                                                    <label for="bairro_emit_">Bairro/Distrito:</label>
-                                                    <input type="text" class="form-control" id="bairro_emit_" name="bairro_emit_" />
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <label for="cep_emit_">CEP:</label>
@@ -360,41 +400,47 @@
                                                 </div>
                                             </div>
                                             <div class="row form-group col-lg-12">
+                                                <div class="col-sm-2">
+                                                    <label for="telefone_emit_"> Telefone: </label>
+                                                    <input type="text" class="form-control" id="telefone_emit_" name="telefone_emit_" onkeypress="mascara(this, '## ####-####')" />
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <label for="bairro_emit_">Bairro/Distrito:</label>
+                                                    <input type="text" class="form-control" id="bairro_emit_" name="bairro_emit_" />
+                                                </div>
                                                 <div class="col-sm-4">
                                                     <label for="municipio_emit_">Município:</label>
                                                     <input type="text" class="form-control" id="municipio_emit_" name="municipio_emit_" />
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <label for="telefone_emit_"> Telefone: </label>
-                                                    <input type="text" class="form-control" id="telefone_emit_" name="telefone_emit_" onkeypress="mascara(this, '## ####-####')" />
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <label for="uf_emit_">UF:</label>
-                                                    <input type="text" class="form-control" id="uf_emit_" name="uf_emit_" />
-                                                </div>
-                                                <div class="col-sm-3">
                                                     <label for="pais_emit_">País:</label>
                                                     <input type="text" class="form-control" id="pais_emit_" name="pais_emit_" />
                                                 </div>
+                                            </div>
+                                            <div class="row form-group col-lg-12">
                                                 <div class="col-sm-2">
+                                                    <label for="uf_emit_">UF:</label>
+                                                    <input type="text" class="form-control" id="uf_emit_" name="uf_emit_" />
+                                                </div>
+                                                <div class="col-sm-4">
                                                     <label for="insc_estadual_emit_">Inscrição Estadual:</label>
                                                     <input type="text" class="form-control" id="insc_estadual_emit_" name="insc_estadual_emit_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                            </div>
-                                            <div class="row form-group col-lg-12">
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-4">
                                                     <label for="ie_subst_tribu_emit_">IE do Substituto Tributário:</label>
                                                     <input type="text" class="form-control" id="ie_subst_tribu_emit_" name="ie_subst_tribu_emit_" />
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-2">
                                                     <label for="insc_municipal_emit_">Inscrição Municipal:</label>
                                                     <input type="text" class="form-control" id="insc_municipal_emit_" name="insc_municipal_emit_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                                <div class="col-sm-3">
+                                            </div>
+                                            <div class="row form-group col-lg-12">
+                                                <div class="col-sm-6">
                                                     <label for="cnae_fiscal_emit_">CNAE Fiscal:</label>
                                                     <input type="text" class="form-control" id="cnae_fiscal_emit_" name="cnae_fiscal_emit_" onkeydown="javascript: fMasc( this, mNum );" />
                                                 </div>
-                                                <div class="col-sm-3">
+                                                <div class="col-sm-6">
                                                     <label for="cod_regime_trib_emit_">Código de Regime Tributário:</label>
                                                     <select class="form-control" id="cod_regime_trib_emit_" name="cod_regime_trib_emit_">
                                                         <option value=""> SELECIONE </option>
@@ -661,79 +707,79 @@
                                             <fieldset class="col-lg-12">
                                                 <legend> ICMS </legend>
                                                 <div class="row form-group col-lg-12">
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_desp_acessor_">O. Desp. Acessórias:</label>
-                                                        <input type="text" class="form-control" id="vl_desp_acessor_" name="vl_desp_acessor_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_desp_acessor_" class="labels">O. Desp. Acessórias:</label>
+                                                        <input type="text" class="form-control" id="vl_desp_acessor_" name="vl_desp_acessor_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_frete_">Valor do Frete:</label>
-                                                        <input type="text" class="form-control" id="vl_frete_" name="vl_frete_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_frete_" class="labels">Valor do Frete:</label>
+                                                        <input type="text" class="form-control" id="vl_frete_" name="vl_frete_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_seguro_">Valor do Seguro:</label>
-                                                        <input type="text" class="form-control" id="vl_seguro_" name="vl_seguro_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_seguro_" class="labels">Valor do Seguro:</label>
+                                                        <input type="text" class="form-control" id="vl_seguro_" name="vl_seguro_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_total_prod_">Valor Total dos Prod.:</label>
-                                                        <input type="text" class="form-control" id="vl_total_prod_" name="vl_total_prod_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_total_prod_" class="labels">Valor Total dos Prod.:</label>
+                                                        <input type="text" class="form-control" id="vl_total_prod_" name="vl_total_prod_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_total_nf_"> Valor Total da NFe: </label>
-                                                        <input type="text" class="form-control" id="vl_total_nf_" name="vl_total_nf_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_total_nf_" class="labels"> Valor Total da NFe: </label>
+                                                        <input type="text" class="form-control" id="vl_total_nf_" name="vl_total_nf_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
-                                                        <label for="vl_aprox_tributos_">V. Aprox dos Tributos:</label>
-                                                        <input type="text" class="form-control" id="vl_aprox_tributos_" name="vl_aprox_tributos_" />
+                                                    <div class="col-sm-2" class="margin">
+                                                        <label for="vl_aprox_tributos_" class="labels">V. Aprox dos Tributos:</label>
+                                                        <input type="text" class="form-control" id="vl_aprox_tributos_" name="vl_aprox_tributos_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="col-lg-12">
                                                 <legend> ICMS </legend>
                                                 <div class="row form-group col-lg-12">
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3">
                                                         <label for="vl_bc_icms_"> Base de Cálculo: </label>
-                                                        <input type="text" class="form-control" id="vl_bc_icms_" name="vl_bc_icms_" />
+                                                        <input type="text" class="form-control" id="vl_bc_icms_" name="vl_bc_icms_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_aliq_icms_">Alíquota:</label>
-                                                        <input type="text" class="form-control" id="vl_aliq_icms_" name="vl_aliq_icms_" />
+                                                        <input type="text" class="form-control" id="vl_aliq_icms_" name="vl_aliq_icms_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3">
                                                         <label for="vl_icms_">Valor:</label>
-                                                        <input type="text" class="form-control" id="vl_icms_" name="vl_icms_" />
+                                                        <input type="text" class="form-control" id="vl_icms_" name="vl_icms_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_outras_icms_">Outras:</label>
-                                                        <input type="text" class="form-control" id="vl_outras_icms_" name="vl_outras_icms_" />
+                                                        <input type="text" class="form-control" id="vl_outras_icms_" name="vl_outras_icms_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_isento_icms_">Isento:</label>
-                                                        <input type="text" class="form-control" id="vl_isento_icms_" name="vl_isento_icms_" />
+                                                        <input type="text" class="form-control" id="vl_isento_icms_" name="vl_isento_icms_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
                                             <fieldset class="col-lg-12">
                                                 <legend> IPI </legend>
                                                 <div class="row form-group col-lg-12">
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3">
                                                         <label for="vl_bc_ipi_"> Base de Cálculo: </label>
-                                                        <input type="text" class="form-control" id="vl_bc_ipi_" name="vl_bc_ipi_" />
+                                                        <input type="text" class="form-control" id="vl_bc_ipi_" name="vl_bc_ipi_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_aliq_ipi_">Alíquota:</label>
-                                                        <input type="text" class="form-control" id="vl_aliq_ipi_" name="vl_aliq_ipi_" />
+                                                        <input type="text" class="form-control" id="vl_aliq_ipi_" name="vl_aliq_ipi_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-2">
+                                                    <div class="col-sm-3">
                                                         <label for="vl_ipi_">Valor:</label>
-                                                        <input type="text" class="form-control" id="vl_ipi_" name="vl_ipi_" />
+                                                        <input type="text" class="form-control" id="vl_ipi_" name="vl_ipi_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_outras_ipi_">Outras:</label>
-                                                        <input type="text" class="form-control" id="vl_outras_ipi_" name="vl_outras_ipi_" />
+                                                        <input type="text" class="form-control" id="vl_outras_ipi_" name="vl_outras_ipi_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_isento_ipi_">Isento:</label>
-                                                        <input type="text" class="form-control" id="vl_isento_ipi_" name="vl_isento_ipi_" />
+                                                        <input type="text" class="form-control" id="vl_isento_ipi_" name="vl_isento_ipi_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -742,15 +788,15 @@
                                                 <div class="row form-group col-lg-12">
                                                     <div class="col-sm-4">
                                                         <label for="vl_bc_pis_"> Base de Cálculo: </label>
-                                                        <input type="text" class="form-control" id="vl_bc_pis_" name="vl_bc_pis_" />
+                                                        <input type="text" class="form-control" id="vl_bc_pis_" name="vl_bc_pis_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for="vl_aliq_pis_">Alíquota:</label>
-                                                        <input type="text" class="form-control" id="vl_aliq_pis_" name="aliq_pvl_aliq_pis_is" />
+                                                        <input type="text" class="form-control" id="vl_aliq_pis_" name="aliq_pvl_aliq_pis_is" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-4 fix-right">
                                                         <label for="vl_pis_">Valor:</label>
-                                                        <input type="text" class="form-control" id="vl_pis_" name="vl_pis_" />
+                                                        <input type="text" class="form-control" id="vl_pis_" name="vl_pis_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -759,15 +805,15 @@
                                                 <div class="row form-group col-lg-12">
                                                     <div class="col-sm-4">
                                                         <label for="vl_bc_cofins_"> Base de Cálculo: </label>
-                                                        <input type="text" class="form-control" id="vl_bc_cofins_" name="vl_bc_cofins_" />
+                                                        <input type="text" class="form-control" id="vl_bc_cofins_" name="vl_bc_cofins_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for="vl_aliq_cofins_">Alíquota:</label>
-                                                        <input type="text" class="form-control" id="vl_aliq_cofins_" name="vl_aliq_cofins_" />
+                                                        <input type="text" class="form-control" id="vl_aliq_cofins_" name="vl_aliq_cofins_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-4">
                                                         <label for="vl_cofins_">Valor:</label>
-                                                        <input type="text" class="form-control" id="vl_cofins_" name="vl_cofins_" />
+                                                        <input type="text" class="form-control" id="vl_cofins_" name="vl_cofins_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -776,41 +822,41 @@
                                                 <div class="row form-group col-lg-12">
                                                     <div class="col-sm-2">
                                                         <label for="vl_icms_deson_"> ICMS Desonerado: </label>
-                                                        <input type="text" class="form-control" id="vl_icms_deson_" name="vl_icms_deson_" />
+                                                        <input type="text" class="form-control" id="vl_icms_deson_" name="vl_icms_deson_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_fcp_"> FCP:</label>
-                                                        <input type="text" class="form-control" id="vl_fcp_" name="vl_fcp_" />
+                                                        <input type="text" class="form-control" id="vl_fcp_" name="vl_fcp_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_icms_fcp_"> ICMS FCP:</label>
-                                                        <input type="text" class="form-control" id="vl_icms_fcp_" name="vl_icms_fcp_" />
+                                                        <input type="text" class="form-control" id="vl_icms_fcp_" name="vl_icms_fcp_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-3">
-                                                        <label for="vl_icms_inter_uf_dest_"> ICMS Interestadual UF Destino: </label>
-                                                        <input type="text" class="form-control" id="vl_icms_inter_uf_dest_" name="m_bc_covl_icms_inter_uf_dest_fins" />
+                                                    <div class="col-sm-3 marginLabel">
+                                                        <label for="vl_icms_inter_uf_dest_" class="labelWidth"> ICMS Interestadual UF Destino: </label>
+                                                        <input type="text" class="form-control" id="vl_icms_inter_uf_dest_" name="m_bc_covl_icms_inter_uf_dest_fins" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-3">
-                                                        <label for="vl_icms_inter_uf_rem_"> ICMS Interestadual UF Rem.:</label>
-                                                        <input type="text" class="form-control" id="vl_icms_inter_uf_rem_" name="vl_icms_inter_uf_rem_" />
+                                                    <div class="col-sm-3 marginLabel">
+                                                        <label for="vl_icms_inter_uf_rem_" class="labelWidth"> ICMS Interestadual UF Rem.:</label>
+                                                        <input type="text" class="form-control" id="vl_icms_inter_uf_rem_" name="vl_icms_inter_uf_rem_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                                 <div class="row form-group col-lg-12">
                                                     <div class="col-sm-2">
-                                                        <label for="vl_bc_icms_st_">B. de Cálculo ICMS ST:</label>
-                                                        <input type="text" class="form-control" id="vl_bc_icms_st_" name="vl_bc_icms_st_" />
-                                                    </div>
-                                                    <div class="col-sm-2">
                                                         <label for="vl_icms_subst_"> ICMS Substituição: </label>
-                                                        <input type="text" class="form-control" id="vl_icms_subst_" name="vl_icms_subst_" />
+                                                        <input type="text" class="form-control" id="vl_icms_subst_" name="vl_icms_subst_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <label for="vl_fcp_retido_st_">FCP retido por ST:</label>
-                                                        <input type="text" class="form-control" id="vl_fcp_retido_st_" name="vl_fcp_retido_st_" />
+                                                        <input type="text" class="form-control" id="vl_fcp_retido_st_" name="vl_fcp_retido_st_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
-                                                    <div class="col-sm-3">
-                                                        <label for="vl_retido_ant_st_">FCP retido anteriormente por ST:</label>
-                                                        <input type="text" class="form-control" id="vl_retido_ant_st_" name="vl_retido_ant_st_" />
+                                                    <div class="col-sm-2 margin">
+                                                        <label for="vl_bc_icms_st_" class="labels">B. de Cálculo ICMS ST:</label>
+                                                        <input type="text" class="form-control" id="vl_bc_icms_st_" name="vl_bc_icms_st_" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                    </div>
+                                                    <div class="col-sm-3 margin">
+                                                        <label for="vl_retido_ant_st_" class="labelWidth">FCP retido anteriormente por ST:</label>
+                                                        <input type="text" class="form-control" id="vl_retido_ant_st_" name="vl_retido_ant_st_" onKeyPress="return(moeda(this,'.',',',event))" />
                                                     </div>
                                                 </div>
                                             </fieldset>
@@ -846,7 +892,29 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="dados-duplicata" role="tabpanel" aria-labelledby="dados-duplicata-tab">
-
+                                        <div class="row form-group col-lg-14" style="margin-left: 30px;">
+                                            <div class="col-md-9">
+                                                <h4>Duplicatas a pagar</h4>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <button type="button" class="btn btn-success" id="btnDuplicata">
+                                                    <span class="fas fa-plus"></span>
+                                                    Adicionar duplicata
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group col-lg-3 container" style="margin-left: 40px;">
+                                            <div class="col-sm-2 left">
+                                                <p class="bold"> N° Título:</p>
+                                                <p class="bold"> Vencimento:</p>
+                                                <p class="bold"> Valor:</p>
+                                            </div>
+                                            <div class="col-sm-2 right">
+                                                <p class="line right"> 00/00/0000 </p>
+                                                <p class="line right"> 00/00/0000 </p>
+                                                <p class="line right"> R$ <span>00,00</span></p>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="dados-info-gerais" role="tabpanel" aria-labelledby="dados-info-gerais-tab">
                                         <div class="row form-group col-lg-12">
