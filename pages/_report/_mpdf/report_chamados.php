@@ -7,7 +7,7 @@ ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 400);
 date_default_timezone_set('America/Sao_Paulo');
 
-include_once "/opt/homebrew/var/www/mpdf/Relatorio.class.php";
+include_once "../../../../mpdf/Relatorio.class.php";
 
 ## Inicializando variáveis
 $p = json_decode($_POST['parametros']);

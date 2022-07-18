@@ -34,26 +34,18 @@
         $xmlRet = $retXml->xml;
 
         #Descompactar o XMl e Ler - Conferindo a existencia, validação do banco
-        $xmlDoc = simplexml_load_string(base64_decode($xmlRet));
+        /**
+         * Formas de abrir o XML
+         */
+        $xmlDoc  = simplexml_load_string(base64_decode($xmlRet));
+        $xmlJson = json_decode(json_encode((array)$xmlDoc,true));
+        $xmlArray = xml2array($xmlDoc);
 
-
-        #Armazenar e retornar o próximo NSU 
         print"<pre>";
-        print_r($xmlDoc);
+        print_r($xmlArray);
         exit;
-       
-        
+      
     }
-
- }
-
- print"<pre>";
- print_r($readAPI["data"]);
- exit;
-
- 
-
-
-
-
+        
+}
 ?>
