@@ -7,8 +7,9 @@ ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 400);
 date_default_timezone_set('America/Sao_Paulo');
 
+print"antes"; 
 include_once "../gestao/gestao.humanaalimentar.com.br/mpdf/Relatorio.class.php";
-
+echo"depois";
 ## Inicializando variáveis
 $p = json_decode($_POST['parametros']);
 $tipo = $p->tipo;
