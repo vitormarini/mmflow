@@ -7,10 +7,7 @@
 */
 
 #Exemplo de chamada
-#$consultaNfe = consultaArquivei("100","50","nfe");  -- Retorno será um Array
-print"<pre>";
-print_r(consultaArquivei("100","50","nfe"));
-exit;
+// $consultaNfe = consultaArquivei("100","50","nfe");  
 
 /**
  * #FUNÇAO PARA CONSULTA DOS ARQUIVOS CONTIDOS NA API - ARQUIVEI
