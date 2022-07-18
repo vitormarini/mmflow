@@ -8,6 +8,13 @@
  include_once 'requestArquivei.php';
 
  #Chamda da API
+/**
+ * #FUNÇAO PARA CONSULTA DOS ARQUIVOS CONTIDOS NA API - ARQUIVEI
+ * * Variáveis:
+ * @- $xInicial : valor inicial, semelhante com o NSU
+ * @ - $xFinal   : valor final, semelhante ao LastNSU
+ * @ - $xTipo    : tipoda consulta ( TIPOS VÁLIDOS nfe, nfse )
+ */
  $readAPI = consultaArquivei("100","50","nfe");
 
  #Tratando os retornos.
