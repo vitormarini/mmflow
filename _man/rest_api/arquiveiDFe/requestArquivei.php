@@ -33,7 +33,8 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
         #Transformando o array em Json
         $dataJson = json_encode($dataPost);
 
-        $endPoint      = "/v1/$tipo/received";
+
+        $endPoint      =  $tipo == "events" ? "/v1/events/nfe" : "/v1/$tipo/received";
 
         #Dados do header
         $headers = array(
@@ -72,6 +73,7 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
 
         #Tratando o retorno
         $dataRet = json_decode($response);
+        
 
         #Tratamento do retorno
         if ( $dataRet->status->code == "200" ){

@@ -13,7 +13,7 @@
  * * Variáveis:
  * @- $xInicial : valor inicial, semelhante com o NSU
  * @ - $xFinal   : valor final, semelhante ao LastNSU
- * @ - $xTipo    : tipoda consulta ( TIPOS VÁLIDOS nfe, nfse )
+ * @ - $xTipo    : tipoda consulta ( TIPOS VÁLIDOS nfe, nfse, cte e events )
  */
  $readAPI = consultaArquivei("100","50","nfe");
 
@@ -23,7 +23,7 @@
 
 
  #Lendo o retorno dos arrays
- if ( $confirmRet == "Ok" ){
+ if ( $confirmRet == "Ok" || $confirmRet == "OK" ){
 
     foreach ($dataRet as $retXml){
 
@@ -39,11 +39,11 @@
          */
         $xmlDoc  = simplexml_load_string(base64_decode($xmlRet));
         $xmlJson = json_decode(json_encode((array)$xmlDoc,true));
-        $xmlArray = xml2array($xmlDoc);
+        // $xmlArray = xml2array($xmlDoc);
 
         print"<pre>";
-        print_r($xmlArray);
-        exit;
+        print_r($xmlDoc);
+        // exit;
       
     }
         
