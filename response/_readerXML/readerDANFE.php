@@ -1,40 +1,47 @@
 <?php
 
-include_once('../../_man/_aux.php');
-include_once('../../_conection/_conect.php');
+// include_once('../../_man/_aux.php');
+// include_once('../../_conection/_conect.php');
 
-$caminho = "C:/WebServer/Apache24/htdocs/";
-$chave_acesso = "35220357208480000106550010000768581721096617.xml";
+
 
 //$dados    = loadFile($caminho,$chave_acesso);
-$json_nf  = json_encode($dados);
+// $json_nf  = json_encode($dados);
 
-if($dados){
-    # valida duplicidade
-    if(duplicity($chave_acesso)){
-        $bd->Execute("SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");
-    }
-}
+// if($dados){
+//     # valida duplicidade
+    // if(duplicity($chave_acesso)){
+    //     $bd->Execute("SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");
+    // }
+// }
+
 /* PRINCIPAL */
-function loadFile($caminho,$chave_acesso){
-    $arquivo = $caminho.$chave_acesso;
+function loadFile($xml,$count,$id_dfe){
+    // global $bd;
+    $chave_acesso = $xml->infProt->chNFe;
+
+
+    // print "<pre>";print_r($xml);
+    // exit("tamara 1");
+
+
     # Verifica se o arquivo é XML
-    if(!isXmlFile($chave_acesso)){throw new Exception("Ops! Somente arquivos .xml podem ser carregados.");}
+    // if(!isXmlFile($chave_acesso)){throw new Exception("Ops! Somente arquivos .xml podem ser carregados.");}
           
     # Verifica se o arquivo existe
-    if (file_exists($arquivo)) {
+    // if (file_exists($arquivo)) {
         # Carrega arquivo
-        $load_arq = simplexml_load_file($arquivo);         
         
         # Verifica se o xml está autorizado para uso pela sefaz
-        if(!findProtocol($load_arq)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
-        
-        $xml = $load_arq->NFe->infNFe;
+        if(!findProtocol($xml)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
+
+        $xml_ = $xml->protNFe;
+        $xml  = $xml->NFe->infNFe;
         
         # tag @attributes
         $versao = (string) $xml->attributes()->versao;
-        $id     = (string) $xml->attributes()->Id;
-        
+        $id     = (string) $xml->attributes()->Id;        
+
         #tags
         $ide     = $xml->ide;       # Identificação
         $emit    = $xml->emit;      # Emitente
@@ -45,6 +52,9 @@ function loadFile($caminho,$chave_acesso){
         $cobr    = $xml->cobr;      # Cobrança
         $pag     = $xml->pag;       # Pagamento
         $infAdic = $xml->infAdic;   # Informações adicionais 
+        $infAdic = $xml->infAdic;   # Informações adicionais 
+
+       
         
         # monta o array da NFe 
         $dados = array(
@@ -59,13 +69,14 @@ function loadFile($caminho,$chave_acesso){
             ,'cobr'         => dadosCOBR($cobr)
             ,'pag'          => dadosPAG($pag)
             ,'inf_adic'     => $infAdic
+            ,'prot_nfe'     => dadosProtNFe($xml_)
         );
-        
+
         # Retorno 
         return $dados;        
-    }else{
-        exit("NÃO EXISTENTE");
-    }
+    // }else{
+    //     exit("NÃO EXISTENTE");
+    // }
 }
 
 function isXmlFile($chave_acesso){
@@ -80,15 +91,6 @@ function findProtocol($nfe){
         }
     }          
     return false;        
-}
-
-function duplicity($chave_acesso){
-    global $bd;
-    $chave_acesso = explode(".",$chave_acesso)[0];    
-    $nf = $bd->Execute($sql = "SELECT * FROM t_escrita_fiscal WHERE REPLACE(ef_ident,'NFe','') = '{$chave_acesso}'; --ef_num_nf = '76858' AND ef_cnpj_emit = '57208480000106' AND ef_tipo_op = '1';");
-    if($nf->RecordCount() > 0)return false;
-    
-    return true;        
 }
 
 # dados de identificação
@@ -206,10 +208,10 @@ function dadosDET($det){
                 ,'unidade_trib'     => (string) $prod->uTrib
                 ,'quantidade_trib'  => (string) $prod->qTrib
                 ,'v_unitario_trib'  => (string) $prod->vUnTrib
-                ,'v_frete'          => (string) ($item->prod->vFrete            ?? "0.00")
-                ,'v_seguro'         => (string) ($item->prod->vSeg              ?? "0.00")
-                ,'v_desconto'       => (string) ($item->prod->vDesc             ?? "0.00")
-                ,'v_outras'         => (string) ($item->prod->vOutro            ?? "0.00")
+                ,'v_frete'          => (string) ($prod->vFrete            ?? "0.00")
+                ,'v_seguro'         => (string) ($prod->vSeg              ?? "0.00")
+                ,'v_desconto'       => (string) ($prod->vDesc             ?? "0.00")
+                ,'v_outras'         => (string) ($prod->vOutro            ?? "0.00")
                 ,'ind_tot'          => (string) $prod->indTot                                                                
                 # Impostos
                 ,'v_tot_trib'       => (string) ($i->imposto->vTotTrib          ?? "0.00")
@@ -272,7 +274,6 @@ function dadosTOTAL($total){
     return $arr;
 }
 
-
 # dados da transportadora 
 function dadosTRANSP($transp){
     $arr = array(
@@ -330,4 +331,30 @@ function dadosPAG($pag){
 function dadosinfAdic($infAdic){
     $arr = $infAdic->infCpl;
     return $arr;
-}               
+}
+
+function dadosProtNFe($protNFe){
+    global $bd;
+    global $user_id;
+
+    $versao_ = $protNFe->attributes()->versao;
+    $protNFe = $protNFe->infProt;
+
+    $arr = array(
+        'versao'                    => (string) $versao_
+       ,'id'                        => (string) $protNFe->attributes()->Id
+       ,'tpamb'                     => (string) $protNFe->tpAmb
+       ,'veraplic'                  => (string) $protNFe->verAplic
+       ,'chnfe'                     => (string) $protNFe->chNFe
+       ,'dhrecbto'                  => (string) $protNFe->dhRecbto
+       ,'nprot'                     => (string) $protNFe->nProt
+       ,'digval'                    => (string) $protNFe->digVal
+       ,'cstat'                     => (string) $protNFe->cStat
+       ,'xmotivo'                   => (string) $protNFe->xMotivo
+    //    ,'nsu'                       => (int) $x
+    //    ,'id_dfe'                    => (string) $id_dfe
+    //    ,'xml'                       => $xml
+    );
+
+    return $arr;
+}
