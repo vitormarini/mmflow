@@ -65,10 +65,6 @@
         width: 100% !Important;
     }
 
-    .btnTable {
-        columns: 15px 3;
-    }
-
     .btnStyle {
         margin: 1px 1px 1px 1px;
         width: 30px;
@@ -215,15 +211,15 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" name="checkAll" id="checkAll" width="03%"></th>
-                            <th class="text-center">Emitente </th>
-                            <th class="text-center">Número/Série </th>
-                            <th class="text-center">Valor </th>
-                            <th class="text-center">Origem </th>
-                            <th class="text-center">Emissão </th>
-                            <th class="text-center">Status </th>
-                            <th class="text-center">Registro </th>
-                            <th class="text-center">Recebimento </th>
-                            <th class="text-center">Opções </th>
+                            <th class="text-center" width="25%">Emitente </th>
+                            <th class="text-center" width="25%">Número/Série </th>
+                            <th class="text-center" width="25%">Valor </th>
+                            <th class="text-center" width="25%">Origem </th>
+                            <th class="text-center" width="25%">Emissão </th>
+                            <th class="text-center" width="25%">Status </th>
+                            <th class="text-center" width="25%">Registro </th>
+                            <th class="text-center" width="25%">Recebimento </th>
+                            <th class="text-center" width="25%">Opções </th>
                         </tr>
                     </thead>
                     <tbody>

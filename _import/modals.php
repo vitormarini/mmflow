@@ -126,6 +126,18 @@
                 margin: 10px 0px 0px 60px;
             }
 
+            .spacing {
+                margin-left: 0px;
+                padding-left: 0px;
+                margin-right: 0px;
+                padding-right: 0px;
+            }
+
+            .spacingLeft {
+                margin-left: 15px;
+                padding-right: 0px;
+            }
+
         }
     </style>
 </head>
@@ -469,235 +481,232 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <!-- <tr>
-                                                        <td>
-                                                            <a href="#" id="show_1"> Show Extra </a>
-                                                        </td>
-                                                        <td class="cod_prod">   codigo          </td>
-                                                        <td class="descricao">  descricao       </td>
-                                                        <td class="unidade">    unid            </td>
-                                                        <td class="quantidade"> quantidade      </td>
-                                                        <td class="v_unitario"> unit            </td>
-                                                        <td class="v_produto">  total           </td>
-                                                        <td class="cfop">       cfop            </td>
-                                                        <td class="nat_oper">   nat oper        </td>
+                                                    <td>
+                                                        <a href="#" id="show_1"> Show Extra </a>
+                                                    </td>
+                                                    <td class="cod_prod"> codigo </td>
+                                                    <td class="descricao"> descricao </td>
+                                                    <td class="unidade"> unid </td>
+                                                    <td class="quantidade"> quantidade </td>
+                                                    <td class="v_unitario"> unit </td>
+                                                    <td class="v_produto"> total </td>
+                                                    <td class="cfop"> cfop </td>
+                                                    <td class="nat_oper"> nat oper </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="9">
-                                                            <div id="extra_1" style="display: none;" class="row form-group col-lg-12">
+                                                            <div id="extra_1" style="display: none;" class="row form-group col-lg-12 spacing">
                                                                 <div class="row form-group col-lg-12">
-                                                                    <div class="col-lg-4">
+                                                                    <div class="col-lg-3">
                                                                         <label for="ncm"> NCM </label>
-                                                                        <input type="text" class="form-control" name="ncm" id="ncm">
+                                                                        <input type="text" class="form-control" name="ncm" id="ncm" onkeydown="javascript: fMasc( this, mNum );">
                                                                     </div>
-                                                                    <div class="col-lg-4">
+                                                                    <div class="col-lg-3">
                                                                         <label for="cod_ncm"> Número FCI </label>
-                                                                        <input type="text" class="form-control" name="cod_ncm" id="cod_ncm">
+                                                                        <input type="text" class="form-control" name="cod_ncm" id="cod_ncm" onkeydown="javascript: fMasc( this, mNum );">
                                                                     </div>
-                                                                    <div class="col-sm-4">
-                                                                        <label for="ie_subst_tribu_emit_">Indicador de Comp. Valor Total NFe:</label>
-                                                                        <input type="text" class="form-control" id="ie_subst_tribu_emit_" name="ie_subst_tribu_emit_"/>
+                                                                    <div class="col-sm-3">
+                                                                        <label for="ie_subst_tribu_emit_" style="width:300px;font-size:14px">Indicador de Comp. Valor Total NFe:</label>
+                                                                        <input type="text" class="form-control" id="ie_subst_tribu_emit_" name="ie_subst_tribu_emit_" />
+                                                                    </div>
+                                                                    <div class="col-sm-3" style="padding-right: 0px;">
+                                                                        <label for="v_frete"> Vl Frete </label>
+                                                                        <input type="text" class="form-control" name="v_frete" id="v_frete" onKeyPress="return(moeda(this,'.',',',event))">
                                                                     </div>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">
-                                                                    <div class="col-sm-2">
-                                                                        <label for="v_frete"> Vl Frete </label>
-                                                                        <input type="text" class="form-control" name="v_frete" id="v_frete">
-                                                                    </div>
-                                                                    <div class="col-sm-2">
+                                                                <div class="row form-group col-lg-12 spacing">
+                                                                    <div class="col-sm-3">
                                                                         <label for="v_seguro"> Vl Seguro </label>
-                                                                        <input type="text" class="form-control" name="v_seguro" id="v_seguro">
+                                                                        <input type="text" class="form-control" name="v_seguro" id="v_seguro" onKeyPress="return(moeda(this,'.',',',event))">
                                                                     </div>
-                                                                    <div class="col-sm-2">
+                                                                    <div class="col-sm-3">
                                                                         <label for="v_desconto"> Vl Desconto </label>
-                                                                        <input type="text" class="form-control" name="v_desconto" id="v_desconto">
+                                                                        <input type="text" class="form-control" name="v_desconto" id="v_desconto" onKeyPress="return(moeda(this,'.',',',event))">
                                                                     </div>
-                                                                    <div class="col-sm-2">
+                                                                    <div class="col-sm-3">
                                                                         <label for="v_outras"> Vl Outras Desp. </label>
-                                                                        <input type="text" class="form-control" name="v_outras" id="v_outras">
+                                                                        <input type="text" class="form-control" name="v_outras" id="v_outras" onKeyPress="return(moeda(this,'.',',',event))">
                                                                     </div>
-                                                                    <div class="col-sm-2">
+                                                                    <div class="col-sm-3" style="padding-right: 0px;">
                                                                         <label for="v_tot_trib"> Vl Aprox. Tributos </label>
-                                                                        <input type="text" class="form-control" name="v_tot_trib" id="v_tot_trib">
+                                                                        <input type="text" class="form-control" name="v_tot_trib" id="v_tot_trib" onKeyPress="return(moeda(this,'.',',',event))">
                                                                     </div>
-                                                                </div>                                                      
-                                                                <div class="row form-group col-lg-12">                                                                                                 
+                                                                </div>
+                                                                <div class="row form-group col-lg-12 spacing">
                                                                     <div class="col-sm-3">
                                                                         <label for="cod_ean">Código EAN Comercial:</label>
-                                                                        <input type="text" class="form-control" id="cod_ean" name="cod_ean"/>
-                                                                    </div>                                                                                   
+                                                                        <input type="text" class="form-control" id="cod_ean" name="cod_ean" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                    </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="cnae_fiscal_emit_">Unidade Comercial:</label>
-                                                                        <input type="text" class="form-control" id="cnae_fiscal_emit_" name="cnae_fiscal_emit_"/>
-                                                                    </div>                                                                                                    
+                                                                        <input type="text" class="form-control" id="cnae_fiscal_emit_" name="cnae_fiscal_emit_" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                    </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="quantidade">Quantidade Comercial:</label>
-                                                                        <input type="text" class="form-control" id="quantidade" name="quantidade"/>
-                                                                    </div>                                                                                                    
-                                                                    <div class="col-sm-3">
+                                                                        <input type="text" class="form-control" id="quantidade" name="quantidade" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                    </div>
+                                                                    <div class="col-sm-3" style="padding-right: 0px;">
                                                                         <label for="v_unitario">Valor Unit. Comercial:</label>
-                                                                        <input type="text" class="form-control" id="v_unitario" name="v_unitario"/>
-                                                                    </div>                                                                                                    
+                                                                        <input type="text" class="form-control" id="v_unitario" name="v_unitario" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">                                                                                                 
+                                                                <div class="row form-group col-lg-12 spacing">
                                                                     <div class="col-sm-3">
                                                                         <label for="cod_ean_trib">Código EAN Tributável:</label>
-                                                                        <input type="text" class="form-control" id="cod_ean_trib" name="cod_ean_trib"/>
-                                                                    </div>                                                                                   
+                                                                        <input type="text" class="form-control" id="cod_ean_trib" name="cod_ean_trib" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                    </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="unidade_trib">Unidade Tributável:</label>
-                                                                        <input type="text" class="form-control" id="unidade_trib" name="unidade_trib"/>
-                                                                    </div>                                                                                                    
+                                                                        <input type="text" class="form-control" id="unidade_trib" name="unidade_trib" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                    </div>
                                                                     <div class="col-sm-3">
                                                                         <label for="quantidade_trib">Quantidade Tributável:</label>
-                                                                        <input type="text" class="form-control" id="quantidade_trib" name="quantidade_trib"/>
-                                                                    </div>                                                                                                    
-                                                                    <div class="col-sm-3">
+                                                                        <input type="text" class="form-control" id="quantidade_trib" name="quantidade_trib" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                    </div>
+                                                                    <div class="col-sm-3" style="padding-right: 0px;">
                                                                         <label for="v_unitario_trib">Valor Unit. Tributável:</label>
-                                                                        <input type="text" class="form-control" id="v_unitario_trib" name="v_unitario_trib"/>
-                                                                    </div>                                                                                                    
+                                                                        <input type="text" class="form-control" id="v_unitario_trib" name="v_unitario_trib" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                    </div>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">  
-                                                                    <fieldset> 
-                                                                        <legend> ICMS </legend>     
-                                                                        <div class="row form-group col-sm-12">                                                                                         
-                                                                            <div class="col-sm-3">
-                                                                                <label for="cst_origem">CST ICMS Origem:</label>
-                                                                                <input type="text" class="form-control" id="cst_origem" name="cst_origem"/>
-                                                                            </div>                                                                                   
-                                                                            <div class="col-sm-3">
-                                                                                <label for="cst_trib">CST ICMS Trib.:</label>
-                                                                                <input type="text" class="form-control" id="cst_trib" name="cst_trib"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
-                                                                                <label for="mod_bc">Modalidade:</label>
-                                                                                <input type="text" class="form-control" id="mod_bc" name="mod_bc"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
-                                                                                <label for="cnae_fiscal_emit_">Valor Unit. Tributável:</label>
-                                                                                <input type="text" class="form-control" id="cnae_fiscal_emit_" name="cnae_fiscal_emit_"/>
-                                                                            </div>     
-                                                                        </div>   
-                                                                        <div class="row form-group col-sm-12">                                                                                         
-                                                                            <div class="col-sm-3">
-                                                                                <label for="bc_icms">Base de Cálculo</label>
-                                                                                <input type="text" class="form-control" id="bc_icms" name="bc_icms"/>
-                                                                            </div>                                                                                   
-                                                                            <div class="col-sm-3">
-                                                                                <label for="aliq_icms">Aliquota:</label>
-                                                                                <input type="text" class="form-control" id="aliq_icms" name="aliq_icms"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
-                                                                                <label for="v_icms">Valor:</label>
-                                                                                <input type="text" class="form-control" id="v_icms" name="v_icms"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
-                                                                                <label for="outras_icms">Outras:</label>
-                                                                                <input type="text" class="form-control" id="outras_icms" name="outras_icms"/>
-                                                                            </div>     
-                                                                            <div class="col-sm-3">
-                                                                                <label for="isento_icms">Isentas:</label>
-                                                                                <input type="text" class="form-control" id="isento_icms" name="isento_icms"/>
-                                                                            </div>     
-                                                                        </div>   
-                                                                        <div class="row form-group col-sm-12">                                                                                         
-                                                                            <div class="col-sm-6">
-                                                                                <label for="aliq_fcp">Percentual do Fundo de Combate à Pobreza (FCP)</label>
-                                                                                <input type="text" class="form-control" id="aliq_fcp" name="aliq_fcp"/>
-                                                                            </div>                                                                                   
-                                                                            <div class="col-sm-6">
-                                                                                <label for="v_fcp">Valor do Fundo de Combate à Pobreza (FCP):</label>
-                                                                                <input type="text" class="form-control" id="v_fcp" name="v_fcp"/>
-                                                                            </div>                                                                                                                                                                    
-                                                                        </div>   
-                                                                    </fieldset>                                                                                            
+                                                                <div class="row form-group col-lg-12 spacing">
+                                                                    <legend> ICMS </legend>
+                                                                    <div class="row form-group col-lg-12 spacingLeft">
+                                                                        <div class="col-lg-4">
+                                                                            <label for="cst_origem">CST ICMS Origem:</label>
+                                                                            <input type="text" class="form-control" id="cst_origem" name="cst_origem" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            <label for="cst_trib">CST ICMS Trib.:</label>
+                                                                            <input type="text" class="form-control" id="cst_trib" name="cst_trib" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                        <div class="col-sm-4" style="padding-right: 0px;">
+                                                                            <label for="cnae_fiscal_emit_">Valor Unit. Tributável:</label>
+                                                                            <input type="text" class="form-control" id="cnae_fiscal_emit_" name="cnae_fiscal_emit_" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row form-group col-lg-12 spacingLeft">
+                                                                        <div class="col-sm-2">
+                                                                            <label for="mod_bc">Modalidade:</label>
+                                                                            <input type="text" class="form-control" id="mod_bc" name="mod_bc" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <label for="bc_icms">Base de Cálculo</label>
+                                                                            <input type="text" class="form-control" id="bc_icms" name="bc_icms" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <label for="aliq_icms">Aliquota:</label>
+                                                                            <input type="text" class="form-control" id="aliq_icms" name="aliq_icms" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                        </div>
+                                                                        <div class="col-sm-2">
+                                                                            <label for="v_icms">Valor:</label>
+                                                                            <input type="text" class="form-control" id="v_icms" name="v_icms" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                        </div>
+                                                                        <div class="col-sm-2" style="padding-right: 0px;  margin-left:0px">
+                                                                            <label for="outras_icms">Outras:</label>
+                                                                            <input type="text" class="form-control" id="outras_icms" name="outras_icms" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                        <div class="col-sm-2" style="padding-right: 0px;">
+                                                                            <label for="isento_icms">Isentas:</label>
+                                                                            <input type="text" class="form-control" id="isento_icms" name="isento_icms" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row form-group col-lg-12 spacingLeft">
+                                                                        <div class="col-sm-6">
+                                                                            <label for="aliq_fcp">Percentual do Fundo de Combate à Pobreza (FCP)</label>
+                                                                            <input type="text" class="form-control" id="aliq_fcp" name="aliq_fcp" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                        </div>
+                                                                        <div class="col-sm-6" style="padding-right: 0px;">
+                                                                            <label for=" v_fcp">Valor do Fundo de Combate à Pobreza (FCP):</label>
+                                                                            <input type="text" class="form-control" id="v_fcp" name="v_fcp" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">  
-                                                                    <fieldset> 
-                                                                        <legend> IPI </legend>     
-                                                                        <div class="row form-group col-sm-12">                                                                              
-                                                                            <div class="col-sm-6">
+                                                                <div class="row form-group col-lg-12 spacing">
+                                                                    <fieldset>
+                                                                        <legend> IPI </legend>
+                                                                        <div class="row form-group col-sm-12 spacingLeft">
+                                                                            <div class="col-sm-4">
                                                                                 <label for="cod_enquad">Código de Enquadramento:</label>
-                                                                                <input type="text" class="form-control" id="cod_enquad" name="cod_enquad"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-6">
+                                                                                <input type="text" class="form-control" id="cod_enquad" name="cod_enquad" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                            </div>
+                                                                            <div class="col-sm-4">
                                                                                 <label for="cst_ipi">CST:</label>
-                                                                                <input type="text" class="form-control" id="cst_ipi" name="cst_ipi"/>
-                                                                            </div>   
-                                                                        </div>   
-                                                                        <div class="row form-group col-sm-12">                                                                                         
-                                                                            <div class="col-sm-3">
+                                                                                <input type="text" class="form-control" id="cst_ipi" name="cst_ipi" onkeydown="javascript: fMasc( this, mNum );" />
+                                                                            </div>
+                                                                            <div class="col-sm-4" style="padding-right: 0px;">
                                                                                 <label for="bc_ipi">Base de Cálculo</label>
-                                                                                <input type="text" class="form-control" id="bc_ipi" name="bc_ipi"/>
-                                                                            </div>                                                                                   
+                                                                                <input type="text" class="form-control" id="bc_ipi" name="bc_ipi" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row form-group col-sm-12 spacingLeft">
                                                                             <div class="col-sm-3">
                                                                                 <label for="aliq_ipi">Aliquota:</label>
-                                                                                <input type="text" class="form-control" id="aliq_ipi" name="aliq_ipi"/>
-                                                                            </div>                                                                                                    
+                                                                                <input type="text" class="form-control" id="aliq_ipi" name="aliq_ipi" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="v_ipi">Valor:</label>
-                                                                                <input type="text" class="form-control" id="v_ipi" name="v_ipi"/>
-                                                                            </div>                                                                                                    
+                                                                                <input type="text" class="form-control" id="v_ipi" name="v_ipi" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="outras_ipi">Outras:</label>
-                                                                                <input type="text" class="form-control" id="outras_ipi" name="outras_ipi"/>
-                                                                            </div>     
-                                                                            <div class="col-sm-3">
+                                                                                <input type="text" class="form-control" id="outras_ipi" name="outras_ipi" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
+                                                                            <div class="col-sm-3" style="padding-right: 0px;">
                                                                                 <label for="isento_ipi">Isentas:</label>
-                                                                                <input type="text" class="form-control" id="isento_ipi" name="isento_ipi"/>
-                                                                            </div>     
+                                                                                <input type="text" class="form-control" id="isento_ipi" name="isento_ipi" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                         </div>
-                                                                    </fieldset>                                                                                            
+                                                                    </fieldset>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">  
-                                                                    <fieldset> 
-                                                                        <legend> PIS </legend>                                                                           
-                                                                        <div class="row form-group col-sm-12">   
+                                                                <div class="row form-group col-lg-12 spacing">
+                                                                    <fieldset>
+                                                                        <legend> PIS </legend>
+                                                                        <div class="row form-group col-sm-12 spacing">
                                                                             <div class="col-sm-3">
                                                                                 <label for="cst_pis">CST:</label>
-                                                                                <input type="text" class="form-control" id="cst_pis" name="cst_pis"/>
-                                                                            </div>                                                                                       
+                                                                                <input type="text" class="form-control" id="cst_pis" name="cst_pis" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="bc_pis">Base de Cálculo</label>
-                                                                                <input type="text" class="form-control" id="bc_pis" name="bc_pis"/>
-                                                                            </div>                                                                                   
+                                                                                <input type="text" class="form-control" id="bc_pis" name="bc_pis" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="aliq_pis">Aliquota:</label>
-                                                                                <input type="text" class="form-control" id="aliq_pis" name="aliq_pis"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
+                                                                                <input type="text" class="form-control" id="aliq_pis" name="aliq_pis" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
+                                                                            <div class="col-sm-3 " style="padding-right: 0px;">
                                                                                 <label for="v_pis">Valor:</label>
-                                                                                <input type="text" class="form-control" id="v_pis" name="v_pis"/>
+                                                                                <input type="text" class="form-control" id="v_pis" name="v_pis" onKeyPress="return(moeda(this,'.',',',event))" />
                                                                             </div>
                                                                         </div>
-                                                                    </fieldset>                                                                                            
+                                                                    </fieldset>
                                                                 </div>
-                                                                <div class="row form-group col-lg-12">  
-                                                                    <fieldset> 
-                                                                        <legend> COFINS </legend>                                                                           
-                                                                        <div class="row form-group col-sm-12">   
+                                                                <div class="row form-group col-lg-12 spacing">
+                                                                    <fieldset>
+                                                                        <legend> COFINS </legend>
+                                                                        <div class="row form-group col-sm-12 spacing">
                                                                             <div class="col-sm-3">
                                                                                 <label for="cst_cofins">CST:</label>
-                                                                                <input type="text" class="form-control" id="cst_cofins" name="cst_cofins"/>
-                                                                            </div>                                                                                       
+                                                                                <input type="text" class="form-control" id="cst_cofins" name="cst_cofins" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="bc_cofins">Base de Cálculo</label>
-                                                                                <input type="text" class="form-control" id="bc_cofins" name="bc_cofins"/>
-                                                                            </div>                                                                                   
+                                                                                <input type="text" class="form-control" id="bc_cofins" name="bc_cofins" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
                                                                             <div class="col-sm-3">
                                                                                 <label for="aliq_cofins">Aliquota:</label>
-                                                                                <input type="text" class="form-control" id="aliq_cofins" name="aliq_cofins"/>
-                                                                            </div>                                                                                                    
-                                                                            <div class="col-sm-3">
+                                                                                <input type="text" class="form-control" id="aliq_cofins" name="aliq_cofins" onKeyPress="return(moeda(this,'.',',',event))" />
+                                                                            </div>
+                                                                            <div class="col-sm-3" style="padding-right: 0px;">
                                                                                 <label for="v_cofins">Valor:</label>
-                                                                                <input type="text" class="form-control" id="v_cofins" name="v_cofins"/>
+                                                                                <input type="text" class="form-control" id="v_cofins" name="v_cofins" onKeyPress="return(moeda(this,'.',',',event))" />
                                                                             </div>
                                                                         </div>
-                                                                    </fieldset>                                                                                            
+                                                                    </fieldset>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                    </tr> -->
+                                                    </tr>
                                                 </tbody>
                                             </table>
                                         </div>
