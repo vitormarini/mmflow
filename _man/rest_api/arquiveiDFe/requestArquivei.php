@@ -18,7 +18,7 @@
  */
 function consultaArquivei($xInicial, $xFinal, $xTipo){
 
-
+   
     include_once 'requestBasicData.php';
     error_reporting(1);
 
@@ -33,7 +33,8 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
         #Transformando o array em Json
         $dataJson = json_encode($dataPost);
 
-        $endPoint      = "/v1/$tipo/received";
+        // $endPoint      = "/v1/$tipo/received";//"/v1/cte/taker";
+        $endPoint      = $tipo;
 
         #Dados do header
         $headers = array(
@@ -58,6 +59,8 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
             CURLOPT_HTTPHEADER => $headers
         ]);
 
+        // print "<pre>1"; print_r($dataRet);
+        // exit;
         // Armazena o retorno
         $response = curl_exec($curl);
 

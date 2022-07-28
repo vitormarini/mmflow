@@ -1,89 +1,57 @@
 <?php
 
-// include_once('../../_man/_aux.php');
-// include_once('../../_conection/_conect.php');
-
-
-
-//$dados    = loadFile($caminho,$chave_acesso);
-// $json_nf  = json_encode($dados);
-
-// if($dados){
-//     # valida duplicidade
-    // if(duplicity($chave_acesso)){
-    //     $bd->Execute("SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");
-    // }
-// }
-
 /* PRINCIPAL */
-function loadFile($xml,$count,$id_dfe){
-    // global $bd;
+function loadFile($xml){
     $chave_acesso = $xml->infProt->chNFe;
-
-
-    // print "<pre>";print_r($xml);
-    // exit("tamara 1");
-
-
-    # Verifica se o arquivo é XML
-    // if(!isXmlFile($chave_acesso)){throw new Exception("Ops! Somente arquivos .xml podem ser carregados.");}
-          
-    # Verifica se o arquivo existe
-    // if (file_exists($arquivo)) {
-        # Carrega arquivo
         
-        # Verifica se o xml está autorizado para uso pela sefaz
-        if(!findProtocol($xml)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
+    # Verifica se o xml está autorizado para uso pela sefaz
+    if(!findProtocol($xml)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
 
-        $xml_ = $xml->protNFe;
-        $xml  = $xml->NFe->infNFe;
-        
-        # tag @attributes
-        $versao = (string) $xml->attributes()->versao;
-        $id     = (string) $xml->attributes()->Id;        
+    $xml_ = $xml->protNFe;
+    $xml  = $xml->NFe->infNFe;
+    
+    # tag @attributes
+    $versao = (string) $xml->attributes()->versao;
+    $id     = (string) $xml->attributes()->Id;
 
-        #tags
-        $ide     = $xml->ide;       # Identificação
-        $emit    = $xml->emit;      # Emitente
-        $dest    = $xml->dest;      # Destinatário 
-        $det     = $xml->det;       # Dados Produtos/Serviços 
-        $total   = $xml->total;     # Total
-        $transp  = $xml->transp;    # Transportadora/Transporte
-        $cobr    = $xml->cobr;      # Cobrança
-        $pag     = $xml->pag;       # Pagamento
-        $infAdic = $xml->infAdic;   # Informações adicionais 
-        $infAdic = $xml->infAdic;   # Informações adicionais 
+    #tags
+    $ide     = $xml->ide;       # Identificação
+    $emit    = $xml->emit;      # Emitente
+    $dest    = $xml->dest;      # Destinatário 
+    $det     = $xml->det;       # Dados Produtos/Serviços 
+    $total   = $xml->total;     # Total
+    $transp  = $xml->transp;    # Transportadora/Transporte
+    $cobr    = $xml->cobr;      # Cobrança
+    $pag     = $xml->pag;       # Pagamento
+    $infAdic = $xml->infAdic;   # Informações adicionais 
+    $infAdic = $xml->infAdic;   # Informações adicionais 
 
-       
-        
-        # monta o array da NFe 
-        $dados = array(
-             'nome_arquivo' => $id
-            ,'versao'       => $versao            
-            ,'ide'          => dadosIDE($ide)
-            ,'emit'         => dadosEMIT($emit)
-            ,'dest'         => dadosDEST($dest)
-            ,'det'          => dadosDET($det)
-            ,'total'        => dadosTOTAL($total)
-            ,'transp'       => dadosTRANSP($transp)
-            ,'cobr'         => dadosCOBR($cobr)
-            ,'pag'          => dadosPAG($pag)
-            ,'inf_adic'     => $infAdic
-            ,'prot_nfe'     => dadosProtNFe($xml_)
-        );
-
-        # Retorno 
-        return $dados;        
-    // }else{
-    //     exit("NÃO EXISTENTE");
-    // }
+    # monta o array da NFe 
+    $dados = array(
+         'nome_arquivo' => $id
+        ,'versao'       => $versao            
+        ,'ide'          => dadosIDE($ide)
+        ,'emit'         => dadosEMIT($emit)
+        ,'dest'         => dadosDEST($dest)
+        ,'det'          => dadosDET($det)
+        ,'total'        => dadosTOTAL($total)
+        ,'transp'       => dadosTRANSP($transp)
+        ,'cobr'         => dadosCOBR($cobr)
+        ,'pag'          => dadosPAG($pag)
+        ,'inf_adic'     => $infAdic
+        ,'prot'         => dadosProtNFe($xml_)
+    );
+    # Retorno Principal
+    return $dados;
 }
 
+# Verifica se a extensão é XML
 function isXmlFile($chave_acesso){
     if(pathinfo(strtolower($chave_acesso), PATHINFO_EXTENSION) == "xml") return true;
     else false;
 }
 
+# Verifica se o XML é valido pela SEFAZ
 function findProtocol($nfe){
     foreach($nfe->children() as $child){
         if($child->getName() == "protNFe"){
@@ -334,9 +302,6 @@ function dadosinfAdic($infAdic){
 }
 
 function dadosProtNFe($protNFe){
-    global $bd;
-    global $user_id;
-
     $versao_ = $protNFe->attributes()->versao;
     $protNFe = $protNFe->infProt;
 
@@ -351,10 +316,6 @@ function dadosProtNFe($protNFe){
        ,'digval'                    => (string) $protNFe->digVal
        ,'cstat'                     => (string) $protNFe->cStat
        ,'xmotivo'                   => (string) $protNFe->xMotivo
-    //    ,'nsu'                       => (int) $x
-    //    ,'id_dfe'                    => (string) $id_dfe
-    //    ,'xml'                       => $xml
     );
-
     return $arr;
 }
