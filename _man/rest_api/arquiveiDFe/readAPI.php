@@ -8,6 +8,7 @@
 include_once 'requestArquivei.php';
 include_once("../../../response/_readerXML/readerDANFE.php");
 include_once("../../../_conection/_conect.php");
+include_once("../../../_man/_aux.php");
 
 session_start();
 $user_id = $_SESSION['user_id'];
@@ -21,23 +22,27 @@ $user_id = $_SESSION['user_id'];
  * @ - $xTipo    : tipoda consulta ( TIPOS VÁLIDOS nfe, nfse )
  */
 
-$arrxTipo = ['nfe','nfse','cte','events'];
-$y = 0;
-foreach($arrxTipo as $tp){
-    $nsu = $bd->Execute($sql = "SELECT lastnsu FROM t_dfe_service tds WHERE tipo = UPPER('{$tp}') ORDER BY id_t_dfe_service DESC LIMIT 1;");
-    $xFinal = !empty($nsu->fields['lastnsu']) ? $nsu->fields['lastnsu'] : 50;
+function readAPI($readAPI,$tp,$xFinal,$nsu){
+    global $bd;
+    global $user_id;
 
-    $xTipo = ['/v1/nfe/received','/v1/events/nfe','/v1/nfse/received','/v1/cte/taker'];
+    error_reporting(1);
 
-    # Função que retorna a consulta 
-    $readAPI = consultaArquivei("100","$xFinal","$xTipo[$y]");
+    # Decodificação
+    $readAPI = json_decode($readAPI,true);
 
     #Tratando os retornos.
-    $confirmRet = strtoupper($readAPI["retorno_mensagem"]);
-    $dataRet    = $readAPI["data"];
+    $confirmRet = strtoupper($readAPI['status']["message"]);
+    $dataRet    = $readAPI["data"];       
+    
+    print "<pre>"; print_r($readAPI);
+    // print "<pre>"; print_r($dataRet);
+    exit;
 
     #Lendo o retorno dos arrays
-    if ( $confirmRet == "OK" ){
+    if ( $confirmRet == "OK" ){        
+
+        $xFinal += 50;
 
         $bd->Execute($sql = "
             INSERT INTO public.t_dfe_service (
@@ -50,11 +55,15 @@ foreach($arrxTipo as $tp){
         $x = 1;
         foreach ($dataRet as $retXml){
 
+            // print "<pre>"; print_r("tamara aq");
+            // print "<pre>"; print_r($retXml['xml']);
+            //     exit;
+
             #Conferir a chave e o XML se já não estão gravados no banco
-            $chave  = $retXml->access_key;
+            $chave_acesso  = $retXml['access_key'];
 
             #Validar o XML 
-            $xmlRet = $retXml->xml;
+            $xmlRet = $retXml['xml'];
 
             #Descompactar o XMl e Ler - Conferindo a existencia, validação do banco
             /**
@@ -63,21 +72,31 @@ foreach($arrxTipo as $tp){
             $xmlDoc  = simplexml_load_string(base64_decode($xmlRet));
             $xmlJson = json_decode(json_encode((array)$xmlDoc,true));
 
+            // print "<pre>xml "; print_r($xmlRet);
+            //     exit;
+
             if( $tp == "nfe" ){
                 /** Lendo o XML */
                 $xml = loadFile($xmlDoc);
 
                 /** Montando array para adicionar na tabela t_d */
-                $xml['prot']["nsu"]     = (string) $nsu->fields['lastnsu'] + $x;
+                $xml['prot']["nsu"]     = (string) $nsu + $x;
                 $xml['prot']["id_dfe"]  = (string) $id_dfe;
                 $xml['prot']["xml"]     = $xmlDoc;
 
                 # Transforma o array em json para gravação do banco
                 $json_nf = json_encode($xml,true);
 
+                // print "<pre>"; print_r($json_nf);
+                // exit;
+
                 if(duplicity($chave_acesso)){
-                    $bd->Execute("SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");
+                    $bd->Execute($sql = "SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");            
+                    print "<pre>SQL "; print $sql;                        
                 }
+
+                // print "<pre>id "; print $sql;
+                // exit("tamara");
             }else if( in_array($tp,array("cte","events")) ){
                 if( $tp == "cte" ){
                     $versao = $xmlDoc->protCTe->attributes()->versao;
@@ -97,7 +116,7 @@ foreach($arrxTipo as $tp){
                    ,'digval'        => (string) $prot->digVal
                    ,'cstat'         => (string) $prot->cStat
                    ,'xmotivo'       => (string) $prot->xMotivo
-                   ,'nsu'           => (string) $nsu->fields['lastnsu'] + $x
+                   ,'nsu'           => (string) $nsu + $x
                    ,'id_dfe'        => (string) $id_dfe
                    ,'xml'           => $xmlDoc
                    ,'tpevento'      => (string) $prot->tpEvento
@@ -106,27 +125,27 @@ foreach($arrxTipo as $tp){
                    ,'corgao'        => (string) $prot->cOrgao
                    ,'cnpjdest'      => (string) $prot->CNPJDest
                 );
-            }
+            }            
             
             $json = str_replace("'", "''", json_encode($xml['prot'],true));
             $bd->Execute($sql = "SELECT crud_t_dfe_service_docs_('INSERT_','1','{$json}');");
+            print "<pre>SQL2 "; print $sql;    
 
             $x++;
         }
+        // print "OK aq";
     }else{
-        print $readAPI["retorno_mensagem"];
+        print $readAPI['status']["message"];
         exit;
     }
-    $y++;
 }
-print "OK";
-exit;
 
 # Função que verifica a duplicidade da NFe
 function duplicity($chave_acesso){
     global $bd;
-    $chave_acesso = explode(".",$chave_acesso)[0];    
-    $nf = $bd->Execute($sql = "SELECT * FROM t_escrita_fiscal WHERE REPLACE(ef_ident,'NFe','') = '{$chave_acesso}'; --ef_num_nf = '76858' AND ef_cnpj_emit = '57208480000106' AND ef_tipo_op = '1';");
+    $chave_acesso = explode(".",$chave_acesso)[0];
+
+    $nf = $bd->Execute($sql = "SELECT * FROM t_escrita_fiscal WHERE REPLACE(ef_ident,'NFe','') = '{$chave_acesso}';");
     if($nf->RecordCount() > 0)return false;
     
     return true;        

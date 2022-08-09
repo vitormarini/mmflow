@@ -226,16 +226,16 @@
                         <?php
 
                         $dados = $bd->Execute("
-                                SELECT ef_id 
-                                    , (ef_cnpj_emit ||' - '|| ef_razao_social_emit) AS emit_nfe
-                                    , (ef_num_nf ||'/'||ef_serie) AS nf_serie
-                                    , moedabrasil(ef_v_nf::numeric) AS ef_v_nf
-                                    , databrasil(ef_dt_emissao::date) AS ef_dt_emissao
-                                    , ef_status 
-                                    , databrasil(ef_data_hora::date) AS ef_data_hora  
-                                    , SUBSTR(ef_ident,4,44) AS ef_ident
-                                FROM t_escrita_fiscal tef 
-                                ORDER BY 1 DESC;");
+                            SELECT ef_id 
+                                , (ef_cnpj_emit ||' - '|| ef_razao_social_emit) AS emit_nfe
+                                , (ef_num_nf ||'/'||ef_serie) AS nf_serie
+                                , moedabrasil(ef_v_nf::numeric) AS ef_v_nf
+                                , databrasil(ef_dt_emissao::date) AS ef_dt_emissao
+                                , ef_status 
+                                , databrasil(ef_data_hora::date) AS ef_data_hora  
+                                , SUBSTR(ef_ident,4,44) AS ef_ident
+                            FROM t_escrita_fiscal tef 
+                            ORDER BY 1 DESC;");
 
                         while (!$dados->EOF) {
                             print '
@@ -250,7 +250,7 @@
                                         <td class="text-center">  </td>
                                         <td class="text-center">' . $dados->fields['ef_data_hora']   . '</td>
                                         <td class="text-center btnTable">
-                                                <button class="openDetalhes btn btn-info btn-sm btnStyle"> <span class="fas fa-search openDetalhes"></span></button>
+                                                <button class="openDetalhes btn btn-info btn-sm btnStyle" id="'. $dados->fields['ef_id'] .'"> <span class="fas fa-search"></span></button>
                                                 <button class="btn btn-info btn-sm btnStyle"><span class="fas fa-tags"></span></button>
                                                 <button class="btn btn-info btn-sm btnStyle"><span class="far fa-paper-plane"></span></button>
                                                 <button class="btn btn-info btn-sm btnStyle"><span class="far fa-map"></span></div>
@@ -339,34 +339,63 @@
 
         $("#btnConsultar").on("click", function() {
             console.log("tamara");
+            $("#titulo_modal_success").html("Aguarde, consulta sendo realizada!");
+            $("#modal_success").modal("show");
             $.ajax({
-                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/ciot/requestCIOT_ListaEmpresas.php",
+                url: "<?= $_SERVER['localhost'] ?>/mmflow/_man/rest_api/arquiveiDFe/requestArquivei.php",
                 method: "post",
-                dataType: "json",
+                dataType: "text",
                 data: {
-                    op: "retorna_detalhes",
-                    chave_acesso: "35220307705871000826550010000327711195994565"
+                    op: "retorna_detalhes"
+                },
+                error: function () {
+                    $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
+                    $("#modal_erro").modal("show");
                 },
                 success: function(retorno) {
                     console.log(retorno);
+                    if (retorno.trim() == "OK") {
+                        console.log( "retornou ok " );
+                        $("#titulo_modal_success").html("Operação realizada com sucesso!");
+                        $("#modal_success").modal("show");
+                        setTimeout(function () {
+                            $("#modal_success").modal("hide");
+                            history.go(0);
+                        }, 1000);
+                    } else {
+                        $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno );
+                        $("#modal_erro").modal("show");
+                    }
                 }
             });
         });
 
         /** ABRE O MODAL DETALHES DA NOTA */
+        var _tr_td = "";
+        var id;
         $(document).on("click", ".openDetalhes", function() {
+            id = this.id;
+            $("#table_modal tbody").empty();
+            $(document).find("#dados-gerais-tab,#dados-gerais").prop("selected",true);
             $("#modalDetalhesNota").modal("show");
         });
 
+        /* FECHA O MODAL DAS NOTAS */
+        $('#modalDetalhesNota').on('hidden.bs.modal', function(event) {
+            $(this).removeData('bs.modal');
+        });
+
+
         /* ABRE O MODAL DAS NOTAS */
         $('#modalDetalhesNota').on('show.bs.modal', function(event) {
+            _tr_td = "";
             $.ajax({
                 url: $("#frmDados").prop("action"),
                 method: "post",
                 dataType: "json",
                 data: {
                     op: "retorna_detalhes",
-                    chave_acesso: "35220307705871000826550010000327711195994565"
+                    id: id
                 },
                 success: function(retorno) {
                     var dados = Object.keys(retorno); // Array com as chaves do array
@@ -380,7 +409,7 @@
                     // Loop do array item
                     var i = 0;
                     var item;
-                    var _tr_td;
+                    
                     var _num_item;
                     $.each(retorno.item, function() {
                         item_key = Object.keys(retorno.item[i]); // Array com as chaves do array do item
@@ -392,16 +421,16 @@
 
                             _tr_td = '\n\
                             <td>\n\
-                                <a href="#" id="show_' + _num_item + '"> Show Extra </a>\n\
+                                <button class="openDetalhes btn btn-info btn-sm btnStyle" id="show_'+ _num_item +'" title="Clique para visualizar mais."><span class="fas fa-plus"></span></button>\n\
                             </td>\n\
-                            <td>' + item["cod_prod"] + '</td>\n\
-                            <td>' + item["descricao"] + '</td>\n\
-                            <td>' + item["unidade"] + '</td>\n\
-                            <td>' + item["quantidade"] + '</td>\n\
-                            <td>' + item["v_unitario"] + '</td>\n\
-                            <td>' + item["v_produto"] + '</td>\n\
-                            <td>' + item["cfop"] + '</td>\n\
-                            <td>' + _num_item + '</td>';
+                            <td>' + item["cod_prod"]    + '</td>\n\
+                            <td>' + item["descricao"]   + '</td>\n\
+                            <td>' + item["unidade"]     + '</td>\n\
+                            <td>' + item["quantidade"]  + '</td>\n\
+                            <td>' + item["v_unitario"]  + '</td>\n\
+                            <td>' + item["v_produto"]   + '</td>\n\
+                            <td>' + item["cfop"]        + '</td>\n\
+                            <td>' + _num_item           + '</td>';
                         });
                         /* chama a função que alimenta a tabela dos itens */
                         _tr(_tr_td, _num_item, retorno.item[i]);
@@ -412,12 +441,19 @@
         });
 
         /** ABRE OS DETALHES DOS ITENS NO MODAL */
-        $(document).on("a[id^=show_]").click(function(event) {
+        $(document).on("button[id^=show_]").click(function(event) {
             event.preventDefault();
             var target = $(document).find(event.target);
             var id = target.attr('id').substr(5);
             $(document).find("#extra_" + id).slideToggle("slow");
         });
+
+        // $(document).on("button[class^=show_]").click(function(event) {
+        //     event.preventDefault();
+        //     var target = $(document).find(event.target);
+        //     var id = target.attr('id').substr(5);
+        //     $(document).find("#extra_" + id).slideToggle("slow");
+        // });
     });
 
     function _tr(corpo_div, valor, item) {

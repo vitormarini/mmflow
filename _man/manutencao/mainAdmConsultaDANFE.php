@@ -16,8 +16,11 @@ $op      = $_SESSION['op'];          //Ação
 $p       = $_SESSION['p'];           //Página da Busca
 $r       = $_SESSION['tela_atual'];  //Tela Atual
 $b       = $_SESSION['buscas'];      //Filtros de buscas
-$id      = $_SESSION['id'];          //Filtros de buscas
+
 $dados   = $_POST;
+
+
+$id      = !empty($_SESSION['id']) ? $_SESSION['id'] : $dados['id'];          //ID
 $retorno = "ERRO";
 
 if( $dados['op'] == "retorna_detalhes" ){
@@ -48,7 +51,7 @@ if( $dados['op'] == "retorna_detalhes" ){
             , ef_v_pis                  , ef_v_cofins                   , ef_v_outros                   , ef_v_nf
             , ef_v_trib                 , ef_inf_adic
         FROM t_escrita_fiscal ef
-        --WHERE ef_id = {$id};");
+        WHERE ef_id = {$id};");
 
     $item = $bd->Execute("
         SELECT efi_id               , efi_ef_id             , efi_num_item              , efi_cod_prod              , efi_cod_ean
@@ -61,7 +64,7 @@ if( $dados['op'] == "retorna_detalhes" ){
             , efi_bc_pis            , efi_aliq_pis          , efi_v_pis                 , efi_cst_cofins            , efi_bc_cofins
             , efi_aliq_cofins       , efi_v_cofins
         FROM t_escrita_fiscal_item i
-        WHERE efi_ef_id = 11
+        WHERE efi_ef_id = {$id}
         ORDER BY 1;");
 
     $arr_item = array();

@@ -5,7 +5,7 @@ function loadFile($xml){
     $chave_acesso = $xml->infProt->chNFe;
         
     # Verifica se o xml está autorizado para uso pela sefaz
-    if(!findProtocol($xml)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
+    // if(!findProtocol($xml)){throw new Exception("Ops! Não foi possível processar a nota fiscal pois ela não está autorizado pela sefaz.");}
 
     $xml_ = $xml->protNFe;
     $xml  = $xml->NFe->infNFe;

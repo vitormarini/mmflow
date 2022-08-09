@@ -6,6 +6,12 @@
  * Data: 06/07/2022
 */
 
+include_once("./../../../_conection/_conect.php");
+include_once("./readAPI.php");
+
+session_start();
+$user_id = $_SESSION['user_id'];
+
 #Exemplo de chamada
 // $consultaNfe = consultaArquivei("100","50","nfe");  
 
@@ -16,16 +22,21 @@
  * @ - $xFinal   : valor final, semelhante ao LastNSU
  * @ - $xTipo    : tipoda consulta ( TIPOS VÁLIDOS nfe, nfse )
  */
-function consultaArquivei($xInicial, $xFinal, $xTipo){
 
+
+
+// $xTipo = ['/v1/nfe/received','/v1/events/nfe','/v1/nfse/received','/v1/cte/taker'];
+$xTipo = ['/v1/nfe/received'];
+
+# Função que retorna a consulta 
+$readAPI = consultaArquivei();
+
+function consultaArquivei(){
+    global $bd;
    
     include_once 'requestBasicData.php';
     error_reporting(1);
-
-    $inicial = ( isset($xInicial) && !empty($xInicial) ? $xInicial : "0");
-    $final   = ( isset($xFinal)   && !empty($xFinal)   ? $xFinal   : "50");
-    $tipo    = ( isset($xTipo)    && !empty($xTipo)    ? $xTipo    : "nfe");
-
+    
     try {
         #Dados para o Post 
         $dataPost = "";
@@ -45,28 +56,53 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
 
         #Definindo os limites da pesquisa
         // $cursorLimit = "?cursor=$inicial&limit=$final";
-        $cursorLimit = "?cursor=$inicial&limit=$final";
+        // $cursorLimit = "?cursor=$inicial&limit=$final";
         // $cursorLimit = "?from=2019-09-12&to=now&cursor=$inicial&limit=$final";
 
         #Inicia a chamada do CURL
         $curl = curl_init();
 
-        // Configura os parâmetros para a chamada
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $urlRequest.$endPoint.$cursorLimit, 
-            CURLOPT_RETURNTRANSFER => 1,    
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_HTTPHEADER => $headers
-        ]);
+        // $arrxTipo = ['nfe','nfse','cte','events'];
+        $arrxTipo = ['nfe'];
+        $t = 0;
+        foreach($arrxTipo as $tp){
 
-        // print "<pre>1"; print_r($dataRet);
-        // exit;
-        // Armazena o retorno
-        $response = curl_exec($curl);
+            # Array com o complemento da URL
+            $xTipo = ['/v1/nfe/received','/v1/events/nfe','/v1/nfse/received','/v1/cte/taker'];
+
+            $nsu = $bd->Execute($sql = "SELECT lastnsu FROM t_dfe_service tds WHERE tipo = UPPER('{$tp}') ORDER BY id_t_dfe_service DESC LIMIT 1;");
+            $xFinal = !empty($nsu->fields['lastnsu']) ? $nsu->fields['lastnsu'] : 50;
+
+            $xInicial = $nsu->fields['lastnsu'] + 50;
+
+            $inicial = ( isset($xInicial) && !empty($xInicial)  ? $xInicial : "100");
+            $final   = ( isset($xFinal)   && !empty($xFinal)    ? $xFinal   : "50");
+            $tipo    = ( isset($xTipo)    && !empty($xTipo[$t]) ? $xTipo[$t]    : "nfe");
+           
+            $cursorLimit = "?cursor=$inicial&limit=50";
+
+            // Configura os parâmetros para a chamada
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $urlRequest.$xTipo[$t].$cursorLimit, 
+                CURLOPT_RETURNTRANSFER => 1,    
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HTTPHEADER => $headers
+            ]);
+
+            // Armazena o retorno
+            $response = curl_exec($curl);
+
+            // print "<pre>"; print_r($response);
+            // print "<pre>"; print_r($dataRet);
+            // exit;
+            
+            readAPI($response,$tp,$xFinal,$nsu->fields['lastnsu']);
+        }
+        $t++;
 
         #Coleta informações do Curl
         curl_getinfo($curl);
-
+        
         #Coleta os erros do retorno
         curl_errno($curl);
 
@@ -75,6 +111,8 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
 
         #Tratando o retorno
         $dataRet = json_decode($response);
+
+        // print "<pre>"; print_r($dataRet);
 
         #Tratamento do retorno
         if ( $dataRet->status->code == "200" ){
@@ -96,7 +134,7 @@ function consultaArquivei($xInicial, $xFinal, $xTipo){
                 "retorno_mensagem"  => $dataRet->status->message
             );
         }
-
+        print "OK";
     }catch(Exception $e){
         $retorno = "ERROR";    
     }
