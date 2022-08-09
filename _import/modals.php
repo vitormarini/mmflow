@@ -146,7 +146,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="margin-bottom-10">
-                    <h2 class="modal-title text-center text-success" id="titulo_modal_success">Operação realizada com sucesso!</h2>
+                    <h2 class="modal-title text-center text-success" id="titulo_modal_success"> Operação realizada com sucesso!</h2>
                 </div>
             </div>
 
@@ -250,7 +250,7 @@
                             <div class="card-header p-0 pt-1">
                                 <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" id="dados-gerais-tab" data-toggle="pill" href="#dados-gerais" role="tab" aria-controls="dados-gerais" aria-selected="true"> NFe </a>
+                                        <a class="nav-link active" id="dados-gerais-tab" data-toggle="pill" href="#dados-gerais" role="tab" aria-controls="dados-gerais" aria-selected="true" active> NFe </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="dados-emitente-tab" data-toggle="pill" href="#dados-emitente" role="tab" aria-controls="dados-emitente" aria-selected="false"> Emitente </a>
@@ -390,7 +390,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-emitente" role="tabpanel" aria-labelledby="dados-emitente-tab">
+                                    <div class="tab-pane" id="dados-emitente" role="tabpanel" aria-labelledby="dados-emitente-tab">
                                         <fieldset>
                                             <legend> Emitente </legend>
                                             <div class="row form-group col-lg-12">
@@ -464,7 +464,7 @@
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-produtos-servicos" role="tabpanel" aria-labelledby="dados-produtos-servicos-tab">
+                                    <div class="tab-pane" id="dados-produtos-servicos" role="tabpanel" aria-labelledby="dados-produtos-servicos-tab">
                                         <div class="row form-group col-lg-12">
                                             <table id="table_modal" class="table table-bordered table-hover">
                                                 <thead>
@@ -475,13 +475,13 @@
                                                         <th class="text-center" width="05%"> Unid. </th>
                                                         <th class="text-center" width="09%"> Qtde. </th>
                                                         <th class="text-center" width="09%"> Valor Unit. </th>
-                                                        <th class="text-center" width="09%"> Valor Total </th>
+                                                        <th class="text-center" width="09%"> Total </th>
                                                         <th class="text-center" width="05%"> CFOP </th>
                                                         <th class="text-center" width="25%"> Nat. Operação </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <td>
+                                                    <!--<td>
                                                         <a href="#" id="show_1"> Show Extra </a>
                                                     </td>
                                                     <td class="cod_prod"> codigo </td>
@@ -706,12 +706,12 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                    </tr>
+                                                    </tr>-->
                                                 </tbody>
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-totais" role="tabpanel" aria-labelledby="dados-totais-tab">
+                                    <div class="tab-pane" id="dados-totais" role="tabpanel" aria-labelledby="dados-totais-tab">
                                         <div class="row form-group col-lg-12">
                                             <fieldset class="col-lg-12">
                                                 <legend> ICMS </legend>
@@ -871,7 +871,7 @@
                                             </fieldset>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-transporte" role="tabpanel" aria-labelledby="dados-transporte-tab">
+                                    <div class="tab-pane" id="dados-transporte" role="tabpanel" aria-labelledby="dados-transporte-tab">
                                         <div class="row form-group col-lg-12">
                                             <fieldset class="col-lg-12">
                                                 <legend class="col-lg-12"> DADOS DO TRANSPORTE </legend>
@@ -900,7 +900,7 @@
                                             </fieldset>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-duplicata" role="tabpanel" aria-labelledby="dados-duplicata-tab">
+                                    <div class="tab-pane" id="dados-duplicata" role="tabpanel" aria-labelledby="dados-duplicata-tab">
                                         <div class="row form-group col-lg-14" style="margin-left: 30px;">
                                             <div class="col-md-9">
                                                 <h4>Duplicatas a pagar</h4>
@@ -925,7 +925,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="dados-info-gerais" role="tabpanel" aria-labelledby="dados-info-gerais-tab">
+                                    <div class="tab-pane" id="dados-info-gerais" role="tabpanel" aria-labelledby="dados-info-gerais-tab">
                                         <div class="row form-group col-lg-12">
                                             <fieldset class="col-lg-12">
                                                 <legend class="col-lg-12"> INFORMAÇÕES ADICIONAIS </legend>
