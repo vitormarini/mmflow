@@ -375,8 +375,6 @@
         var id;
         $(document).on("click", ".openDetalhes", function() {
             id = this.id;
-            $("#table_modal tbody").empty();
-            $(document).find("#dados-gerais-tab,#dados-gerais").prop("selected",true);
             $("#modalDetalhesNota").modal("show");
         });
 
@@ -389,6 +387,8 @@
         /* ABRE O MODAL DAS NOTAS */
         $('#modalDetalhesNota').on('show.bs.modal', function(event) {
             _tr_td = "";
+            $("#table_modal tbody").empty();
+            $(document).find("#dados-gerais-tab,#dados-gerais").prop("selected",true);
             $.ajax({
                 url: $("#frmDados").prop("action"),
                 method: "post",
