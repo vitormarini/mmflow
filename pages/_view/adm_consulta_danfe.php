@@ -349,6 +349,7 @@
                     op: "retorna_detalhes"
                 },
                 error: function () {
+                    $("#modal_success").modal("hide");
                     $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
                     $("#modal_erro").modal("show");
                 },
@@ -363,6 +364,7 @@
                             history.go(0);
                         }, 1000);
                     } else {
+                        $("#modal_success").modal("hide");
                         $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno );
                         $("#modal_erro").modal("show");
                     }

@@ -8,15 +8,13 @@ function salvar(ret) {
             $("#mensagem_erro").html("Ocorreu um erro imprevisto ao enviar os dados para o banco. Por favor, contate o administrador do sistema.");
             $("#modal_erro").modal("show");
         },
-        success: function (retorno) {                        
+        success: function (retorno) {
             if (retorno == "OK") {
                 $("#modal_success").modal("show");
                 setTimeout(function () {
                     $("#modal_success").modal("hide");
                     location.href = "" + ret;
                 }, 500);
-                console.log( "tamara dalvar" );
-                console.log( ret );
             } else {
                 $("#mensagem_erro").html("Não foi possível completar a operação, tente novamente!<br/><br/>" + retorno.mensagem);
                 $("#modal_erro").modal("show");
@@ -31,7 +29,7 @@ function salvar(ret) {
  * @returns {String}
  */
 function validateSave(page) {
-    $(this).prop("disabled",true);
+    $(this).prop("disabled", true);
     $.ajax({
         url: "./_man/validateData.php",
         method: "post",
@@ -41,8 +39,8 @@ function validateSave(page) {
             validate: "liberaBtnSalvar"
         },
         success: function (retorno) {
-            console.log( "retorno" );
-            console.log( page );
+            console.log("retorno");
+            console.log(page);
             if (retorno == "OK") {
                 salvar(page);
             } else {
@@ -53,22 +51,22 @@ function validateSave(page) {
     });
 }
 
-function retornaEmpresas(cnpj){    
+function retornaEmpresas(cnpj) {
     $.ajax({
         url: "/mmflow/_man/search/_searchSelect.php",
         method: "post",
         dataType: "json",
         data: {
-            busca : "t_empresas",
-            cnpj  : cnpj
+            busca: "t_empresas",
+            cnpj: cnpj
         },
         success: function (retorno) {
             if (retorno.dados[0]['status'] == "OK") {
-                $("#empresa_modal").html(retorno.dados[0]['html']);                
+                $("#empresa_modal").html(retorno.dados[0]['html']);
             }
-       }
+        }
     });
-    return false;   
+    return false;
 }
 
 function login() {
@@ -78,9 +76,9 @@ function login() {
         dataType: "text",
         data: $("#frmDados").serialize(),
         success: function (retorno) {
-            
+
             retornaEmpresas($("#cnpj").val());
-            
+
             if (retorno == "OK") {
                 //location.href = "menu_sys.php";                
                 $("#modal_empresas").modal("show");
@@ -153,9 +151,9 @@ function validaData(v1, v2, v3, v4, v) {
 }
 
 function selecionaEmpresa(retorno) {
-    
+
     retornaEmpresas(retorno);
-    
+
     $.ajax({
         url: "./_man/validaLogin.php",
         method: "post",
@@ -166,7 +164,7 @@ function selecionaEmpresa(retorno) {
             empresas_desc: $("#empresa_modal option:selected").text(),
         },
         success: function (retorno) {
-            console.log( retorno );
+            console.log(retorno);
             if (retorno == "login") {
                 setTimeout(function () {
                     $("#modal_empresas").modal("hide");
@@ -183,26 +181,26 @@ function selecionaEmpresa(retorno) {
 }
 
 /* Inicializa a mascara de telefone */
-function mphone(v) {    
+function mphone(v) {
     var r = v.replace(/\D/g, "");
     r = r.replace(/^0/, "");
     if (r.length > 10) {
-      r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+        r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
     } else if (r.length > 5) {
-      r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+        r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
     } else if (r.length > 2) {
-      r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+        r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
     } else {
-      r = r.replace(/^(\d*)/, "($1");
+        r = r.replace(/^(\d*)/, "($1");
     }
     return r;
 }
 
 function maskphone(o, f) {
-    setTimeout(function() {
+    setTimeout(function () {
         var v = mphone(o.value);
         if (v != o.value) {
-          o.value = v;
+            o.value = v;
         }
     }, 1);
 }
@@ -212,28 +210,28 @@ function maskphone(o, f) {
 function mcpfcnpj(v) {
     var r = v.replace(/\D/g, "");
     r = r.replace(/^/, "");
-    
+
     if (r.length > 11) {
         r = r.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, "$1.$2.$3/$4-$5");
-    } else  {
+    } else {
         r = r.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
     }
     return r;
 }
 
 function maskcpfcnpj(o, f) {
-    setTimeout(function() {
+    setTimeout(function () {
         var v = mcpfcnpj(o.value);
         if (v != o.value) {
-          o.value = v;
+            o.value = v;
         }
     }, 1);
 }
 /* Fim */
 
-function btnSalvar(manutencao,parametros,pagina){
+function btnSalvar(manutencao, parametros, pagina) {
     $.ajax({
-        url: './_man/manutencao/'+manutencao,
+        url: './_man/manutencao/' + manutencao,
         method: "post",
         dataType: "text",
         data: parametros,
@@ -243,32 +241,32 @@ function btnSalvar(manutencao,parametros,pagina){
     });
 }
 
-function retorno(pagina){
-    if( pagina == "chamados" ){
+function retorno(pagina) {
+    if (pagina == "chamados") {
         window.open('./pages/_view/adm_chamados.php', '_blank');
     }
 }
 
-function btnImprimir(url,parametros){
+function btnImprimir(url, parametros) {
     /* monta o formulário */
     var mapForm = document.createElement("form");
     mapForm.target = "Map";
     mapForm.method = "POST"; // or "post" if appropriate
-    mapForm.action = "pages/_report/_mpdf/"+url;
+    mapForm.action = "pages/_report/_mpdf/" + url;
     /* monta input */
     var mapInput = document.createElement("input");
     mapInput.type = "text";
     mapInput.name = "parametros";
-    mapInput.value = parametros;   
+    mapInput.value = parametros;
     /* adiciona input em formulário */
-    mapForm.appendChild(mapInput); 
-    
-    
-    document.body.appendChild(mapForm);   
-    mapForm.submit(); 
-    
-    console.log( url );
-    console.log( parametros );
-    
-//    window.open("pages/_report/_mpdf/"+url, "_blank");
+    mapForm.appendChild(mapInput);
+
+
+    document.body.appendChild(mapForm);
+    mapForm.submit();
+
+    console.log(url);
+    console.log(parametros);
+
+    //    window.open("pages/_report/_mpdf/"+url, "_blank");
 }

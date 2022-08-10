@@ -71,7 +71,7 @@ function consultaArquivei(){
             $xTipo = ['/v1/nfe/received','/v1/events/nfe','/v1/nfse/received','/v1/cte/taker'];
 
             $nsu = $bd->Execute($sql = "SELECT lastnsu FROM t_dfe_service tds WHERE tipo = UPPER('{$tp}') ORDER BY id_t_dfe_service DESC LIMIT 1;");
-            $xFinal = !empty($nsu->fields['lastnsu']) ? $nsu->fields['lastnsu'] : 50;
+            $xFinal = !empty($nsu->fields['lastnsu']) ? $nsu->fields['lastnsu'] + 50 : 50;
 
             $xInicial = $nsu->fields['lastnsu'] + 50;
 

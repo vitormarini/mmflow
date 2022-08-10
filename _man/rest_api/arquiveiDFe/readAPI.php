@@ -35,14 +35,12 @@ function readAPI($readAPI,$tp,$xFinal,$nsu){
     $confirmRet = strtoupper($readAPI['status']["message"]);
     $dataRet    = $readAPI["data"];       
     
-    print "<pre>"; print_r($readAPI);
-    // print "<pre>"; print_r($dataRet);
-    exit;
+    // print "<pre>"; print_r($readAPI);
+    // // print "<pre>"; print_r($dataRet);
+    // exit;
 
     #Lendo o retorno dos arrays
-    if ( $confirmRet == "OK" ){        
-
-        $xFinal += 50;
+    if ( $confirmRet == "OK" ){
 
         $bd->Execute($sql = "
             INSERT INTO public.t_dfe_service (
@@ -91,8 +89,7 @@ function readAPI($readAPI,$tp,$xFinal,$nsu){
                 // exit;
 
                 if(duplicity($chave_acesso)){
-                    $bd->Execute($sql = "SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");            
-                    print "<pre>SQL "; print $sql;                        
+                    $bd->Execute($sql = "SELECT crud_escrita_fiscal('INSERT_' , '1' , '{$json_nf}');");                  
                 }
 
                 // print "<pre>id "; print $sql;
@@ -129,7 +126,7 @@ function readAPI($readAPI,$tp,$xFinal,$nsu){
             
             $json = str_replace("'", "''", json_encode($xml['prot'],true));
             $bd->Execute($sql = "SELECT crud_t_dfe_service_docs_('INSERT_','1','{$json}');");
-            print "<pre>SQL2 "; print $sql;    
+            // print "<pre>SQL2 "; print $sql;    
 
             $x++;
         }
@@ -138,6 +135,7 @@ function readAPI($readAPI,$tp,$xFinal,$nsu){
         print $readAPI['status']["message"];
         exit;
     }
+    return true;
 }
 
 # Função que verifica a duplicidade da NFe
